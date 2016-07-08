@@ -710,9 +710,9 @@ function closeDescription(divID) {
                   <span onclick="accFunc('acc_content_id_{{loop.index0}}')">
 	                  <table class="header_table_result">
 		                  <tr>
-		                  <td class="courseLink"><b>{{i[0]}} {{i[1]}} {% if i[2] != '0' %}{{i[2]}}{% endif %}</b>: <u class="courseLink" onclick="showDescription('course_desc_div', '{{i[0]}}', '{{i[1]}}')">{{i[3]}}</u></td>
-		                  <td class="prof_result">{{i[4]}}</td>
-		                  <td class="CRN_result"><span style="margin-right:10%;">CRN: {{i[10]}}</span></td>
+		                  <td class="courseLink"><b>{{i.subject}} {{i.course_num}} {% if i.seq_num != '0' %}{{i.seq_num}}{% endif %}</b>: <u class="courseLink" onclick="showDescription('course_desc_div', '{{i.subject}}', '{{i.course_num}}')">{{i.course_title}}</u></td>
+		                  <td class="prof_result">{{i.instructor1}}</td>
+		                  <td class="CRN_result"><span style="margin-right:10%;">CRN: {{i.CRN}}</span></td>
 		                  <td class="x_result"><span onclick="document.getElementById('acc_id_{{loop.index0}}').style.display='none'" class="w3-closebtn w3-margin-right w3-medium">x</span></td>
 		                  </tr>
 			          </table>
@@ -730,14 +730,14 @@ function closeDescription(divID) {
                     		<td class="results_th">Syllabus</td>
                     	</tr>
                     	<tr>
-                    		<td class="results_td">{{i[5]}}</td>
-                    		<td class="results_td">{{i[6]}}</td>
-                    		<td class="results_td">{{i[9]}}</td>
-                    		<td class="results_td">{{i[7]}}</td>
-                    		<td class="results_td">{{i[13]}}</td>
-                    		<td class="results_td">{{i[8]}}</td>
-                    		<td class="results_td">{{i[11]}}</td>
-                    		<td class="results_td"><a href = {{url_for('download',file_path=i[12])}} target = "blank" style="cursor:pointer;">{{i[12]}}</a></td>
+                    		<td class="results_td">{{i.class_time}}</td>
+                    		<td class="results_td">{{i.meet_days}}</td>
+                    		<td class="results_td">{{i.bldg_code + " " + i.room_code }}</td>
+                    		<td class="results_td">{{i.course_attrib}}</td>
+                    		<td class="results_td">{{i.course_notes}}</td>
+                    		<td class="results_td">{{i.max_enroll}}</td>
+                    		<td class="results_td">{{i.visitable}}</td>
+                    		<td class="results_td"><a href = {{url_for('download',file_path=i.syllabus_link)}} target = "blank" style="cursor:pointer;">{{i[12]}}</a></td>
 	                    </tr>                    </table>
 	              
                     
