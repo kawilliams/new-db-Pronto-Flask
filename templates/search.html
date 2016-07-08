@@ -1,0 +1,877 @@
+<!DOCTYPE html>
+<html>
+<header>	
+<link rel="stylesheet" type="text/css" href={{url_for('static', filename='search.css')}}>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+<script>window.jQuery || document.write('<script src="{{
+  url_for('static', filename='jquery.js') }}">\x3C/script>')</script>
+<!--<script src="search_flask.js"></script>-->
+<script src="static/courses.js"></script>
+<link rel="stylesheet" href="http://www.w3schools.com/lib/w3.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Search Page</title>
+</header>
+<body onload="findCurrentDate()">
+	
+<script>
+	
+/*--------------------------Open and Close Sidenav---------------------*/
+
+function w3_open() {
+    document.getElementsByClassName("w3-sidenav")[0].style.display = "block";
+}
+function w3_close() {
+    document.getElementsByClassName("w3-sidenav")[0].style.display = "none";
+}
+
+
+/*---------------------Create query to pass to the db------------------*/
+
+function hasClass(element, cls) {
+    return (' ' + element.className + ' ').indexOf(' ' + cls + ' ') > -1;
+}
+
+function createQueryStr(){
+
+	var profStr = "";
+	var deptStr = "";
+	var dayStr = "";
+	var timeStr = "";
+	var distStr = "";
+	var semStr = "";
+	var classSizeStr = "";
+		
+	var checkedBoxes = document.getElementsByClassName("choices");
+	var i;
+	for(i = 0; i < checkedBoxes.length; i++){
+		var curElem = checkedBoxes[i];
+		if (curElem.checked){
+			if (hasClass(curElem, "prof_check")){
+				var replacemt;
+				if(profStr != ""){
+					replacemt = profStr.concat(" or ", curElem.value);
+				}
+				else{
+					replacemt = profStr.concat(curElem.value);
+						
+				}
+				profStr = replacemt;
+			}
+			if (hasClass(curElem, "dept_check")){
+				var replacemt;
+				if(deptStr != ""){
+					replacemt = deptStr.concat(" or ", curElem.value);
+				}
+				else{
+					replacemt = deptStr.concat(curElem.value);
+				}
+				deptStr = replacemt;
+			}
+			if (hasClass(curElem,"day_check")){
+				var replacemt;
+				if(dayStr != ""){
+					replacemt = dayStr.concat(" or ", curElem.value);
+				}
+				else{
+					replacemt = dayStr.concat(curElem.value);
+						
+				}
+				dayStr = replacemt;
+			}
+			if (hasClass(curElem,"time_check")){
+				var replacemt;
+				if(timeStr != ""){
+					replacemt = timeStr.concat(" or ", curElem.value);
+				}
+				else{
+					replacemt = timeStr.concat(curElem.value);
+						
+				}
+				timeStr = replacemt;
+			}
+			if (hasClass(curElem,"dist_req_check")){
+				var replacemt;
+				if(distStr != ""){
+					replacemt = distStr.concat(" or ", curElem.value);
+				}
+				else{
+					replacemt = distStr.concat(curElem.value);
+						
+				}
+				distStr = replacemt;
+			}
+			if (hasClass(curElem,"class_size_check")){
+				var replacemt;
+				if(classSizeStr != ""){
+					replacemt = classSizeStr.concat(" or ", curElem.value);
+				}
+				else{
+					replacemt = classSizeStr.concat(curElem.value);
+						
+				}
+				classSizeStr = replacemt;
+			}
+		}
+	}
+			
+	var semDropdown = document.getElementById("year_dropdwn");
+	var semChoices = semDropdown.options;
+	var semAns = semChoices[semDropdown.selectedIndex];
+	var replacemt;
+	replacemt = semStr.concat(semAns.value);
+	semStr = replacemt;
+
+	document.getElementById("period").value = semStr;
+	document.getElementById("prof_form").value = profStr;
+	document.getElementById("dep").value = deptStr;
+	document.getElementById("days").value = dayStr;
+	document.getElementById("times").value = timeStr;
+	document.getElementById("distri").value = distStr; 	
+	document.getElementById("class_size").value = classSizeStr;	
+}
+
+
+/*------------------------Open and Close Accordions-------------------*/
+
+function accFunc(id) {
+	
+    var x = document.getElementById(id);
+    if (x.className.indexOf("w3-show") == -1) {
+        x.className += " w3-show";
+        x.previousElementSibling.className += " w3-gray";
+    } else { 
+        x.className = x.className.replace(" w3-show", "");
+        x.previousElementSibling.className = 
+        x.previousElementSibling.className.replace(" w3-gray", "");
+    }
+}
+
+
+/*---------Check and Uncheck (Morning/Afternoon classes)---------------*/
+
+$(document).ready(function(){
+var mornClassOn = document.getElementById("morn_classes").checked;
+  $("#morn_classes").click(
+  	function(){
+	 	var labels = $(".morn");
+	 	var checkBoxes = $(".morn_check")
+     	checkBoxes.prop("checked", !mornClassOn);
+     	if (!mornClassOn){
+     		$(labels).css("color", "#248f8f");
+     		$("#morn_classes_label").css("color", '#248f8f');
+     	}
+     	else{
+	     	$(labels).css("color", 'black');
+     		$("#morn_classes_label").css("color", 'black');
+	    }
+     	mornClassOn = !mornClassOn;
+	});
+	
+	var aftClassOn = document.getElementById("aft_classes").checked;
+	$("#aft_classes").click(function(){
+		var labels = $(".aft");
+	  	var checkBoxes = $(".aft_check");
+      	checkBoxes.prop("checked", !aftClassOn);
+      	if (!aftClassOn){
+     		$(labels).css({"color":'#248f8f'});
+     		$("#aft_classes_label").css({"color":'#248f8f'});
+     	}
+     	else{
+	     	$(labels).css({"color":'black'});
+     		$("#aft_classes_label").css({"color":'black'});
+	    }
+      aftClassOn = !aftClassOn;
+	});
+	
+  $("#hidden_morn_classes").click(
+  	function(){
+	  	var labels = $(".morn");
+	 	var checkBoxes = $(".morn_check");
+     	checkBoxes.prop("checked", !mornClassOn);
+     	if (!mornClassOn){
+     		$(labels).css({"color":"#248f8f"});
+     		$("#hidden_morn_classes_label").css({"color":'#248f8f'});
+     	}
+     	else{
+	     	$(labels).css("color", 'black');
+     		$("#hidden_morn_classes_label").css({"color":'black'});
+	    }
+     	mornClassOn = !mornClassOn;
+	});
+	
+	$("#hidden_aft_classes").click(function(){
+		var labels = $(".aft");
+	  	var checkBoxes = $(".aft_check");
+      	checkBoxes.prop("checked", !aftClassOn);
+      	if (!aftClassOn){
+     		$(labels).css("color", '#248f8f');
+     		$("#hidden_aft_classes_label").css("color", '#248f8f');
+     	}
+     	else{
+	     	$(labels).css("color", 'black');
+     		$("#hidden_aft_classes_label").css("color", 'black');
+	    }
+      aftClassOn = !aftClassOn;
+	});
+	
+	
+/*------------------------Click hidden submit--------------------------*/
+	
+	$("#gen_search_btn_home").click(function(){
+		$("#hidden_search_home").click();
+	});
+	$("#gen_search_btn").click(function(){
+		$("#hidden_search").click();
+	});
+	$("#gen_search_mobile").click(function(){
+		$("#submit_search_mobile").click();
+	});
+	
+	
+/*------------------------General Check and Uncheck---------------------*/
+	
+	$(".checkbox").click(function(){
+		var labelID = this.id.concat("_label");
+		var label = document.getElementById(labelID);
+		
+		if (this.checked){
+			$(label).css({'color':'#248f8f'});
+		}
+		else{
+			$(label).css({"color":"black"});
+		}
+	});
+	
+
+/*------------------------Clear Selections-------------------------------*/
+
+	$("#clear-btn").click(function(){
+		var checkedBoxes = $("input:checked");
+		var labels = $(".label");
+		checkedBoxes.prop("checked", false);
+		$(labels).css({"color":"black"});
+	});
+	
+
+/*---------------------Check and Uncheck Depts---------------------------*/
+
+	$(".visible_dep").click(function(){
+		var checked = this.checked;
+		var curID = this.id;
+		var hiddenID = "hidden_" + curID;
+		var hiddenElem = document.getElementById(hiddenID);
+		var hiddenLabel = document.getElementById(hiddenID + "_label");
+		var curLabel = document.getElementById(curID + "_label");
+		$(hiddenElem).prop("checked", checked);
+		if (checked){
+			$(hiddenLabel).css({"color":'#248f8f'});
+			$(curLabel).css({"color":'#248f8f'});
+		}	
+		else{
+			$(hiddenLabel).css({"color":'black'});
+			$(curLabel).css({"color":'black'});
+		}
+	});
+	$(".hidden_dep").click(function(){
+		var checked = this.checked;
+		var curID = this.id;
+		var normID = curID.substring(7,curID.length);
+		var normElem = document.getElementById(normID);
+		var normLabel = document.getElementById(normID + "_label");
+		var curLabel = document.getElementById(curID + "_label");
+		$(normElem).prop("checked", checked);
+		if (checked){
+			$(normLabel).css({"color":'#248f8f'});
+			$(curLabel).css({"color":'#248f8f'});
+		}	
+		else{
+			$(normLabel).css({"color":'black'});
+			$(curLabel).css({"color":'black'});
+		}
+	});
+}); 
+
+
+/*------------------------Professor Search Function----------------------*/
+
+function filterProfs(){
+	
+	var profs = document.getElementsByClassName("prof");
+	var curInput = document.getElementById("prof_search_id").value.toLowerCase();
+	var inputLen = curInput.length;
+	
+	var i;
+	for (i = 0; i < profs.length; i++){
+		var curElem = profs[i];
+		var curSubStr = curElem.value.substring(0,inputLen).toLowerCase();
+		
+		if (curSubStr !== curInput){
+			curElem.parentElement.style.display = "none";	
+		}	
+		else{
+			curElem.parentElement.style.display = "block";	
+		}
+	}
+}
+function closeDiv(divID){
+	var curDiv = document.getElementById(divID);
+	curDiv.style.display = "none";
+	document.getElementById("blackout").style.display = "none";
+}
+
+/*-------------------------- Find Current Date ---------------------------*/
+
+function findCurrentDate(){
+	var curDate = new Date();
+	var formattedDate = "";
+	
+	var curYear = curDate.getFullYear();
+	formattedDate += curYear;
+	var curMonth = curDate.getMonth();
+	if (curMonth > 4){
+		formattedDate += "01";	
+	}
+	else{
+		formattedDate += "02";	
+	}
+	
+	document.getElementById(formattedDate).selected = true;
+}
+
+/*-------------------------- Display Course Description ---------------------------*/
+function showDescription(divID, katy, course_num){
+
+	var curDiv = document.getElementById(divID);
+	curDiv.style.display = "block";
+	document.getElementById("blackout").style.display = "block"; 	
+	
+	var descDiv = document.getElementById('course_desc_div');
+	var a = document.createElement('iframe');
+	a.id = "iframe_description"
+	a.src = "http://www.davidson.edu/general-course-detail/?subj=" + katy + "&cnum=" + course_num;	
+	a.width = "100%";
+	a.height = "200";
+	a.frameborder = "1";
+	
+	
+	var cancelBtn = document.getElementById('put_here');
+	descDiv.insertBefore(a, cancelBtn);
+}
+
+function closeDescription(divID) {
+	var curDiv = document.getElementById(divID);
+	var descriptionElem = document.getElementById("iframe_description");
+	curDiv.removeChild(descriptionElem);
+	curDiv.style.display = "none";
+	document.getElementById("blackout").style.display = "none";
+}
+
+</script>
+
+	<div id="course_desc_div" style="font-size: 90%;">
+		<p id="put_here"></p>
+		<input type="button" id="close_desc" value="Close" name="close" onclick="closeDescription('course_desc_div')"/>
+	</div>
+	<div id="blackout">
+	</div>
+	
+	
+<!--~~~~~~~~~~~~~~~~~~~~~~~~~~Help ~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+
+	<div id="help_div">
+		<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/8d/VisualEditor_-_Icon_-_Close.svg/1000px-VisualEditor_-_Icon_-_Close.svg.png" id="close_btn_help" onclick="closeDiv('help_div')"/>
+		<p class="question"><b>Q: How can I search by semester?</b></p>
+		<p class="answer">A: For the Fall semester, type in the year followed by "01" (Ex: "201601"). For the Spring semester, type in the previous year followed by "02" (Ex:"201602").</p>
+	</div>
+	
+
+<!--Sidenav ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+	
+	<nav id="filter" class="w3-sidenav w3-collapse w3-quarter w3-card-2 w3-animate-left" style="padding-bottom:20px;">
+		<a href="#" onclick="w3_close()" class="w3-closenav w3-hide-large">Close &times;</a>
+		<form action={{url_for("process_search")}} method="post">
+			<p id="by_keyword_sidenav"><b>Search By Keyword:</b></p>
+			<input type="search" results:5 id="search_sidenav" name="gen_search" class="search" placeholder="Search...">
+			<li class="" id="gen_search_mobile"><i class="material-icons" id="icon_search_mobile">search</i></li>
+	  		<input type="submit" id="submit_search_mobile" name="gen_search_btn" hidden></form>
+			<p id="filter_res"><b>Filter Results</b></p>
+		<form action={{url_for("process_form")}} method="post">
+		
+		
+	<!--Semester ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+		
+		<div class="w3-accordion">
+    		<a onclick="accFunc('year_acc')" href="#">
+      		By Semester <i class="fa fa-caret-down"></i>
+    		</a>
+    		<div id="year_acc" class="w3-accordion-content w3-padding">
+      			<select name="years" class="w3-select w3-border w3-padding" id="year_dropdwn">
+	      		<option value="201602" id="201602" class="year_li">Spring 2017</option>
+	      		<option value="201601" id="201601" class="year_li">Fall 2016</option>
+  				<option value="201502" id="201502" class="year_li">Spring 2016</option>
+  				<option value="201501" id="201501" class="year_li">Fall 2015</option>
+  				<option value="201402" id="201402" class="year_li">Spring 2015</option> 				
+  				<option value="201401" id="201401" class="year_li">Fall 2014</option>
+  				<option value="201302" id="201302" class="year_li">Spring 2014</option>
+  				<option value="201301" id="201301" class="year_li">Fall 2013</option>
+  				<option value="201202" id="201202" class="year_li">Spring 2013</option>
+  				<option value="201201" id="201201" class="year_li">Fall 2012</option>
+  				<option value="201102" id="201102" class="year_li">Spring 2012</option>			
+  				<option value="201101" id="201101" class="year_li">Fall 2011</option>
+  				<option value="201002" id="201002" class="year_li">Spring 2011</option>
+  				<option value="201001" id="201001" class="year_li">Fall 2010</option>
+  				<option value="200902" id="200902" class="year_li">Spring 2010</option>
+  				<option value="200901" id="200901" class="year_li">Fall 2009</option>
+				</select>
+    		</div>
+    	</div>
+    	
+    	
+	<!--Professors ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+
+    	<div class="w3-accordion">
+    		<a onclick="accFunc('prof_acc')" href="#">
+      		By Professor<i class="fa fa-caret-down"></i>
+    		</a>
+    		<div id="prof_acc" class="w3-accordion-content w3-white w3-card-4 w3-padding">
+	    		<input type="text" class="w3-input w3-animate-input" oninput="filterProfs()" name="prof_search" id="prof_search_id" placeholder="Search for a professor"/>
+	    		<div>
+		    	<div>
+      			<ul class="w3-ul" id="prof_list">	
+	    			{% for i in profs %}
+    				<li class="prof_li"><input type="checkbox" class="checkbox choices prof prof_check" id="{{i}}" value="{{i}}" onclick="changeColorCheck('{{i}}_label', this)"><label id="{{i}}_label" for="{{i}}" class="label text">{{i}}</label></li>
+    				{% endfor %}
+    			</ul>
+    			</div>
+    			</div>
+    		</div>
+    	</div>
+    	
+    	
+	<!--Departments ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+
+		<div class="w3-accordion">
+    		<a onclick="accFunc('dept_acc')" href="#">
+      		By Department<i class="fa fa-caret-down"></i>
+    		</a>
+    		<div id="dept_acc" class="w3-accordion-content w3-white w3-card-4 w3-padding">
+	    		<div>
+		    	<div>
+	    		<div class="w3-row-padding">
+  					<div class="w3-third dept_list" id="first_col">
+	  					{% for i in deps %}
+	  						<input type="checkbox" class="choices visible_dep dept_li dept_check" id='{{i}}' value='{{i}}'><label for='{{i}}' class="w3-tooltip dept_text label" id='{{i}}_label'>{{i}}<span id="{{i}}_span" class="w3-text w3-tag w3-small">{{deps_full[loop.index0]}}</span></label></input><br>
+		  					
+		  					{% if loop.index == 15 %}
+		  						</div>
+		  						<div class="w3-third dept_list" id="sec_col">
+		  					{% endif %}
+		  					{% if loop.index == 30 %}
+		  						</div>
+  								<div class="w3-third dept_list" id="third_col">
+		  					{% endif %}
+	  					{% endfor %}
+  					</div>
+  					</div>
+  					</div>
+
+  					<div id="hidden_dept_scroll">
+	  					{% for i in deps %}
+	  					<li class='hidden_dept_li'><input type='checkbox' class='hidden_dep choices dept_li dept_check' id="hidden_{{i}}" value="{{i}}"><label for="hidden_{{i}}" class='w3-tooltip dept_text' id="hidden_{{i}}_label">{{i}}<span class='w3-text w3-tag w3-small'>{{deps_full[loop.index0]}}</span></label></input></li>
+	  					{% endfor %}
+		    		</div>
+				</div>
+    		</div>
+    	</div>
+    	
+    	
+	<!--Day ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+
+    	<div class="w3-accordion">
+    		<a onclick="accFunc('day_acc')" href="#">
+      		By Day<i class="fa fa-caret-down"></i>
+    		</a>
+    		<div id="day_acc" class="w3-accordion-content w3-white w3-card-4">
+	    		<div>
+		    	<div>
+	    		<div id="day_list">
+      				<p class="day_li"><input type="checkbox" id="mwf" class="checkbox day_check choices" value="mwf"><label id="mwf_label" class="label text">MWF</label></p>
+      				<p class="day_li"><input type="checkbox" id="tr" class="checkbox day_check choices" value="tr"><label id="tr_label" class="label text">TR</label></p>
+    			</div>
+    			</div>
+    			</div>
+    		</div>
+    	</div>
+    	
+    	
+	<!--Time ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+
+    	<div class="w3-accordion">
+    		<a onclick="accFunc('time_acc')" href="#">
+      		By Time<i class="fa fa-caret-down"></i>
+    		</a>
+    		<div id="time_acc" class="w3-accordion-content w3-white w3-card-4 w3-padding">
+	    		
+	    		<!--Heading (Morning/Afternoon) ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+	    		<div id="morn_aft">
+		    		<div class="w3-row-padding">
+			    		<div class="w3-half" id="morn_half">
+						<input type="checkbox" id="morn_classes" class="choices"><label id="morn_classes_label" class="label text">Morning</label>
+						</div>
+			    		<div class="w3-half" id="aft_half">
+						<input type="checkbox" id="aft_classes" class="choices"><label id="aft_classes_label" class="label text">Afternoon</label>
+						</div>
+					</div>
+				</div>
+				<div id="hidden_morn_aft">
+		    		<div class="w3-row-padding">
+						<input type="checkbox" id="hidden_morn_classes" class="choices"><label id="hidden_morn_classes_label" class="text">Morning</label><br>
+						<input type="checkbox" id="hidden_aft_classes" class="choices"><label id="hidden_aft_classes_label" class="text">Afternoon</label>
+					</div>
+				</div>				
+				<!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+				
+				
+				<div class="w3-row-padding">
+			    	<div class="w3-half time_list" id="time_MWF_div">
+    				<ul id="time_list_MWF">
+      					<li class="time_li"><input type="checkbox" id="time_0830" class="morn_check time_check checkbox choices" value="0830"><label id="time_0830_label" class="label morn text">8:30am</label></li>
+      					<li class="time_li"><input type="checkbox" id="time_0930" class="morn_check time_check checkbox choices" value="0930"><label id="time_0930_label" class="label morn text">9:30am</label></li>
+      					<li class="time_li"><input type="checkbox" id="time_1030" class="morn_check time_check checkbox choices" value="1030"><label id="time_1030_label" class="label morn text">10:30am</label></li>
+      					<li class="time_li"><input type="checkbox" id="time_1130" class="morn_check time_check checkbox choices" value="1130"><label id="time_1130_label" class="label morn text">11:30am</label></li>
+	  					<li class="time_li"><input type="checkbox" id="time_1230" class="aft_check time_check checkbox choices" value="1230"><label id="time_1230_label" class="label aft text">12:30pm</label></li>
+						<li class="time_li"><input type="checkbox" id="time_0130" class="aft_check time_check checkbox choices" value="0130"><label id="time_0130_label" class="label aft text">1:30pm</label></li>
+						<li class="time_li"><input type="checkbox" id="time_0230" class="aft_check time_check checkbox choices" value="0230"><label id="time_0230_label" class="label aft text">2:30pm</label></li>
+						<li class="time_li"><input type="checkbox" id="time_0330" class="aft_check time_check checkbox choices" value="0330"><label id="time_0330_label" class="label aft text">3:30pm</label></li>
+    				</ul>
+    				</div>
+    				<br>
+			    	<div class="w3-half time_list" id="time_TR_div">
+    				<ul id="time_list_TR">
+	 					<li class="time_li"><input type="checkbox" id="time_0815" class="morn_check time_check checkbox choices" value="0815"><label id="time_0815_label" class="label morn text">8:15am</label></li>
+      					<li class="time_li"><input type="checkbox" id="time_0940" class="morn_check time_check checkbox choices" value="0940"><label id="time_0940_label" class="label morn text">9:40am</label></li>
+      					<li class="time_li"><input type="checkbox" id="time_1215" class="aft_check time_check checkbox choices" value="1215"><label id="time_1215_label" class="label aft text">12:15pm</label></li>
+      					<li class="time_li"><input type="checkbox" id="time_0140" class="aft_check time_check checkbox choices" value="0140"><label id="time_0140_label" class="label aft text">1:40pm</label></li>
+	  					<li class="time_li"><input type="checkbox" id="time_0315" class="aft_check time_check checkbox choices" value="0315"><label id="time_0315_label" class="label aft text">3:15pm</label></li>
+					</ul>
+					</div>
+					<!--<ul class="hidden_time_list" id="time_list_MWF">
+      					<li class="time_li"><input type="checkbox" id="hidden_0830" class="morn_check time_check checkbox choices" value="0830"><label id="hidden_0830_label" class="morn text">8:30am</label></li>
+      					<li class="time_li"><input type="checkbox" id="hidden_0930" class="morn_check time_check checkbox choices" value="0930"><label id="hidden_0930_label" class="morn text">9:30am</label></li>
+      					<li class="time_li"><input type="checkbox" id="hidden_1030" class="morn_check time_check checkbox choices" value="1030"><label id="hidden_1030_label" class="morn text">10:30am</label></li>
+      					<li class="time_li"><input type="checkbox" id="hidden_1130" class="morn_check time_check checkbox choices" value="1130"><label id="hidden_1130_label" class="morn text">11:30am</label></li>
+	  					<li class="time_li"><input type="checkbox" id="hidden_1230" class="aft_check time_check checkbox choices" value="1230"><label id="hidden_1230_label" class="aft text">12:30pm</label></li>
+						<li class="time_li"><input type="checkbox" id="hidden_0130" class="aft_check time_check checkbox choices" value="0130"><label id="hidden_0130_label" class="aft text">1:30pm</label></li>
+						<li class="time_li"><input type="checkbox" id="hidden_0230" class="aft_check time_check checkbox choices" value="0230"><label id="hidden_0230_label" class="aft text">2:30pm</label></li>
+						<li class="time_li"><input type="checkbox" id="hidden_0330" class="aft_check time_check checkbox choices" value="0330"><label id="hidden_0330_label" class="aft text">3:30pm</label></li>
+					</ul>
+    				<ul class="hidden_time_list" id="time_list_TR">
+	 					<li class="time_li"><input type="checkbox" id="hidden_0815" class="morn_check time_check checkbox choices" value="0815"><label id="hidden_0815_label" class="morn text">8:15am</label></li>
+      					<li class="time_li"><input type="checkbox" id="hidden_0940" class="morn_check time_check checkbox choices" value="0940"><label id="hidden_0940_label" class="morn text">9:40am</label></li>
+      					<li class="time_li"><input type="checkbox" id="hidden_1215" class="aft_check time_check checkbox choices" value="1215"><label id="hidden_1215_label" class="aft text">12:15pm</label></li>
+      					<li class="time_li"><input type="checkbox" id="hidden_0140" class="aft_check time_check checkbox choices" value="0140"><label id="hidden_0140_label" class="aft text">1:40pm</label></li>
+	  					<li class="time_li"><input type="checkbox" id="hidden_0315" class="aft_check time_check checkbox choices" value="0315"><label id="hidden_0315_label" class="aft text">3:15pm</label></li>
+					</ul>-->
+				</div>
+    		</div>
+    	</div>
+    	
+    	
+	<!--Distribution Requirements ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+    	<div class="w3-accordion">
+    		<a onclick="accFunc('dist_acc')" href="#">
+      		By Distribution Requirement<i class="fa fa-caret-down"></i>
+    		</a>
+    		<div id="dist_acc" class="w3-accordion-content w3-white w3-card-4">
+	    		<div>
+		    	<div>
+	    		<div class="w3-row-padding">
+	    			<div class="w3-half dist_req_list">
+		    			<input type="checkbox" value="HTRQ" id="htrq" class="checkbox dist_req_check dist_req_li choices"><label id="htrq_label" class="label w3-tooltip dist_text">Historical Thought  <span class="w3-text w3-tag w3-small">HTRQ</span></label><br>
+						<input type="checkbox" value="LBRQ" id="lbrq" class="checkbox dist_req_check dist_req_li choices"><label id="lbrq_label" class="label w3-tooltip dist_text">Liberal Studies  <span class="w3-text w3-tag w3-small">LBRQ</span></label><br>
+						<input type="checkbox" value="LTRQ" id="ltrq" class="checkbox dist_req_check dist_req_li choices"><label id="ltrq_label" class="label w3-tooltip dist_text">Literary Studies, Creative Writing, and Rhetoric  <span class="w3-text w3-tag w3-small">  LTRQ</span></label><br>
+						<input type="checkbox" value="MQRQ" id="mqrq" class="checkbox dist_req_check dist_req_li choices"><label id="mqrq_label" class="label w3-tooltip dist_text">Mathematical and Quantitative Thought  <span class="w3-text w3-tag w3-small">  MQRQ</span></label><br>
+					</div>
+					<div class="w3-half dist_req_list">
+		    			<input type="checkbox" value="NSRQ" id="nsrq" class="checkbox dist_req_check dist_req_li choices"><label id="nsrq_label" class="label w3-tooltip dist_text">Natural Science  <span class="w3-text w3-tag w3-small">NSRQ</span></label><br>
+						<input type="checkbox" value="SSRQ" id="ssrq" class="checkbox dist_req_check dist_req_li choices"><label id="ssrq_label" class="label w3-tooltip dist_text">Social-Scientific Thought  <span class="w3-text w3-tag w3-small">SSRQ</span></label><br>
+						<input type="checkbox" value="VPRQ" id="vprq" class="checkbox dist_req_check dist_req_li choices"><label id="vprq_label" class="label w3-tooltip dist_text">Visual and Performing Arts  <span class="w3-text w3-tag w3-small">VPRQ</span></label><br>
+						<input type="checkbox" value="PRRQ" id="prrq" class="checkbox dist_req_check dist_req_li choices"><label id="prrq_label" class="label w3-tooltip dist_text">Philosophical and Religious Perspectives  <span class="w3-text w3-tag w3-small">PRRQ</span></label><br>
+					</div>
+				</div>
+				</div>
+				</div>	
+					
+					<!--<div id="hidden_dist_req_list">
+		    			<input type="checkbox" value="HTRQ" id="dist_req_check" class="checkbox dist_req_check dist_req_li choices"><label id="htrq" class="w3-tooltip dist_text">Historical Thought  <span class="w3-text w3-tag w3-small">HTRQ</span></label><br>		
+						<input type="checkbox" value="LBRQ" id="dist_req_check" class="checkbox dist_req_check dist_req_li choices"><label id="lbrq" class="w3-tooltip dist_text">Liberal Studies  <span class="w3-text w3-tag w3-small">LBRQ</span></label><br>
+						<input type="checkbox" value="LTRQ" id="dist_req_check" class="checkbox dist_req_check dist_req_li choices" onclick="changeColorCheck('ltrq', this)"><label id="ltrq" class="w3-tooltip dist_text">Literary Studies, Creative Writing, and Rhetoric  <span class="w3-text w3-tag w3-small">  LTRQ</span></label><br>
+						<input type="checkbox" value="MQRQ" id="dist_req_check" class="checkbox dist_req_check dist_req_li choices" onclick="changeColorCheck('mqrq', this)"><label id="mqrq" class="w3-tooltip dist_text">Mathematical and Quantitative Thought  <span class="w3-text w3-tag w3-small">  MQRQ</span></label><br>
+		    			<input type="checkbox" value="NSRQ" id="dist_req_check" class="checkbox dist_req_check dist_req_li choices" onclick="changeColorCheck('nsrq', this)"><label id="nsrq" class="w3-tooltip dist_text">Natural Science  <span class="w3-text w3-tag w3-small">NSRQ</span></label><br>
+						<input type="checkbox" value="SSRQ" id="dist_req_check" class="checkbox dist_req_check dist_req_li choices" onclick="changeColorCheck('ssrq', this)"><label id="ssrq" class="w3-tooltip dist_text">Social-Scientific Thought  <span class="w3-text w3-tag w3-small">SSRQ</span></label><br>
+						<input type="checkbox" value="VPRQ" id="dist_req_check" class="checkbox dist_req_check dist_req_li choices" onclick="changeColorCheck('vprq', this)"><label id="vprq" class="w3-tooltip dist_text">Visual and Performing Arts  <span class="w3-text w3-tag w3-small">VPRQ</span></label><br>
+						<input type="checkbox" value="PRRQ" id="dist_req_check" class="checkbox dist_req_check dist_req_li choices" onclick="changeColorCheck('prrq', this)"><label id="prrq" class="w3-tooltip dist_text">Philosophical and Religious Perspectives  <span class="w3-text w3-tag w3-small">PRRQ</span></label><br>
+					</div>-->
+	    	</div>
+    	</div>
+    	
+    	
+	<!--Class Size ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+
+    	<div class="w3-accordion">
+    		<a onclick="accFunc('class_size_acc')" href="#">
+      		By Class Size<i class="fa fa-caret-down"></i>
+    		</a>
+    		<div id="class_size_acc" class="w3-accordion-content w3-white w3-card-4">
+		    	<div>
+		    	<div>
+	    		<ul id="class_size_list">
+      				<li class="class_size_li"><input type="checkbox" id="class_size_0_6" class="checkbox class_size_check choices" value="0 - 6"><label id="class_size_0_6_label" class="label text">0 - 6</label></li>
+      				<li class="class_size_li"><input type="checkbox" id="class_size_6_12" class="checkbox class_size_check choices" value="6 - 12"><label id="class_size_6_12_label" class="label text">6 - 12</label></li>
+      				<li class="class_size_li"><input type="checkbox" id="class_size_12_20" class="checkbox class_size_check choices" value="12 - 20"><label id="class_size_12_20_label" class="label text">12 - 20</label></li>
+      				<li class="class_size_li"><input type="checkbox" id="class_size_20" class="checkbox class_size_check choices" value="20 +"><label id="class_size_20_label" class="label text">20 +</label></li>
+    			</ul>
+    			</div>
+    			</div>
+	    	</div>
+    	</div>
+    	
+	<!--Form Submission and Clear/Filter Buttons ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+
+    <input type="text" id="dep" name="dep" value="" hidden>
+    <input type="text" id="period" name="period" value="" hidden>
+    <input type="text" id="prof_form" name="prof_form" value="" hidden>
+    <input type="text" id="days" name="days" value="" hidden>
+    <input type="text" id="times" name="times" value="" hidden>
+    <input type="text" id="distri" name="distri" value="" hidden>
+    <input type="text" id="class_size" name="class_size" value="" hidden>
+    <input type="submit" onclick="createQueryStr()" class="w3-btn-block" value="Filter by Selections">
+	</form>
+	<input type="button" class="w3-btn-block" id="clear-btn" value="Clear All">
+	</nav>
+	
+	
+	
+	
+	
+	
+	
+<!--Rest of the screen ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+	
+	<div class="w3-main w3-threequarter" style="margin-left:25%">
+		<div id="bckgrnd_img">
+			
+		<span class="w3-opennav w3-hide-large" onclick="w3_open()">&#9776;</span> <!--Opening sidenav-->
+		
+		<h4 id="davidson_logo">DAVIDSON COLLEGE</h4>   <!--Logo-->
+		
+		
+	<!--Search Box ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+
+		<div id="opq_search_box">
+			<p id="by_keyword">Search By Keyword:</p>
+			<form action={{url_for("process_search")}} method="post"> 
+  			<input class="search" id="search_norm_home" name="gen_search" placeholder="Search..." autofocus/>
+  			<li class="w3-btn" id="gen_search_btn_home"><i class="material-icons" id="icon_search_home">search</i></li>
+	  		<input type="submit" id="hidden_search_home" name="gen_search_btn" hidden></form>
+	  		
+			<form action={{url_for("process_search")}} method="post"> <p id="by_keyword_long">Search By Keyword: </p> 
+  			<input id="search_norm" name="gen_search" placeholder="Search..." autofocus/>
+  			<li class="w3-btn" id="gen_search_btn"><i class="material-icons" id="icon_search">search</i></li>
+  			<p id="help" onclick="document.getElementById('help_div').style.display = 'block';document.getElementById('blackout').style.display = 'block';">Help</p>
+	  		<input type="submit" id="hidden_search" name="gen_search_btn" style="display:none;"></form>
+		</div>
+		
+		
+	<!--Description ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+		<div id="descript_page">
+			<h5>Welcome to the Syllabi Search Page!</h5> 
+			<p>In order to find a class, either filter using the navigation to your left or search using the central search bar. If you are an administrator, login on the left navigation. If you are a professor looking to upload a syllabus, contact an administrator for access. Thank you very much for using this page! Good day. </p>
+		</div>
+		
+		
+	<!--Result Div ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+	
+		{% if chosen_year %}
+		<p id="displayed_yr"><i>{{chosen_year}}</i>
+		{% endif %}
+		{% if result_count %}
+			&nbsp;&nbsp;&nbsp;Total Results: {{result_count}}
+		{% endif %}
+		</p>
+		<div id="results" class="w3-card-4 w3-animate-opacity">
+			<ul id="result_list">
+				{% for i in search_results %}
+              <li id="acc_id_{{loop.index0}}">
+                <div class="w3-accordion" style="margin:0px;padding:0px;">
+                  <span onclick="accFunc('acc_content_id_{{loop.index0}}')">
+	                  <table class="header_table_result">
+		                  <tr>
+		                  <td class="courseLink"><b>{{i[0]}} {{i[1]}} {% if i[2] != '0' %}{{i[2]}}{% endif %}</b>: <u class="courseLink" onclick="showDescription('course_desc_div', '{{i[0]}}', '{{i[1]}}')">{{i[3]}}</u></td>
+		                  <td class="prof_result">{{i[4]}}</td>
+		                  <td class="CRN_result"><span style="margin-right:10%;">CRN: {{i[10]}}</span></td>
+		                  <td class="x_result"><span onclick="document.getElementById('acc_id_{{loop.index0}}').style.display='none'" class="w3-closebtn w3-margin-right w3-medium">x</span></td>
+		                  </tr>
+			          </table>
+			      </span>
+                  <div id="acc_content_id_{{loop.index0}}" class="w3-accordion-content w3-container" style="margin-top:10px;background-color:#d9d9d9; padding:5px;">
+	                  <table id="results_table">
+		                  <tr>
+                    		<td class="results_th">Time:</td>
+                    		<td class="results_th">Days:</td>
+                    		<td class="results_th">Place:</td>
+                    		<td class="results_th">Distr. Req.'s:</td>
+                    		<td class="results_th">Notes</td>
+                    		<td class="results_th">Class Size:</td> 
+                    		<td class="results_th">Visit:</td>
+                    		<td class="results_th">Syllabus</td>
+                    	</tr>
+                    	<tr>
+                    		<td class="results_td">{{i[5]}}</td>
+                    		<td class="results_td">{{i[6]}}</td>
+                    		<td class="results_td">{{i[9]}}</td>
+                    		<td class="results_td">{{i[7]}}</td>
+                    		<td class="results_td">{{i[13]}}</td>
+                    		<td class="results_td">{{i[8]}}</td>
+                    		<td class="results_td">{{i[11]}}</td>
+                    		<td class="results_td"><a href = {{url_for('download',file_path=i[12])}} target = "blank" style="cursor:pointer;">{{i[12]}}</a></td>
+	                    </tr>                    </table>
+	              
+                    
+                    <div id="hidden_results_mobile">
+	                    <p><span class="results_th">Time: </span><span class="results_td">{{i[5]}}</span></p>
+                    	<p><span class="results_th">Days:</span><span class="results_td">{{i[6]}}</span></p>
+                    	<p><span class="results_th">Place:</span><span class="results_td">{{i[9]}}</span></p>
+                    	<p><span class="results_th">Dist. Req.'s:</span><span class="results_td">{{i[7]}}</span></p>
+                    	<p><span class="results_th">Notes:</span><span class="results_td">{{i[13]}}</span></p>
+                    	<p><span class="results_th">Class Size:</span><span class="results_td">{{i[8]}}</span></p>
+                    	<p><span class="results_th">Visit:</span><span class="results_td">{{i[11]}}</span></p>
+                    	<p><span class="results_th">Syllabus</span><span class="results_td"><a style="cursor:pointer;">{{i[12]}}</a></span></p>
+	                </div>
+                  </div>
+              </li>
+              {% endfor %}
+              </ul> 
+	   		</div>
+		</div>
+		{% if search_results %}
+	          		<script>
+		          		var searchBox = document.getElementById("opq_search_box");
+						searchBox.style.marginTop = "20px";	
+						searchBox.style.width = "90%";
+						searchBox.style.marginLeft = "5%";
+						searchBox.style.height = "55px";
+						searchBox.style.paddingTop = "0px";
+						document.getElementById("results").style.display = "block";
+						document.getElementById("descript_page").style.display = "none";
+						document.getElementById("search_norm").style.height = "35px";
+						document.getElementById("search_norm").style.padding = "0px";
+						document.getElementById("search_norm").style.paddingLeft = "10px";
+						document.getElementById("search_norm").style.display = "inline-block";
+						document.getElementById("by_keyword_long").style.display = "inline-block";
+						document.getElementById("gen_search_btn").style.display = "inline-block";
+						document.getElementById("gen_search_btn_home").style.display = "none";
+						document.getElementById("by_keyword").style.display = "none";
+						document.getElementById("help").style.display = "inline-block";
+						document.getElementById("search_norm_home").style.display = "none";
+						document.getElementById("search_norm").style.width = "55%";
+	
+						w3-close();
+		          	</script>
+		      {% elif message %}
+		      		<script>
+		          		var searchBox = document.getElementById("opq_search_box");
+						searchBox.style.marginTop = "20px";	
+						searchBox.style.width = "90%";
+						searchBox.style.marginLeft = "5%";
+						searchBox.style.height = "55px";
+						searchBox.style.paddingTop = "0px";
+						document.getElementById("descript_page").style.display = "none";
+						document.getElementById("search_norm").style.height = "35px";
+						document.getElementById("search_norm").style.padding = "0px";
+						document.getElementById("search_norm").style.paddingLeft = "10px";
+						document.getElementById("search_norm").style.display = "inline-block";
+						document.getElementById("by_keyword_long").style.display = "inline-block";
+						document.getElementById("gen_search_btn").style.display = "inline-block";
+						document.getElementById("gen_search_btn_home").style.display = "none";
+						document.getElementById("by_keyword").style.display = "none";
+						document.getElementById("search_norm_home").style.display = "none";
+						document.getElementById("search_norm").style.width = "55%";
+	
+						w3-close();
+		          	</script>
+		      		<p id="error_msg">{{message}}</p>
+		      {% endif %}
+		      
+		 <script>
+			 var openAccs = [];
+			 var mornTimes = 0;
+			 var aftTimes = 0;
+		 </script>
+		{% for i in kept_values %}
+			<script>
+				var allInputs = document.getElementsByTagName("input");
+				
+    			for(var x = 0; x < allInputs.length; x++){
+	    			var curElem = allInputs[x];
+	    			if(curElem.value == "{{i}}"){
+	        			curElem.checked = true;
+	        			if (hasClass(curElem, "morn_check")){
+		        			mornTimes++;
+		        		}
+		        		if (hasClass(curElem, "aft_check")){
+		        			aftTimes++;
+		        		}
+		        		
+	        			var inputLabel = curElem.id + "_label";
+	        			document.getElementById(inputLabel).style.color = '#248f8f';
+	        			var accId = curElem.parentElement.parentElement.parentElement.parentElement.parentElement.id;
+	        			
+	        			if (openAccs.indexOf(accId) === -1){
+		        			openAccs.push(accId);
+		        			accFunc(accId);
+		        		}	
+	        		}	
+            	}
+            	if (mornTimes === 6){
+	            	var mornId = "morn_classes"
+	            	var mornLabel = mornId + "_label"
+	            	document.getElementById(mornId).checked = true;
+	            	document.getElementById(mornLabel).style.color = '#248f8f';	
+	            }
+	            if (aftTimes === 7){
+	            	var aftId = "aft_classes"
+	            	var aftLabel = aftId + "_label"
+	            	document.getElementById(aftId).checked = true;
+	            	document.getElementById(aftLabel).style.color = '#248f8f';	
+	            }
+					
+			</script>
+		{% endfor %}
+		
+		{% if semester %}
+		
+			<script>
+				var yearInputs = document.getElementsByClassName("year_li");
+				var open = false;
+				for(var x = 0; x < yearInputs.length; x++){
+	    				var curElem = yearInputs[x];
+	    			    if(curElem.value == "{{semester}}"){
+		    			    curElem.selected = true;
+		    			    if (!open){
+			    			    var accId = curElem.parentElement.parentElement.id;
+			    			 	accFunc(accId);  
+			    			}
+		    			}
+		    	}
+			</script>
+		
+		{% endif %}
+
+	</div>
+  
+</body>
+</html>
