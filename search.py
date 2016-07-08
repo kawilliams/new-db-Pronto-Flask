@@ -53,7 +53,7 @@ ALL_DEPS_FULL = {"AFR":"Africana Studies",
                  "THE":"Theatre", 
                  "WRI":"Writing"}
 
-def intesection_of(a_list):
+def intersection_of(a_list):
 	"""
 	accepts a list of lists and return a single list that is the 
 	intersection of all the lists.
@@ -83,7 +83,7 @@ def start_times():
 	"""
 	
 	all_courses = Course.query.all()
-	start_times= set()
+	start_time= set()
 	for i in all_courses:
 		start_time.add(str(i.begin_time))
 		
@@ -97,19 +97,20 @@ def start_time_map():
 	start_time = start_times()
 	time_map = {}
 	for i in start_time:
-		time = int(i[:-2])
-		
-		# change times like 22** to 10**
-		if time > 12:
-			time = str(time-12)
-		else:
-			time = i[:-2]
+		if i.replace(" ","") != "":
+			time = int(i[:-2])
 			
-		# change times like 1** to 01**
-		if len(time) == 1:
-			time = "0"+time
-			
-		time_map[time+i[-2:]] = i
+			# change times like 22** to 10**
+			if time > 12:
+				time = str(time-12)
+			else:
+				time = i[:-2]
+				
+			# change times like 1** to 01**
+			if len(time) == 1:
+				time = "0"+time
+				
+			time_map[time+i[-2:]] = i
 		
 	return time_map
 
@@ -160,7 +161,7 @@ def general_search(query):
 		searches.append(Course.query.
 		                filter(Course.all_data.like(searchterm)).all())
 		                
-	return intesection_of(searches)
+	return intersection_of(searches)
 
 def filter_subject(searchterms):
 	if (len(searchterms)==1 and str(searchterms[0])==""):
@@ -211,6 +212,9 @@ def filter_time(searchterms):
 			s_time = i
 		searches.append(Course.query.
 		                filter(Course.begin_time.like(s_time)).all())
+		
+		if i == "":
+			searches.append(Course.query.all())
 		
 	
 	return union_of(searches)
@@ -355,7 +359,7 @@ def process_form():
 		q5 = filter_time(time)
 		q6 = filter_distr(dist)
 		q7 = filter_class_size(class_size)
-		
+
 		year = (str(acd_prd))[0:4]
 		semester = (str(acd_prd))[4:]
 		if semester == "01":
@@ -369,8 +373,8 @@ def process_form():
 		final_query = intersection_of([q1,q2,q3,q4,q5,q6,q7])
 		
 		final_query_len = len(final_query)
-		print final_query_len
 		
+		print len(final_query)
 		
 		results=format_query(final_query)
 		msg = ""
@@ -399,7 +403,7 @@ def process_search():
 		raw_result = general_search(query_term)
 		results = format_query(raw_result)
 		msg = ""
-		if (raw_result.count() == 0):
+		if (len(raw_result) == 0):
 			msg = "Sorry, no courses found. Try again."
 		return render_template("search.html",search_results=results,
 		                       message = msg,profs=ALL_PROFESSORS,
@@ -409,7 +413,7 @@ def process_search():
 		return redirect(url_for("home"))
 	
 ACCESS_TOKEN_FILE = "access_token.txt"
-#DROPBOX_ACCESS_TOKEN = open(ACCESS_TOKEN_FILE,'r').read()	
+DROPBOX_ACCESS_TOKEN = open(ACCESS_TOKEN_FILE,'r').read()	
 
 @app.route('/<path:file_path>')
 def download(file_path):
@@ -421,5 +425,5 @@ def download(file_path):
 
 if __name__=="__main__":
 	print "All ok"
-	#db.create_all()
-	#app.run()
+	db.create_all()
+	app.run()
