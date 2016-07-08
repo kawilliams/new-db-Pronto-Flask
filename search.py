@@ -243,7 +243,7 @@ def filter_prof(searchterms):
 
 def filter_days(searchterm):
 
-	searchterm = searchterm.replace(" ","%")
+	searchterm = "%".join(list(searchterm))
 	searchterm =  "%" + searchterm.strip() + "%"
 	return Course.query.filter(Course.meet_days.
 	                                       like(searchterm)).all()
@@ -278,20 +278,6 @@ def filter_classroom(searchterms):
 	# the query term to enable searching 2 field of the database
 	pass
 
-
-def format_query(a_query):
-	results = []
-	for i in a_query:
-
-		record = [str(i.subject), str(i.course_num), i.course_title,
-				i.instructor1,i.class_time,i.meet_days,
-				i.course_attrib,i.max_enroll,
-		                str(i.bldg_code) + str(i.room_code),i.CRN,
-		                i.visitable,i.syllabus_link]
-		
-		results.append(record)
-		
-	return results
 
 
 def find_full_deps(dep_list):
@@ -376,7 +362,7 @@ def process_form():
 		
 		print len(final_query)
 		
-		results=format_query(final_query)
+		results=final_query
 		msg = ""
 		
 		if (final_query_len == 0):
