@@ -125,8 +125,7 @@ def prof_list():
 		profs.add(str(i.instructor2))
 		profs.add(str(i.instructor3))
 		
-	if ''  in profs:
-		profs.remove('')
+				
 	profs=sorted(list(profs))
 
 	return profs
@@ -153,6 +152,13 @@ ALL_PROFESSORS = prof_list()
 
 	
 def general_search(query):
+	"""
+	Returns all the courses that satisfy a given query.
+	The query should be a string with keywords separated
+	by space.The results will fulfill all specifications
+	of space separated keywords - so this is like an 
+	"and search"
+	"""
 	query= query.split(" ")
 	all_courses= Course.query.all()
 	searches = []
@@ -165,6 +171,10 @@ def general_search(query):
 	return intersection_of(searches)
 
 def filter_subject(searchterms):
+	"""
+	Given a list of subjects, returns all the courses that satisfy atleast 
+	one of the the subjects
+	"""
 	if (len(searchterms)==1 and str(searchterms[0])==""):
 		return Course.query.all()
 	
@@ -177,6 +187,12 @@ def filter_subject(searchterms):
 
 
 def filter_major(searchterms):
+	"""
+	Given a list of majors, returns all the courses that count towards 
+	atleast one of the listed majors
+	For example if the input is ["MAT","PSY"] the results will be a list
+	of courses that count for math major or psy major (or both)
+	"""	
 	if (len(searchterms)==1 and str(searchterms[0])==""):
 		return Course.query.all()	
 	
@@ -189,6 +205,12 @@ def filter_major(searchterms):
 	
 
 def filter_distr(searchterms):
+	"""
+	Given a list of distribution req, returns all the courses that can 
+	fulfill any of the distribution requirements
+	(Just like filter_major but for distribution)
+	Input should be like ["HQRT", "SSRQ"]
+	"""
 	all_db = Course.query.all()
 	if (len(searchterms)==1 and str(searchterms[0])==""):
 		return all_db
@@ -204,6 +226,13 @@ def filter_distr(searchterms):
 
 
 def filter_time(searchterms):
+	"""
+	Given a list of start times, returns a list of courses that start at 
+	any of the given times. Changes non 12hr formats to 12hr format
+	(1330 is changed to 130)
+	Calling this function with the input ["0930","1330"] will give us a
+	list of all classes that start at 9:30 or 1:30
+	"""
 	time_map = start_time_map()
 	searches=[]
 	for i in searchterms:
@@ -223,11 +252,18 @@ def filter_time(searchterms):
 
 
 def filter_acadPeriod(searchterm):
-
+	"""
+	Returns all courses available at a given acadamic period.
+	The input should be a single string - like "201601" for fall, 2016 
+	"""
 	return  Course.query.filter(Course.acad_period.like(searchterm)).all()
 
                 
 def filter_prof(searchterms):
+	"""
+	Given a list of professors, returns all the courses thought by any of
+	the given professors (they could be listed as a seconday instructor)
+	"""
 	if (len(searchterms)==1 and str(searchterms[0])==""):
 		return Course.query.all()
 	
@@ -243,7 +279,13 @@ def filter_prof(searchterms):
 	return union_of(searches)
 
 def filter_days(searchterm):
-
+	"""
+	Given a single string,searchterm, (is either MWF or TR), returns 
+	classes whoes meeting days matches the searchterm.
+	
+	For example if the input is "MWF", the result is all the courses that
+	are held during MWF
+	"""
 	searchterm = "%".join(list(searchterm))
 	searchterm =  "%" + searchterm.strip() + "%"
 	return Course.query.filter(Course.meet_days.
@@ -252,6 +294,16 @@ def filter_days(searchterm):
 
 
 def filter_class_size(searchterms):
+	"""
+	Input - a list of string, where each string is either "0 - 6",
+		"6 - 12", "12 - 20" or "20 +"
+		
+	Returns - all courses whoes max class size is in any of the given 
+	          ranges
+		  
+	For example an input ["20 +","0 - 6"] will give us all the classes
+	whose max class size is in the range 0-6 or above 20
+	"""
 	if (len(searchterms)==1 and str(searchterms[0])==""):
 		return Course.query.all()
 	
@@ -273,16 +325,11 @@ def filter_class_size(searchterms):
 	return  Course.query.filter(Course.max_enroll.
 		in_(full_searchterms)).all()	
 
-
-def filter_classroom(searchterms):
-	# need an agreement on how to get this data. might need to manuplate
-	# the query term to enable searching 2 field of the database
-	pass
-
-
-
 def find_full_deps(dep_list):
-	
+	"""
+	A function to match an abbreviation for a department to the full 
+	department name
+	"""
 	full_dep_list = []
 	for dep in dep_list:
 		full_dep_list.append(ALL_DEPS_FULL[dep])
