@@ -1,0 +1,284 @@
+<!DOCTYPE>
+<html>
+	<header>
+		<link rel="stylesheet" type="text/css" href={{url_for('static',filename='syl_manager.css')}}>
+		<script type="text/javascript" src={{url_for('static', filename='syl_manager.js')}}></script>
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
+	</header>	
+		
+	<body>
+		
+		
+<!***********************  Group Email for Professors Missing Syllabi  **************************-->
+
+		<div id="email_syl_div">
+			<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/8d/VisualEditor_-_Icon_-_Close.svg/1000px-VisualEditor_-_Icon_-_Close.svg.png" id="close_btn_email" onclick="closeEmail('email_syl_div')"/> <!--close button-->
+			<p>Default Email: </p>
+			
+			<label>Send From: </label><input type="text" id="send_from_input_box" name="send_from"/><br>
+				
+			<p style="text-align:left;">Send To: <span onclick="showRecipients()" id="click_edit_recip">Click to edit the list of recipients</span></p>
+			
+			<input type="text" id="search_recip" placeholder="Search Recipients..." oninput="filterRecip()" value=""/>
+			<div id="hidden_rec_lst_syl">
+				{% for i in recipients %}
+					<span class="email_recipient" id="{{i}}_span"><span class="email_rec_span" style="display:inline-block;" id="{{i}}">{{i}}</span><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/8d/VisualEditor_-_Icon_-_Close.svg/1000px-VisualEditor_-_Icon_-_Close.svg.png" style="cursor:pointer;" class="close_recipient" onclick="deleteRecipient('{{i}}_span')"/></span>
+				{% endfor %}
+			</div>
+			
+			<div id="default_email" name="default_email" contenteditable>You are receiving this email because you have yet to submit a syllabus for your Introduction to Biological Programming Course for Spring 2022. Please submit your syllabus by January 1st to avoid getting subsequent angry emails from us with possible incurring consequences. You may view all of the courses you have submitted syllabi for from the general search page or from the syllabi upload page. If you believe you are receiving this email by mistake, please email asyllabusislife@hotmail.com with your argument. Thank you!</div><br>
+			<input type="button" id="cancel_email_syl" value="Cancel" name="cancel" onclick="closeEmail('email_syl_div')"/>
+			<input type="button" id="send_email_syl" value="Send" onclick="sendEmail()" name="send"/>
+			<form name="grp_syl_email" action="{{ url_for('email') }}" method="post" enctype="multipart/form-data">
+			<input type="button" name="message" id="send_email_msg" value="" style="display:none;"/>
+			<input type="submit" name="recipients" id="send_email" value="" style="display:none;"/>
+			</form>
+		</div>
+		
+
+<!--***********************  Group Email for Professors Missing Learning Outcomes  ******************-->	
+
+		<div id="email_lo_div">
+			<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/8d/VisualEditor_-_Icon_-_Close.svg/1000px-VisualEditor_-_Icon_-_Close.svg.png" id="close_btn_email" onclick="closeEmail('email_lo_div')"/>
+			<p>Default Email: </p>
+			
+			<label>Send From: </label><input type="text" id="send_from_input_box" name="send_from"/><br>
+				
+			<label>Send To: </label>
+			<div id="send_to_input_box" name="send_to">
+			<span class="email_recipient"><span style="display:inline-block;">Alexander-Lee, Ashley </span><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/8d/VisualEditor_-_Icon_-_Close.svg/1000px-VisualEditor_-_Icon_-_Close.svg.png" class="close_recipient" onclick="closeRecipient()"/></span>
+			<span class="email_recipient"><span style="display:inline-block;">Williams, Katy </span><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/8d/VisualEditor_-_Icon_-_Close.svg/1000px-VisualEditor_-_Icon_-_Close.svg.png" class="close_recipient" onclick="closeRecipient()"/></span>
+			<span class="email_recipient"><span style="display:inline-block;">Mulat, Hermon </span><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/8d/VisualEditor_-_Icon_-_Close.svg/1000px-VisualEditor_-_Icon_-_Close.svg.png" class="close_recipient" onclick="closeRecipient()"/></span>
+			<span class="email_recipient"><span style="display:inline-block;">Person, Hello </span><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/8d/VisualEditor_-_Icon_-_Close.svg/1000px-VisualEditor_-_Icon_-_Close.svg.png" class="close_recipient" onclick="closeRecipient()"/></span>
+			</div><br>
+				
+			<div id="default_email" name="default_email" contenteditable>You are receiving this email because you have yet to submit Learning Outcomes for your Introduction to Biological Programming Course for Spring 2022. Please submit your syllabus by January 1st to avoid getting subsequent angry emails from us with possible incurring consequences. You may view all of the courses you have submitted syllabi for from the general search page or from the syllabi upload page. If you believe you are receiving this email by mistake, please email asyllabusislife@hotmail.com with your argument. Thank you!</div><br>
+			<input type="button" id="cancel_email_syl" value="Cancel" name="cancel" onclick="cancelEmail('email_lo_div')"/>
+			<input type="button" id="send_email_syl" value="Send" name="send"/>
+		</div>
+		
+		
+		
+<!--**********************  Individual Email for Specific Professor Missing a Syllabus  ********************-->
+		
+		<div id="ind_email">
+			<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/8d/VisualEditor_-_Icon_-_Close.svg/1000px-VisualEditor_-_Icon_-_Close.svg.png" id="close_btn_email" onclick="closeEmail('ind_email')"/>
+			<p>Default Email: </p>
+			
+			<label>Send From: </label><input type="text" id="send_from_input_box_ind" name="send_from"/><br>
+				
+			<label>Send To: </label>
+			<div id="send_to_input_box_ind" name="send_to">
+			</div><br>
+				
+			<div id="default_email" name="default_email" contenteditable>You are receiving this email because you have yet to submit a syllabus for your Introduction to Biological Programming Course for Spring 2022. Please submit your syllabus by January 1st to avoid getting subsequent angry emails from us with possible incurring consequences. You may view all of the courses you have submitted syllabi for from the general search page or from the syllabi upload page. If you believe you are receiving this email by mistake, please email asyllabusislife@hotmail.com with your argument. Thank you!</div><br>
+			<input type="button" id="cancel_email_syl" value="Cancel" name="cancel" onclick="cancelEmail('ind_email')"/>
+			<input type="button" id="send_email_syl" value="Send" name="send"/>
+		</div>
+		
+		
+		
+<!--**********************  Individual Email for Specific Professor Missing Learning Outcomes  *****************-->
+
+		<div id="ind_email_lo">
+			<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/8d/VisualEditor_-_Icon_-_Close.svg/1000px-VisualEditor_-_Icon_-_Close.svg.png" id="close_btn_email" onclick="closeEmail('ind_email_lo')"/>
+			<p>Default Email: </p>
+			
+			<label>Send From: </label><input type="text" id="send_from_input_box_ind" name="send_from"/><br>
+				
+			<label>Send To: </label>
+			<div id="send_to_input_box" name="send_to">
+			<span class="email_recipient"><span style="display:inline-block;">Alexander-Lee, Ashley </span><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/8d/VisualEditor_-_Icon_-_Close.svg/1000px-VisualEditor_-_Icon_-_Close.svg.png" class="close_recipient" onclick="closeRecipient()"/></span>
+			<span class="email_recipient"><span style="display:inline-block;">Williams, Katy </span><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/8d/VisualEditor_-_Icon_-_Close.svg/1000px-VisualEditor_-_Icon_-_Close.svg.png" class="close_recipient" onclick="closeRecipient()"/></span>
+			<span class="email_recipient"><span style="display:inline-block;">Mulat, Hermon </span><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/8d/VisualEditor_-_Icon_-_Close.svg/1000px-VisualEditor_-_Icon_-_Close.svg.png" class="close_recipient" onclick="closeRecipient()"/></span>
+			<span class="email_recipient"><span style="display:inline-block;">Person, Hello </span><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/8d/VisualEditor_-_Icon_-_Close.svg/1000px-VisualEditor_-_Icon_-_Close.svg.png" class="close_recipient" onclick="closeRecipient()"/></span>
+			</div><br>
+				
+			<div id="default_email" name="default_email" contenteditable>You are receiving this email because you have yet to submit a syllabus for your Introduction to Biological Programming Course for Spring 2022. Please submit your syllabus by January 1st to avoid getting subsequent angry emails from us with possible incurring consequences. You may view all of the courses you have submitted syllabi for from the general search page or from the syllabi upload page. If you believe you are receiving this email by mistake, please email asyllabusislife@hotmail.com with your argument. Thank you!</div><br>
+			<input type="button" id="cancel_email_syl" value="Cancel" name="cancel" onclick="cancelEmail('ind_email_lo')"/>
+			<input type="button" id="send_email_syl" value="Send" name="send"/>
+		</div>
+
+
+
+<!--********************* Div that blacks out screen behind an email box ******************************-->
+
+		<div id="blackout">
+		</div>
+		
+	
+<!--********************************* Option Nav on Right ***********************************************-->
+
+		<p id="options" onclick="showOptionMenu()">Options</p>
+			<div id="option_menu">
+				<img class="close_icon" id="close_btn_option" src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/72/VisualEditor_-_Icon_-_Close_-_white.svg/768px-VisualEditor_-_Icon_-_Close_-_white.svg.png" onclick="hideOptionMenu()"/><br>
+				<p id="option_p_head">Options</p>
+				<div id="login_info">
+					<p>You are logged in as: username</p><br>
+					<a href="search.html" id="logout">Logout</a>
+				</div>
+				<p class="nav_option nav_link" onclick="showEmailWindow('email_syl_div')">Send emails to all professors missing syllabi</p>			
+				<p class="nav_option nav_link" onclick="showEmailWindow('email_lo_div')">Send emails to all professors missing learning outcomes</p>
+				<!--<p class="nav_option nav_link">Show Word Cloud</p>
+				<p class="nav_option nav_link">Show Status of Syllabi By Department</p>
+				<p class="nav_option nav_link" onclick="autoClick('archive')">Archive ALL Syllabi for Current Semester</p>-->
+			</div>
+
+
+
+<!--************************************  Main Body  *****************************************************-->
+	
+		<div id="header_welcome">	
+			<h2 id="welcome">WELCOME, PROFESSOR. &nbsp;&nbsp; &nbsp;&nbsp; ACADEMIC PERIOD: {{ semester }}</h2>
+		</div>
+		
+			<!--*********************  The stats in the dark gray horizontal bar  ***********************-->
+		<div id="main_body">
+			<div id="quick_info">
+				<table>
+					<tr>
+						<td>No. Syllabi Outstanding:<br><p class="answers"><span class="first">{{ miss_syl }}</span><!--<span class="second">See All</span>--></p></td>
+						<td>No. Professors Missing Syllabi:<br><p class="answers"><span class="first">{{ miss_prof }}</span><!--<span class="second">See All</span>--></p></td>
+						<!-- <td>% Syllabi Outstanding:<br><p class="answers"><span class="first">{{ syll_percent }}%</span><!--<span class="second">See All</span>--><!--</p></td>
+						<td>No. Departments Missing Syllabi:<br><p class="answers"><span class="first">0</span><!--<span class="second">See All</span>--><!--</p></td>-->
+					</tr>
+				</table>		
+			</div>
+			
+			
+			<form name="show_hide_form" action="{{ url_for('manage_form') }}" method="post" enctype="multipart/form-data">
+			
+
+			
+			<!--*****************************  Department Scroll  ****************************************-->
+				<div id="dept_search">
+					{% for d in depsSorted %}
+						{% if deps[d] == "True" %}
+							<input type="submit" id="{{d}}" class="dep_li has_syllabus_dep" name="submit" value="{{ d }}"><br>
+						{% else %}
+							<input type="submit" id="{{d}}" class="dep_li no_syllabus_dep" name="submit" value="{{ d }}"><br>
+						{% endif %}
+					{% endfor %}
+					<input name="selected_dep" value="{{ selected_dep }}" style="display:none;">
+				</div>
+				
+				
+			<!--*****************************  Professor Scroll  ****************************************-->
+				<div id="prof_search">
+					{% for p in profsSorted %}
+						{% if profs[p] == "True" %}
+							<input type="submit" id="{{p}}" class="prof_li has_syllabus_prof" name="submit" value="{{ p }}">
+						{% else %}
+							<input type="submit" id="{{p}}" class="prof_li no_syllabus_prof" name="submit" value="{{ p }}">
+						{% endif %}
+					{% endfor %}
+				</div>			
+
+			
+			
+			<!--*****************************  Chart of Course Results  ****************************************-->
+				{% if profs_courses != "" %}
+
+				<div id="syl_status_box">
+					<p class="status_head">{{active_dep}}, {{active_prof}}</p>
+					<img class="close_icon" id="close_stat" src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/8d/VisualEditor_-_Icon_-_Close.svg/1000px-VisualEditor_-_Icon_-_Close.svg.png" onclick="hideStatBox()"><br>
+					<div id="syl_status_table">
+					<table>
+						<tr id="head_row">
+							<th>Dept</th>
+							<th>No.</th>
+							<th>Title</th>
+							<th>Section</th>
+							<th>Day</th>
+							<th>Time</th>
+							<th>Syllabus Available?</th>
+							<th>Learning Outcomes?</th>
+						</tr>
+						
+						{% for c in profs_courses %}
+						<tr>
+							<td>{{ c.subject }}</td>
+							<td>{{ c.course_num }}</td>
+							<td>{{ c.course_title }}</td>
+							<td>{{ c.seq_num }}</td>
+							<td>{{ c.meet_days }}</td>
+							<td>{{ c.class_time }}</td> 
+							{% if c.syllabus_link %}
+								<td><a class="syllabus_link" href="{{url_for('download', file_path=c.syllabus_link) }}" target='blank'>Download</a></td>
+							{% else %}
+								<td><p class="not_avail" onmouseover="showTooltip('send_ind_email_{{loop.index0}}')" onmouseout="hideTooltip('send_ind_email_{{loop.index0}}')">Not Submitted <span id="send_ind_email_{{loop.index0}}" onclick="showIndEmail('{{active_prof}}')" class="tooltip"> Send an email</span></p></td>				
+							{% endif %}
+							<td>{{ c. lo_status }}</td>
+						</tr>
+						{% endfor %}
+					</table>
+					</div>
+				</div>
+				{% endif %}
+				<br>
+					
+					
+			<!--*****************************  Buttons that Filter by only deps/profs missing syllabi  ****************************************-->
+			
+				<div id="only_missing">
+					<table>
+						<tr>
+							<td><p id="show_deps" class="button" onclick="showDepsBtn()">Show Only Departments with Missing Syllabi</p></td>
+							
+							<input type="text" id="dep_btn_submit_ID" name="dep_btn_submit" value="False" hidden/>
+							{% if depBtnOn == "True" %}
+								<script>document.getElementById("show_deps").click();</script>
+							{% endif %}
+							<td><p id="show_profs" class="button" onclick="showProfsBtn()">Show Only Professors with Missing Syllabi in Chosen Department</p></td>
+							
+							<input type="text" id="prof_btn_submit_ID" name="prof_btn_submit" value="False" hidden/>
+							{% if profBtnOn == "True" %}
+								<script>document.getElementById("show_profs").click();</script>
+							{% endif %}
+						</tr>
+	
+					</table>
+				</div>
+				
+				
+				
+				
+			<!--******************************  Keeps track of active fields  ***************************-->
+			
+				<input type="text" name = "active_dep" value="{{active_dep}}" hidden> 
+				<input type="text" value="{{ active_prof }}"  name = "active_prof" hidden>			
+				
+				
+				
+			<!--*****************************  Keeps your selection blue  ****************************************-->
+			
+				{% if active_dep %}
+					<script>
+						var actDep = document.getElementById("{{active_dep}}");
+						actDep.style.backgroundColor = "#cce6ff";
+					</script>
+				{% endif %}
+				{% if active_prof %}
+					<script>
+						var actProf = document.getElementById("{{active_prof}}");
+						actProf.style.backgroundColor = "#cce6ff";
+
+					</script>
+				{% endif %}
+				
+				</form>
+				
+		</div>
+		
+		{% for i in recipients %}
+			<script>
+				EMAIL_RECIPIENTS_EDIT.push('{{i}}');
+				EMAIL_RECIPIENTS.push('{{i}}');
+			</script>
+		{% endfor %}		
+				
+	<!--*****************************  Davidson Logo  ****************************************-->
+	
+	<img src="http://marketing-toolbox.davidson.edu/wp-content/uploads/2015/07/white-letters-white-bar-transparent-diamond-logo.png" id="davidson_logo"/>
+	</body>
+</html>
