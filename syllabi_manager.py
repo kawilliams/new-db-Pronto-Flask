@@ -106,7 +106,7 @@ def count_mis_prof(subj):
 	#pro_miss.add(i.instructor3.strip())
     if "" in pro_miss:
 	pro_miss.remove('')
-    print pro_miss
+    #print pro_miss
     return str(len(pro_miss))
 
     
@@ -132,7 +132,7 @@ def format_prof(profSet,subj):
         for j in pro_cour:
             if j.syllabus_link == "":
                 prof_dict[i] = "False"
-    print prof_dict
+    #print prof_dict
     return prof_dict
 
 def format_subj(subjset):
@@ -253,10 +253,14 @@ def manage_form():
 	            filter_by(acad_period=semester).\
 	            order_by(Course.course_num)
     	    prof_inDep = set()
+	        
 	    
     	    for dc in subject_courses:
                 prof_inDep.add(dc.instructor1.strip())
-
+		
+		#remove courses that are listed under multiple majors
+		
+		
     	    profs_courses = subject_courses.filter_by(instructor1=sub).all()
             profList = format_prof(prof_inDep,active_subj)
 	 	    
