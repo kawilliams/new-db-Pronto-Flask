@@ -1,0 +1,86 @@
+<html>
+	<head>
+	<style>
+
+	#davidson_logo {
+	font-size: 50px;
+	text-align: center;	
+	font-family: "copperplate gothic lite";
+	text-shadow: 2px 2px 4px #FF0000;
+	}
+	
+	#thanks{
+	background-color: #e6e6e6;	
+	margin: 40px;
+	margin-top:40px;
+	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 8px 20px 0 rgba(0, 0, 0, 0.19);
+	min-width: 500px;	
+	}	
+	
+	h1{
+	padding:30px;
+	text-align:center;	
+	}
+	
+	#further_choices{
+	background-color:white;
+	text-align:center;
+	width:40%;	
+	padding:10px;
+	margin-left:30%;
+	font-size:16px;
+	}
+	
+</style>
+	</head>
+	
+	<body>
+		<h4 id="davidson_logo">DAVIDSON COLLEGE</h4>
+		
+		{% if (syl_list|length > 0) or (vis_list|length > 0) or (prv_list|length > 0) or (lo_txt_list|length > 0) %}
+			<h2>Thank you for your submissions! </h2>
+			
+			<h3>You made the following changes: </p>
+		{% else %}
+		<h2>No changes were made.</h2>
+		{% endif %}
+		{% if syl_list|length > 0 %}
+			<h4>The syllabus was changed for: </h4>
+			{% for syl in syl_list %}
+				<p>{{ syl }}</p>
+			{% endfor %}
+		{% endif %}
+		{% if vis_list|length > 0 %}
+			<h4>The visitable setting was changed for: </h4>
+			{% for vis in vis_list %}
+				<p>{{ vis }}</p>
+			{% endfor %}	
+		{% endif %}	
+		{% if prv_list|length > 0 %}
+			<h4>The privacy setting was changed for: </h4>
+			{% for prv in prv_list %}
+				<p>{{ prv }}</p>
+			{% endfor %}		
+		{% endif %}
+		{% if lo_txt_list|length > 0 %}
+			<h4>The learning outcomes were changed for: </h4>
+			{% for lo in lo_txt_list %}
+				<p>{{ lo }}</p>
+			{% endfor %}		
+		{% endif %}
+		<br >
+		<br >
+		<div id="thanks">
+			<p>To make changes to your syllabus submission, click here:<p>
+			<a href="{{ url_for('index') }}">Syllabus Submission Form</a><br><br>
+			<p>To browse other course syllabi, click here:<p>
+			<a href="">Browse Syllabi</a><br><br>
+			
+		</div>
+			
+		
+	</body>
+			
+	
+	
+</html>

@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<link rel="stylesheet" type="text/css" href={{url_for('static',filename='upload.css')}}>
+        <title>My Courses - Syllabi Upload</title>
+      <script>
+      function getids(){
+        var x = document.getElementsByname("crs_id")
+
+      }
+      </script>
+</head>
+<body>
+	<h4 id="davidson_logo">DAVIDSON COLLEGE</h4>
+	<div id="upload_div">
+	<h2 id="syllabus_upload">Syllabus Upload</h2>
+	<p id="you_teach">Please upload your syllabus for each of the following courses. 	Under "Visitable", check whether you would want prospective students to visit 		your class ("Can visit") or not ("Not open"). Under "Privacy," please check 		whether everyone can view your syllabus ("Anyone") or only those on the Davidson 	network ("Only Davidson"). </p>
+			<br>
+	{% if courses|length > 0 %}
+ 		<br>
+			{% set start_yr = courses[0].acad_period[:4] %}
+			{% set end_yr = ((start_yr)|int + 1)|string %}
+
+			{% if courses[0].acad_period[-2:] == "01" %}
+
+				<h3 id="you_teach">Professor {{ courses[0].instructor1[:-2]|string }}'s Courses for Fall {{ start_yr }}</h3>
+			{% else %}
+				<h3 id="you_teach">Professor {{ courses[0].instructor1[:-2]|string }}'s Courses for Spring {{ end_yr }}</h3>
+			{% endif %}
+
+	  <form action={{url_for('make_updates')}} method="post" enctype="multipart/form-data">
+      <table id="class_table">
+			<thead>				
+				<tr>
+					<th name="dep">Dept</th>
+					<th name="course_num">Crs</th>
+					<th name="class_section">Sec</th>
+					<th name="CRN">CRN</th>
+					<th name="title">Title</th>
+					<th name="class_days">Days</th>
+					<th name="class_time">Time</th>
+					<th name="class_place">Location</th>
+					<!-- <th name="instructor">Instructor</th> -->
+					<!-- <th name="course_attrib">Notes</th> -->
+					<!-- <th name="course_attrib">Distribution</th> -->
+					<th name="syllabus_link">Syllabus</th>
+					<th name="visitable">Visitable</th>
+					<th name="privacy">Privacy</th>
+					<th name="learning_outcomes_txt">Learning Outcomes</th>
+					<th name="unknown">Unknown column, ask Hermon</th>
+				</tr>
+			</thead>
+      <tbody>
+
+        {% for c in courses %}
+          <tr>
+            <tr>
+				<td name="dep{{loop.index0}}">{{ c.subject }}</td>
+				<td name="course_num{{loop.index0}}">{{ c.course_num }}</td>
+				<td name="class_section{{loop.index0}}">{{ c.seq_num }}</td>
+				<td name="CRN{{loop.index0}}">{{ c.CRN }}</td>
+				<td name="title{{loop.index0}}">{{ c.course_title }}</td>
+				<td name="class_days{{loop.index0}}">{{ c.meet_days }}</td>
+				<td name="class_time{{loop.index0}}">{{ c.class_time }}</td>
+				<td name="class_place{{loop.index0}}">{{ c.bldg_code + " " + c.room_code }}</td>
+
+				<td name="syllabus_link{{loop.index0}}"><p>Current syllabus: 
+				  <a href = {{url_for('download',file_path=c.syllabus_link)}} target = "blank">{{ c.syllabus_link }}
+					<button type="button">Download!</button>
+				  </a></p>
+				  <p>Upload course syllabus: <input type="file" name="syllabus_link{{loop.index0}}" size="40"></p></td>
+				</td>
+		{% if c.visitable == "Can visit" %}
+				<td name="visitable{{loop.index0}}"><input type="radio" name="visitable{{loop.index0}}" value="Can visit" checked> Can visit <br >
+					<input type="radio" name="visitable{{loop.index0}}" value="Not open"> Not open</td>
+				{% else %}
+				<td name="visitable{{loop.index0}}"><input type="radio" name="visitable{{loop.index0}}" value="Can visit"> Can visit <br >
+					<input type="radio" name="visitable{{loop.index0}}" value="Not open" checked> Not open</td>
+				{% endif %}
+				{% if c.privacy == "All" %}
+				<td name="privacy{{loop.index0}}"><input type="radio" name="privacy{{loop.index0}}" value="All" checked> Anyone <br >
+					<input type="radio" name="privacy{{loop.index0}}" value="Davidson"> Only Davidson </td>
+				{% else %}
+				<td name="privacy{{loop.index0}}"><input type="radio" name="privacy{{loop.index0}}" value="All"> Anyone <br >
+					<input type="radio" name="privacy{{loop.index0}}" value="Davidson" checked> Only Davidson </td>
+				{% endif %}
+				<td name="learning_outcomes_txt{{loop.index0}}"><textarea name="learning_outcomes_txt{{loop.index0}}">{{ c.learning_outcomes_txt }}</textarea></td>
+											
+		
+            <td>
+                <!-- this will be used for to actually get the course -->
+                <input type="file" name="{{c.id}}">
+            </td>
+          </tr>
+
+        {% endfor %}
+      </tbody>
+
+	{% endif %}
+    </table><br\>
+    <input type="text" value="{{db_name}}" name = "db_name" hidden><br>
+    <input type="text" value="{{semester}}" name = "semester" hidden>
+	  <input type="submit" value="Submit" >
+	</form>
+
+</body>
+
+</html>
