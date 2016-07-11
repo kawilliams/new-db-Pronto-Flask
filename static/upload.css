@@ -1,0 +1,176 @@
+.error {color: #ff4d4d;}
+body{
+background-color: #990000;
+}
+#upload_div{
+background-color: #e6e6e6;	
+margin: 40px;
+margin-top:0px;
+box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 8px 20px 0 rgba(0, 0, 0, 0.19);
+min-width: 640px;
+padding-bottom: 30px;
+}
+#davidson_logo {
+font-size: 50px;
+text-align: center;	
+font-family: "copperplate gothic lite";
+text-shadow: 2px 2px 4px #FF0000;
+}
+#syllabus_upload {
+margin-left:10%;
+font-family: "times new roman";
+}
+input[type=text], #email_id {
+margin-left: 20px;
+margin-bottom: 10px;
+border:1px solid lightgray;
+border-radius: 4px;
+}
+.input_text {
+	margin-left: 20px;	
+}
+input[type=text], #email_id{
+width: 25%;	
+padding: 4px;
+color: #800002;
+font-family: "times new roman";
+font-size: 13px;
+min-width: 150px;
+}
+input[type=text]:focus, #email_id:focus{
+background-color: #cccccc;	
+outline: 2px solid #cce6ff;
+}
+input[type=text]:hover, #email_id:hover{
+border-color:#999999;	
+}
+#button {
+	margin-left:20px;
+	padding: 8px;
+	background-color:#990000;
+	color:white;
+	border:none;
+	cursor:pointer;	
+	font-size:14px;
+	/*width:8%;*/
+	height:4%;
+	transition:0.5s;
+	min-width:160px;
+}
+
+#syl_button {
+	margin-left:20px; 
+	padding: 8px;
+	background-color:#990000;
+	color:white;
+	border:none;
+	cursor:pointer;	
+	font-size:14px;
+	/*width:8%;*/
+	height:4%;
+	transition:0.5s;
+	min-width:160px;
+}
+
+#submit {
+	margin-left:43%;
+	padding: 8px;
+	background-color:#990000;
+	color:white;
+	border:none;
+	cursor:pointer;	
+	font-size:14px;
+	width:12%;
+	height:8%;
+	transition:0.5s;
+	min-width:110px;
+	/*visibility:hidden;*/
+}
+#button:hover, #button:focus, #submit:hover, #submit:focus {
+	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 8px 20px 0 rgba(0, 0, 0, 0.19);
+	transition:0.5s;
+}
+#chambers_img{
+	width:100%; 
+	height:8% ;
+	margin-bottom:5px;
+	opacity:0.8;	
+}
+table {
+	width:95%;
+	/*visibility:hidden;*/
+	border:0.5px solid gray;
+	border-collapse:collapse;	
+	margin: 0 auto;
+	/*background-color:#d9d9d9;*/
+	background-color:#f2f2f2;
+	text-align:center;
+	box-shadow: 5px 5px 5px grey;
+	font-size: 80%;
+}
+	
+th {
+	padding:10px;
+	border-bottom: 1px solid #bfbfbf;
+	border-top: 1px solid #bfbfbf;
+	/*background-color: #bfbfbf;*/
+	background-color:#d9d9d9;
+}
+.dept_td{
+	width:15%;
+	min-width:30px;	
+}
+
+.num_td{
+	width:15%;
+	min-width:20px;	
+}
+
+.file_td{
+	width:40%;
+	min-width:45px;	
+}
+
+.visit_td{
+	width:15%;
+	min-width:73px;	
+}
+.privacy_td{
+	width:15%;
+	min-width:70px;	
+}
+	
+td {
+	padding:5px;
+	border-bottom: 1px solid #bfbfbf;
+}
+
+tr:hover {/*background-color: #cccccc;*/background-color:#e6f2ff}
+#class_intro {
+	width:95%;
+	/*visibility:hidden;*/
+	margin-right:0 auto;
+	margin-top:5px;
+	margin-left:10px;	
+	padding:10px;
+	min-width:500px;
+}
+#full_name {
+	text-align:center;
+	margin:10px;	
+}
+#you_teach {
+	text-align:center;
+	color:black;	
+	margin-right: 5%;
+	margin-left:5%;
+}
+.dept, .no {
+	width:4%;	
+}
+.title {
+	width:15%;	
+}
+.tab {
+	margin-left: 300px;
+}
