@@ -16,9 +16,9 @@
 	<div id="upload_div">
 	<h2 id="syllabus_upload">Syllabus Upload</h2>
 	<p id="you_teach">Please upload your syllabus for each of the following courses. 	Under "Visitable", check whether you would want prospective students to visit 		your class ("Can visit") or not ("Not open"). Under "Privacy," please check 		whether everyone can view your syllabus ("Anyone") or only those on the Davidson 	network ("Only Davidson"). </p>
-			<br>
+			
 	{% if courses|length > 0 %}
- 		<br>
+ 		
 			{% set start_yr = courses[0].acad_period[:4] %}
 			{% set end_yr = ((start_yr)|int + 1)|string %}
 
@@ -62,11 +62,10 @@
 				<td name="class_time{{loop.index0}}">{{ c.class_time }}</td>
 				<td name="class_place{{loop.index0}}">{{ c.bldg_code + " " + c.room_code }}</td>
 
-				<td name="syllabus_link{{loop.index0}}"><p>Current syllabus: 
-				  <a href = {{url_for('download',file_path=c.syllabus_link)}} target = "blank">{{ c.syllabus_link }}
-					<button type="button">Download!</button>
+				<td name="syllabus_link{{loop.index0}}"><p>Current: 
+				  <a href = {{url_for('download',file_path=c.syllabus_link)}} target = "blank">Download
 				  </a></p>
-				  <p>Upload course syllabus: <input type="file" name="syllabus_link{{loop.index0}}" size="40"></p></td>
+				  <p>Upload: <input type="file" name="syllabus_link{{loop.index0}}" size="40"></p></td>
 				</td>
 		{% if c.visitable == "Can visit" %}
 				<td name="visitable{{loop.index0}}"><input type="radio" name="visitable{{loop.index0}}" value="Can visit" checked> Can visit <br >
@@ -82,7 +81,15 @@
 				<td name="privacy{{loop.index0}}"><input type="radio" name="privacy{{loop.index0}}" value="All"> Anyone <br >
 					<input type="radio" name="privacy{{loop.index0}}" value="Davidson" checked> Only Davidson </td>
 				{% endif %}
-				<td name="learning_outcomes_txt{{loop.index0}}"><textarea name="learning_outcomes_txt{{loop.index0}}">{{ c.learning_outcomes_txt }}</textarea></td>
+				<td name="learning_outcomes_txt{{loop.index0}}">
+					{% if c.learning_outcomes == "Cut learning outcomes from syllabus and paste them here" %}
+					<textarea rows="5" cols="30" name="learning_outcomes_txt{{loop.index0}}" style="background-color: #cce5ff">{{ c.learning_outcomes }}</textarea>
+					{% elif c.learning_outcomes == "" %}
+					<textarea rows="5" cols="30" name="learning_outcomes_txt{{loop.index0}}" style="background-color: #cce5ff">{{ c.learning_outcomes }}</textarea>
+					{% else %}
+					<textarea rows="5" cols="30" name="learning_outcomes_txt{{loop.index0}}">{{ c.learning_outcomes }}</textarea>
+					{% endif %}
+				</td>
 											
           </tr>
 
@@ -93,7 +100,7 @@
     </table><br\>
     <input type="text" value="{{db_name}}" name = "db_name" hidden><br>
     <input type="text" value="{{semester}}" name = "semester" hidden>
-	  <input type="submit" value="Submit" >
+	  <input id="submit_changes" type="submit" value="Submit" >
 	</form>
 
 </body>
