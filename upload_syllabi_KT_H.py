@@ -75,7 +75,7 @@ def get_courses():
      
     if request.method == 'POST':
         
-        username = request.form['username']
+        username = request.form['username'].lower()
         
         # if user doesn't enter a username
         if username == "":
