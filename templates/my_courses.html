@@ -41,14 +41,11 @@
 					<th name="class_days">Days</th>
 					<th name="class_time">Time</th>
 					<th name="class_place">Location</th>
-					<!-- <th name="instructor">Instructor</th> -->
-					<!-- <th name="course_attrib">Notes</th> -->
-					<!-- <th name="course_attrib">Distribution</th> -->
 					<th name="syllabus_link">Syllabus</th>
 					<th name="visitable">Visitable</th>
 					<th name="privacy">Privacy</th>
 					<th name="learning_outcomes_txt">Learning Outcomes</th>
-					<th name="unknown">Unknown column, ask Hermon</th>
+					
 				</tr>
 			</thead>
       <tbody>
@@ -87,11 +84,6 @@
 				{% endif %}
 				<td name="learning_outcomes_txt{{loop.index0}}"><textarea name="learning_outcomes_txt{{loop.index0}}">{{ c.learning_outcomes_txt }}</textarea></td>
 											
-		
-            <td>
-                <!-- this will be used for to actually get the course -->
-                <input type="file" name="{{c.id}}">
-            </td>
           </tr>
 
         {% endfor %}
