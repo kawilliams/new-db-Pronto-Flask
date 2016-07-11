@@ -91,9 +91,14 @@ def get_courses():
             semester = request.form['semester']
            
             if db_name in PROFLIST: 
+		
                 acad_period = request.form['semester'] 
                 # find user's courses
-                unique, two_found = current_course(db_name,semester)   
+                unique, two_found = current_course(db_name,semester) 
+		if unique == []:
+		    flash('No courses found for '+db_name+' for semester '+semester)
+		    return render_template('Prof_Login.html', username='', 
+                                  most_recent=["201601","201602"])  
                 unique = determine_unique(unique)
                 return render_template('my_courses.html', courses=unique, 
                                        db_name=db_name, semester=semester)
@@ -105,17 +110,17 @@ def get_courses():
 	    for i in range(4, len(query)):
 		print query[:i+1]
 		searchterm =  "%"+str(query[:i]).strip()+"%"
-		searches = Course.query.\
+		searches = Course.query.filter_by(acad_period=semester).\
 	                    filter(Course.instructor1.like(searchterm)).all()
 		if len(searches) > 0:
 		    break
-		
+	    back_searches = []
 	    if len(searches) == 0:
-    
+		
 		for i in range(len(query)-3,1,-1):
 		    print query[i:]
 		    searchterm =  "%"+str(query[i:]).strip()+"%"
-		    back_searches = Course.query.\
+		    back_searches = Course.query.filter_by(acad_period=semester).\
 			        filter(Course.instructor1.like(searchterm)).all()
 		    if len(back_searches) > 0:
 			break	    
@@ -127,9 +132,9 @@ def get_courses():
 	              most_recent=["201601","201602"]) 
 	    
 	    elif len(searches) == 0 and len(back_searches) != 0:
-		print back_searches[0].instructor1
+		
 		unique, two_found = current_course(back_searches[0].instructor1, semester)
-		print unique
+		
 		if len(unique) > 0:
 		    
 		    return render_template('my_courses.html', courses=unique, 
