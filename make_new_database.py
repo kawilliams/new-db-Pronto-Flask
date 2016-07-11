@@ -60,9 +60,7 @@ def read_csv(filename):
                 header = False
                 pass            
             else:                
-                #Remove extra whitespace
-                #line[MEET_DAYS] = line[MEET_DAYS].replace(' ', '')
-                #line[CLASS_TIME] = line[CLASS_TIME].replace(' ', '')
+
                 line[COURSE_ATTRIBUTES] = line[COURSE_ATTRIBUTES].replace(
                     '\r\n', '')   
                 courses.append(line)
@@ -73,10 +71,7 @@ def read_csv(filename):
 		    
 		    CRNs.add(line[CRN])
 		
-    #print CRNs
-    #print len(CRNs)
 
-    
     return courses
 
 ##########################################################################
