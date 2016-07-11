@@ -126,7 +126,9 @@ def prof_list():
 		profs.add(str(i.instructor2))
 		profs.add(str(i.instructor3))
 		
-				
+	if '' in profs:
+		profs.remove('')
+		
 	profs=sorted(list(profs))
 
 	return profs
