@@ -1,4 +1,5 @@
-from flask import Flask, render_template, redirect, url_for, request
+from flask import (Flask, render_template, redirect, url_for, request, url_for,
+                   send_from_directory, send_file)
 from flask_sqlalchemy import SQLAlchemy
 from make_new_database import *
 import dropbox
@@ -128,7 +129,6 @@ def prof_list():
 		
 	if "" in profs:
 		profs.remove("")
-				
 	profs=sorted(list(profs))
 
 	return profs
@@ -454,10 +454,12 @@ def process_search():
 ACCESS_TOKEN_FILE = "access_token.txt"
 DROPBOX_ACCESS_TOKEN = open(ACCESS_TOKEN_FILE,'r').read()	
 
+
 @app.route('/<path:file_path>')
 def download(file_path):
 	""" Downloads a file from Dropbox, given the file's path """
 	file_name = (file_path.split("/")[-1])
+	print file_name
 	client = dropbox.client.DropboxClient(DROPBOX_ACCESS_TOKEN)
 	f = client.get_file(file_path)
 	return send_file(f,attachment_filename=file_name)

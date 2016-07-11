@@ -47,8 +47,6 @@ def all_prof():
     profset=set()
     for i in courses:
         profset.add(i.instructor1.strip())
-        #profset.add(i.instructor2.strip())
-        #profset.add(i.instructor3.strip())
     if '' in profset:
         profset.remove('')
     return list(profset)
@@ -146,7 +144,7 @@ def build_CRN_string(unique):
 
 
 @app.route('/upload/', methods=["GET","POST"])    
-def make_updates(): # was upload_todropbox()
+def make_updates(): # 
     
     if request.method == "POST":
         
@@ -155,8 +153,6 @@ def make_updates(): # was upload_todropbox()
         db_name = request.form["db_name"]
         semester = request.form["semester"]
         
-        print request.form           
-        print request.files
         primary, secondary = current_course(db_name, semester)
         unique = determine_unique(primary)
         
@@ -180,37 +176,33 @@ def make_updates(): # was upload_todropbox()
             vis = "visitable"+str(i)
             prv = "privacy"+str(i)
             lo_txt = "learning_outcomes_txt"+str(i)
-            #filename = ""
             
             new_syllabus = request.files[syl]                
             
             if new_syllabus.filename.replace(" ","") != '':
-                #filename = secure_filename(new_syllabus.filename)         
+                      
                 extension = (new_syllabus.filename.split(".")[-1]).strip()
                 file_name = dept+"_"+crs_num+"_"+section+"_"+Lastprof+'.'+extension
                 file_path = semester+"/"+dept+"/"+file_name
-                #print file_path
-                
+
                 
             new_visitable = request.form[vis]
             new_privacy = request.form[prv]
             new_lo_txt = request.form[lo_txt]   
-            #print "filename =",new_syllabus.filename
             if len(new_syllabus.filename) > 0:
                 changed_syl_list.append(course_name)
                 
-                #new_syllabus.save(os.path.join(app.config['UPLOAD_FOLDER'], 
-                #                               filename))
-                
-                #print "uploading to dropbox"
+
                 response = client.put_file(file_path, new_syllabus.read(), 
                                            overwrite=True)
                 
                 setattr(unique[i], 'syllabus_link', response['path']) 
                 
-                #for course in unique_dict[unique[i].course_title + 
-                                              #'|'+ unique[i].CRN]:
-                    #setattr(course, 'syllabus_link', file_path)
+                # update secondary courses
+                update_secondary(primary, secondary, response['path'])
+                
+                print unique[i].course_title, unique[i].CRN, unique[i].syllabus_link
+                
             if new_visitable != unique[i].visitable:
                 changed_vis_list.append(course_name)
             if new_privacy != unique[i].privacy:
@@ -222,13 +214,7 @@ def make_updates(): # was upload_todropbox()
             setattr(unique[i], 'visitable', new_visitable)
             setattr(unique[i], 'learning_outcomes', new_lo_txt) 
             
-            #for course in unique_dict[unique[i].course_title + 
-                                          #'|'+ unique[i].CRN]:
-                #setattr(course, 'privacy', new_privacy)
-                #setattr(course, 'visitable', new_visitable)
-                #setattr(course, 'learning_outcomes', new_lo_txt)                
-        #print "CRN COURSES"
-        #update_CRN_courses(semester, db_name, unique)   
+
         db.session.commit()
         
         return render_template('thankyou.html', syl_list=changed_syl_list, 
@@ -240,31 +226,12 @@ def make_updates(): # was upload_todropbox()
     return render_template('Prof_Login.html', most_recent=["201601", "201602"])
 
 
-#def update_CRN_courses(acad_period, instructor1, unique):
-    #"""
-    #Update the course information for the cross-listed courses. 
-    #"""
-    #CRN_courses = ((Course.query.filter(Course.title.like("%CRN%"))
-                    #.filter_by(acad_period=acad_period)
-                    #.filter_by(instructor1=instructor1).all()))
-    #for course in CRN_courses:
-        ##print "The crn of the real course", course.title[course.title.find("CRN")+4:]
-        ##print "The 'REGISTER FOR' course crn", course.CRN
-        
-        #for ea in unique:
-            #if ea.CRN == course.title[course.title.find("CRN")+4:]:
-                ##print "ea", ea.title, ea.syllabus_link
-                ##print "course", course.title, course.syllabus_link
-                #if course.privacy != ea.privacy:
-                    #setattr(course, 'privacy', ea.privacy)
-                #if course.visitable != ea.visitable:
-                    #setattr(course, 'visitable', ea.visitable)      
-                #if course.learning_outcomes != ea.learning_outcomes:
-                    #setattr(course, 'learning_outcomes', ea.learning_outcomes)   
-                #if course.syllabus_link != ea.syllabus_link:
-                    #setattr(course, 'syllabus_link', ea.syllabus_link)          
-    #return 
-
+def update_secondary(primary, secondary, file_path):
+    for c in primary:
+        setattr(c, 'syllabus_link', file_path)
+    for c in secondary:
+        setattr(c, 'syllabus_link', file_path)
+    return
 
 
 @app.route('/<path:file_path>')

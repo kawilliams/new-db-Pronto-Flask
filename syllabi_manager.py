@@ -1,7 +1,7 @@
 import os
 
 from flask import (Flask, render_template, redirect, url_for,
-                   request, send_from_directory)
+                   request, send_from_directory, send_file)
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import distinct,func
 #from flask_mail import Mail,Message
@@ -40,8 +40,7 @@ def initialize():
     
     courses = Course.query.filter_by(acad_period=semester).all()
     allcourses = Course.query.all()
-    #print len(courses)
-    #print len(allcourses)
+    
     prof=set()
     subject=set()
     
@@ -53,7 +52,7 @@ def initialize():
 	prof.remove('')
     for c in courses:
 	subject.add(c.subject.strip())
-    #print len(prof)
+	
     return prof,subject
 
 def determine_semester():
@@ -106,7 +105,7 @@ def count_mis_prof(subj):
 	#pro_miss.add(i.instructor3.strip())
     if "" in pro_miss:
 	pro_miss.remove('')
-    #print pro_miss
+	
     return str(len(pro_miss))
 
     
@@ -132,7 +131,7 @@ def format_prof(profSet,subj):
         for j in pro_cour:
             if j.syllabus_link == "":
                 prof_dict[i] = "False"
-    #print prof_dict
+   
     return prof_dict
 
 def format_subj(subjset):
@@ -190,8 +189,7 @@ def manage_form():
 
     	active_pro = request.form["active_prof"]
     	active_subj = request.form["active_dep"]
-	print request.form
-	
+		
 	#find button values
     	subject_btn_on = request.form["dep_btn_submit"]
     	prof_btn_on = request.form["prof_btn_submit"]
@@ -210,7 +208,7 @@ def manage_form():
 	    percent_syl = (float(count_mis_syll(active_subj))/
 			           subject_courses.count())*100
 		    
-	    print percent_syl
+	   
 	    
     	    prof_inDep = set()
 	    
@@ -221,7 +219,7 @@ def manage_form():
 		prof_inDep.remove("")
 	    
 	    profList = format_prof(prof_inDep,active_subj)
-	    print prof_inDep
+	 
 	    
     	    return render_template("syllabi_manager.html", deps=subjList,
 	                               depsSorted=sorted(subjList.keys()),
@@ -239,7 +237,7 @@ def manage_form():
 
         # A professor in a department has been selected
     	if sub in PROFESSORS:
-	    print request.form
+	    
 	    active_pro = sub
 	    # compute percentage
 	    percent_syl = (float(count_mis_syll(active_pro))/
@@ -263,7 +261,7 @@ def manage_form():
 		
     	    profs_courses = subject_courses.filter_by(instructor1=sub).all()
             profList = format_prof(prof_inDep,active_subj)
-	 	    
+	  
     	    return render_template("syllabi_manager.html", deps=subjList,
 	                            depsSorted=sorted(subjList.keys()),
 	                            depBtnOn=subject_btn_on,profBtnOn=prof_btn_on,
@@ -308,7 +306,7 @@ def email():
     if request.method == "POST":
         recipients = str(request.form["recipients"]).split(",")
         #message = request.form["message"]
-	#print message
+	
         # Idealy we would have a professors table with email and name (at least)
         # the get_professors function would query from that table
         #professor = get_professors(recipients)
@@ -368,9 +366,8 @@ url_for('download',file_path=c.syllabus_link)
 ACCESS_TOKEN_FILE = "access_token.txt"
 DROPBOX_ACCESS_TOKEN = open(ACCESS_TOKEN_FILE,'r').read()
 
-@app.route('/download/<path:file_path>')
+@app.route('/<path:file_path>')
 def download(file_path):
-    
     file_name = (file_path.split("/")[-1])
     client = dropbox.client.DropboxClient(DROPBOX_ACCESS_TOKEN)
     f = client.get_file(file_path)
