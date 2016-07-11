@@ -173,6 +173,7 @@ def general_search(query):
 		                
 	return intersection_of(searches)
 
+
 def filter_subject(searchterms):
 	"""
 	Given a list of subjects, returns all the courses that satisfy atleast 
@@ -382,8 +383,6 @@ def process_form():
 		dist = request.form["distri"].split(" or ")
 		if dist != [u'']:
 			full_query += set(dist)
-			#for i in dist:
-				#full_query.append(str(i))
 		
 		class_size = request.form['class_size'].split(" or ")
 		if class_size != [u'']:
@@ -413,7 +412,6 @@ def process_form():
 		
 		print len(final_query)
 		
-		#results=final_query
 		results=sorted(final_query, key=attrgetter('subject', 'course_num'))
 		
 		msg = ""
@@ -438,11 +436,11 @@ def process_search():
 	if request.method == "POST":
 
 		query_term = str(request.form["gen_search"])
-		print query_term
-		raw_result = general_search(query_term)
-		results = format_query(raw_result)
+		
+		results = general_search(query_term)
+		
 		msg = ""
-		if (len(raw_result) == 0):
+		if (len(results) == 0):
 			msg = "Sorry, no courses found. Try again."
 		return render_template("search.html",search_results=results,
 		                       message = msg,profs=ALL_PROFESSORS,
@@ -459,7 +457,7 @@ DROPBOX_ACCESS_TOKEN = open(ACCESS_TOKEN_FILE,'r').read()
 def download(file_path):
 	""" Downloads a file from Dropbox, given the file's path """
 	file_name = (file_path.split("/")[-1])
-	print file_name
+	
 	client = dropbox.client.DropboxClient(DROPBOX_ACCESS_TOKEN)
 	f = client.get_file(file_path)
 	return send_file(f,attachment_filename=file_name)
