@@ -1,4 +1,5 @@
-from flask import Flask, render_template, redirect, url_for, request
+from flask import (Flask, render_template, redirect, url_for, request, url_for,
+                   send_from_directory, send_file)
 from flask_sqlalchemy import SQLAlchemy
 from make_new_database import *
 import dropbox
@@ -126,9 +127,8 @@ def prof_list():
 		profs.add(str(i.instructor2))
 		profs.add(str(i.instructor3))
 		
-	if '' in profs:
-		profs.remove('')
-		
+	if "" in profs:
+		profs.remove("")
 	profs=sorted(list(profs))
 
 	return profs
@@ -172,6 +172,7 @@ def general_search(query):
 		                filter(Course.all_data.like(searchterm)).all())
 		                
 	return intersection_of(searches)
+
 
 def filter_subject(searchterms):
 	"""
@@ -382,8 +383,6 @@ def process_form():
 		dist = request.form["distri"].split(" or ")
 		if dist != [u'']:
 			full_query += set(dist)
-			#for i in dist:
-				#full_query.append(str(i))
 		
 		class_size = request.form['class_size'].split(" or ")
 		if class_size != [u'']:
@@ -413,7 +412,6 @@ def process_form():
 		
 		print len(final_query)
 		
-		#results=final_query
 		results=sorted(final_query, key=attrgetter('subject', 'course_num'))
 		
 		msg = ""
@@ -438,11 +436,11 @@ def process_search():
 	if request.method == "POST":
 
 		query_term = str(request.form["gen_search"])
-		print query_term
-		raw_result = general_search(query_term)
-		results = format_query(raw_result)
+		
+		results = general_search(query_term)
+		
 		msg = ""
-		if (len(raw_result) == 0):
+		if (len(results) == 0):
 			msg = "Sorry, no courses found. Try again."
 		return render_template("search.html",search_results=results,
 		                       message = msg,profs=ALL_PROFESSORS,
@@ -454,10 +452,12 @@ def process_search():
 ACCESS_TOKEN_FILE = "access_token.txt"
 DROPBOX_ACCESS_TOKEN = open(ACCESS_TOKEN_FILE,'r').read()	
 
+
 @app.route('/<path:file_path>')
 def download(file_path):
 	""" Downloads a file from Dropbox, given the file's path """
 	file_name = (file_path.split("/")[-1])
+	
 	client = dropbox.client.DropboxClient(DROPBOX_ACCESS_TOKEN)
 	f = client.get_file(file_path)
 	return send_file(f,attachment_filename=file_name)
