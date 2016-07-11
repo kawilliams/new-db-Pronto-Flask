@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+	    <link rel="stylesheet" type="text/css" href={{url_for('static',filename='upload.css')}}>
+        <title>Build Database</title>
+    </head>
+
+	
+	<body>
+		
+		<h4 id="davidson_logo">DAVIDSON COLLEGE</h4>
+		<hr />
+		{%- for message in get_flashed_messages() %}
+			{{ message }}
+		{%- endfor %}
+
+		<div id="database">
+		<h3 style="color: white;"> BUILD DATABASE</h3>
+		<table style="border: 3px; font-size: 80%">
+			<thead>				
+				<tr>
+					<th name="acad_period">acad_period</th>
+					<th name="major_code">major_code</th>
+					<th name="subject">subject</th>
+					<th name="course_num">course_num</th>
+					<th name="seq_num">seq_num</th>
+					<th name="CRN">CRN</th>					
+					<th name="course_title">course_title</th>
+					<th name="credit_hrs">credit_hrs</th>
+					<th name="cred_hr_session">cred_hr_session</th>
+					<th name="meet_days">meet_days</th>
+					<th name="begin_time">begin_time</th>
+					<th name="end_time">end_time</th>
+					<th name="class_time">class_time</th>
+					<th name="bldg_code">bldg_code</th>
+					<th name="room_code">room_code</th>
+					<th name="instructor1">instructor1</th>
+					<th name="instructor2">instructor2</th>
+					<th name="instructor3">instructor3</th>
+					<th name="course_notes">course_notes</th>
+					<th name="course_attrib">course_attrib</th>
+					<th name="max_enroll">max_enroll</th>
+					<th name="curr_enroll">curr_enroll</th>
+					<th name="seats_remain">seats_remain</th>
+					
+					<th name="syllabus_link">syllabus_link</th>
+					<th name="visitable">visitable</th>
+					<th name="privacy">privacy</th>
+					<th name="learning_outcomes">learning_outcomes</th>
+					<th name="lo_status">lo_status</th>
+						
+				</tr>
+			</thead>	
+			<tbody>
+				{% for c in courses %}					
+					<tr>
+						<td name="acad_period{{loop.index0}}">{{ c.acad_period }}</td>
+						<td name="major_code{{loop.index0}}">{{ c.major_code }}</td>
+						<td name="subject{{loop.index0}}">{{ c.subject }}</td>
+						<td name="course_num{{loop.index0}}">{{ c.course_num }}</td>
+						<td name="seq_num{{loop.index0}}">{{ c.seq_num }}</td>
+						<td name="CRN{{loop.index0}}">{{ c.CRN }}</td>					
+						<td name="course_title{{loop.index0}}">{{ c.course_title }}</td>
+						<td name="credit_hrs{{loop.index0}}">{{ c.credit_hrs }}</td>
+						<td name="cred_hr_session{{loop.index0}}">{{ c.cred_hr_session}}</td>
+						<td name="meet_days{{loop.index0}}">{{ c.meet_days}}</td>
+						<td name="begin_time{{loop.index0}}">{{ c.begin_time}}</td>
+						<td name="end_time{{loop.index0}}">{{ c.end_time}}</td>
+						<td name="class_time{{loop.index0}}">{{ c.class_time}}</td>
+						<td name="bldg_code{{loop.index0}}">{{ c.bldg_code}}</td>
+						<td name="room_code{{loop.index0}}">{{ c.room_code}}</td>
+						<td name="instructor1{{loop.index0}}">{{ c.instructor1}}</td>
+						<td name="instructor2{{loop.index0}}">{{ c.instructor2}}</td>
+						<td name="instructor3{{loop.index0}}">{{ c.instructor3}}</td>
+						<td name="course_notes{{loop.index0}}">{{ c.course_notes}}</td>
+						<td name="course_attrib{{loop.index0}}">{{ c.course_attrib}}</td>
+						<td name="max_enroll{{loop.index0}}">{{ c.max_enroll}}</td>
+						<td name="curr_enroll{{loop.index0}}">{{ c.curr_enroll}}</td>
+						<td name="seats_remain{{loop.index0}}">{{ c.seats_remain}}</td>
+						
+						<td name="syllabus_link{{loop.index0}}">{{ c.syllabus_link}}</td>
+						<td name="visitable{{loop.index0}}">{{ c.visitable}}</td>
+						<td name="privacy{{loop.index0}}">{{ c.privacy}}</td>
+						<td name="learning_outcomes{{loop.index0}}" style="font-size:30%;">{{ c.learning_outcomes}}</td>
+						<td name="lo_status{{loop.index0}}">{{ c.lo_status}}</td>
+											
+					</tr>
+				{% endfor %}
+			</tbody>
+		</table>
+		</div>
+			
+	</body>
+</html>

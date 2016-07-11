@@ -6,7 +6,7 @@
 <script>window.jQuery || document.write('<script src="{{
   url_for('static', filename='jquery.js') }}">\x3C/script>')</script>
 <!--<script src="search_flask.js"></script>-->
-<script src="static/courses.js"></script>
+<!--<script src="static/courses.js"></script>-->
 <link rel="stylesheet" href="http://www.w3schools.com/lib/w3.css">
 <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
 
@@ -710,7 +710,7 @@ function closeDescription(divID) {
                   <span onclick="accFunc('acc_content_id_{{loop.index0}}')">
 	                  <table class="header_table_result">
 		                  <tr>
-		                  <td class="courseLink"><b>{{i.subject}} {{i.course_num}} {% if i.seq_num != '0' %}{{i.seq_num}}{% endif %}</b>: <u class="courseLink" onclick="showDescription('course_desc_div', '{{i.subject}}', '{{i.course_num}}')">{{i.course_title}}</u></td>
+		                  <td class="courseLink"><b>{{i.subject}} {{i.course_num}} {% if i.seq_num != '0' %}{{i.seq_num}}{% endif %}[{{i.major_code}}]</b>: <u class="courseLink" onclick="showDescription('course_desc_div', '{{i.subject}}', '{{i.course_num}}')">{{i.course_title}}</u></td>
 		                  <td class="prof_result">{{i.instructor1}}</td>
 		                  <td class="CRN_result"><span style="margin-right:10%;">CRN: {{i.CRN}}</span></td>
 		                  <td class="x_result"><span onclick="document.getElementById('acc_id_{{loop.index0}}').style.display='none'" class="w3-closebtn w3-margin-right w3-medium">x</span></td>
@@ -737,19 +737,19 @@ function closeDescription(divID) {
                     		<td class="results_td">{{i.course_notes}}</td>
                     		<td class="results_td">{{i.max_enroll}}</td>
                     		<td class="results_td">{{i.visitable}}</td>
-                    		<td class="results_td"><a href = {{url_for('download',file_path=i.syllabus_link)}} target = "blank" style="cursor:pointer;">{{i[12]}}</a></td>
+                    		<td class="results_td"><u><a href = {{url_for('download',file_path=i.syllabus_link)}} target = "blank" style="cursor:pointer;">{{i.syllabus_link}}</a></u></td>
 	                    </tr>                    </table>
 	              
                     
                     <div id="hidden_results_mobile">
-	                    <p><span class="results_th">Time: </span><span class="results_td">{{i[5]}}</span></p>
-                    	<p><span class="results_th">Days:</span><span class="results_td">{{i[6]}}</span></p>
-                    	<p><span class="results_th">Place:</span><span class="results_td">{{i[9]}}</span></p>
-                    	<p><span class="results_th">Dist. Req.'s:</span><span class="results_td">{{i[7]}}</span></p>
-                    	<p><span class="results_th">Notes:</span><span class="results_td">{{i[13]}}</span></p>
-                    	<p><span class="results_th">Class Size:</span><span class="results_td">{{i[8]}}</span></p>
-                    	<p><span class="results_th">Visit:</span><span class="results_td">{{i[11]}}</span></p>
-                    	<p><span class="results_th">Syllabus</span><span class="results_td"><a style="cursor:pointer;">{{i[12]}}</a></span></p>
+	                    <p><span class="results_th">Time: </span><span class="results_td">{{i.class_time}}</span></p>
+                    	<p><span class="results_th">Days:</span><span class="results_td">{{i.meet_days}}</span></p>
+                    	<p><span class="results_th">Place:</span><span class="results_td">{{i.bldg_code+" "+i.room_code}}</span></p>
+                    	<p><span class="results_th">Dist. Req.'s:</span><span class="results_td">{{i.course_attrib}}</span></p>
+                    	<p><span class="results_th">Notes:</span><span class="results_td">{{i.course_notes}}</span></p>
+                    	<p><span class="results_th">Class Size:</span><span class="results_td">{{i.max_enroll}}</span></p>
+                    	<p><span class="results_th">Visit:</span><span class="results_td">{{i.visitable}}</span></p>
+                    	<p><span class="results_th">Syllabus</span><span class="results_td"><u><a href = {{url_for('download',file_path=i.syllabus_link)}} target = "blank"style="cursor:pointer;">Download</a></u></span></p>
 	                </div>
                   </div>
               </li>
