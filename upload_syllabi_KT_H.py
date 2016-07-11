@@ -84,7 +84,7 @@ def get_courses():
                                   most_recent=["201601","201602"])  
         
         # if user enters a username
-        elif len(username) > 4:       
+        elif len(username) > 3:       
             first = username[0].upper()
             last = username[2].upper() + username[3:].lower()
             db_name = last + " " + first
@@ -97,10 +97,64 @@ def get_courses():
                 unique = determine_unique(unique)
                 return render_template('my_courses.html', courses=unique, 
                                        db_name=db_name, semester=semester)
-            else:
-                flash('Username not found. Please check the spelling and try again.')
-                return render_template('Prof_Login.html', username=username, 
-                      most_recent=["201601","201602"])  
+            
+	    query = username[2:]
+	    #all_courses= Course.query.all()
+	    searches = []
+	    
+	    for i in range(4, len(query)):
+		print query[:i+1]
+		searchterm =  "%"+str(query[:i]).strip()+"%"
+		searches = Course.query.\
+	                    filter(Course.instructor1.like(searchterm)).all()
+		if len(searches) > 0:
+		    break
+		
+	    if len(searches) == 0:
+    
+		for i in range(len(query)-3,1,-1):
+		    print query[i:]
+		    searchterm =  "%"+str(query[i:]).strip()+"%"
+		    back_searches = Course.query.\
+			        filter(Course.instructor1.like(searchterm)).all()
+		    if len(back_searches) > 0:
+			break	    
+                
+	    if (len(searches) == 0) and (len(back_searches) == 0):
+	    
+		flash('Username not found. Please check the spelling and try again.')
+		return render_template('Prof_Login.html', username=username, 
+	              most_recent=["201601","201602"]) 
+	    
+	    elif len(searches) == 0 and len(back_searches) != 0:
+		print back_searches[0].instructor1
+		unique, two_found = current_course(back_searches[0].instructor1, semester)
+		print unique
+		if len(unique) > 0:
+		    
+		    return render_template('my_courses.html', courses=unique, 
+			                   db_name=unique[0].instructor1, 
+			                   semester=semester)
+		else:
+		    flash('No courses taught for '+back_searches[0].instructor1+
+		          ' for semester '+semester)
+		    return render_template('Prof_Login.html', username="", 
+                          most_recent=["201601","201602"])
+		
+	    elif len(searches) != 0:
+		print searches[0].instructor1
+		unique, two_found = current_course(searches[0].instructor1, semester)
+		print unique
+		if len(unique) > 0:
+		    
+		    return render_template('my_courses.html', courses=unique, 
+		                           db_name=unique[0].instructor1, 
+		                           semester=semester)
+		else:
+		    flash('No courses taught for '+searches[0].instructor1+
+		          ' for semester '+semester)
+		    return render_template('Prof_Login.html', username="", 
+		          most_recent=["201601","201602"])	    
             
     return render_template('Prof_Login.html', username="", 
                           most_recent=["201601","201602"])     
@@ -122,7 +176,7 @@ def current_course(db_name, semester):
         for c in primary:            
             primary_titles.append(c.course_title + ' ' + c.seq_num)
         
-        
+  
         return primary, secondary
     
     
