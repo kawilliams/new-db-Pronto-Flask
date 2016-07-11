@@ -162,12 +162,7 @@ def find_recip():
     profList=[]
     
     for i in PROFESSORS:
-	#prof_mis_courses = Course.query.filter_by(instructor1=i).\
-	    #filter_by(syllabus_link="").count()
-	
-	#if prof_mis_courses != 0:
-	    #profList.append(i)
-	
+
 	pro_courses = Course.query.filter_by(instructor1=i).\
 	    filter_by(acad_period=semester).all()
 
@@ -207,9 +202,7 @@ def manage_form():
 	    # compute percentage
 	    percent_syl = (float(count_mis_syll(active_subj))/
 			           subject_courses.count())*100
-		    
-	   
-	    
+		        
     	    prof_inDep = set()
 	    
     	    for dc in subject_courses:
