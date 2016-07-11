@@ -2,6 +2,16 @@
 body{
 background-color: #990000;
 }
+#upload_div_login{
+background-color: #e6e6e6;	
+margin: 40px;
+margin-top:0px;
+box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 8px 20px 0 rgba(0, 0, 0, 0.19);
+padding-bottom: 30px;
+text-align: center;
+}
+
+
 #upload_div{
 background-color: #e6e6e6;	
 margin: 40px;
@@ -9,6 +19,8 @@ margin-top:0px;
 box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 8px 20px 0 rgba(0, 0, 0, 0.19);
 min-width: 640px;
 padding-bottom: 30px;
+padding-top: 30px;
+text-align: center;
 }
 #davidson_logo {
 font-size: 50px;
@@ -17,33 +29,20 @@ font-family: "copperplate gothic lite";
 text-shadow: 2px 2px 4px #FF0000;
 }
 #syllabus_upload {
-margin-left:10%;
+text-align: center;
 font-family: "times new roman";
 }
-input[type=text], #email_id {
-margin-left: 20px;
-margin-bottom: 10px;
-border:1px solid lightgray;
-border-radius: 4px;
+
+#syllabus_upload_load {
+text-align: center;
+font-family: "times new roman";
 }
+
 .input_text {
 	margin-left: 20px;	
 }
-input[type=text], #email_id{
-width: 25%;	
-padding: 4px;
-color: #800002;
-font-family: "times new roman";
-font-size: 13px;
-min-width: 150px;
-}
-input[type=text]:focus, #email_id:focus{
-background-color: #cccccc;	
-outline: 2px solid #cce6ff;
-}
-input[type=text]:hover, #email_id:hover{
-border-color:#999999;	
-}
+
+/*keep*/
 #button {
 	margin-left:20px;
 	padding: 8px;
@@ -72,8 +71,8 @@ border-color:#999999;
 	min-width:160px;
 }
 
-#submit {
-	margin-left:43%;
+/*keep*/
+#submit_changes {
 	padding: 8px;
 	background-color:#990000;
 	color:white;
@@ -84,7 +83,6 @@ border-color:#999999;
 	height:8%;
 	transition:0.5s;
 	min-width:110px;
-	/*visibility:hidden;*/
 }
 #button:hover, #button:focus, #submit:hover, #submit:focus {
 	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 8px 20px 0 rgba(0, 0, 0, 0.19);
@@ -95,6 +93,15 @@ border-color:#999999;
 	height:8% ;
 	margin-bottom:5px;
 	opacity:0.8;	
+}
+#receipt{
+background-color: #e6e6e6;	
+margin: 40px;
+margin-top:0px;
+box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 8px 20px 0 rgba(0, 0, 0, 0.19);
+padding-bottom: 30px;
+padding-top: 30px;
+text-align: center;
 }
 table {
 	width:95%;
@@ -110,7 +117,7 @@ table {
 }
 	
 th {
-	padding:10px;
+	padding:7px;
 	border-bottom: 1px solid #bfbfbf;
 	border-top: 1px solid #bfbfbf;
 	/*background-color: #bfbfbf;*/
