@@ -6,16 +6,16 @@
     </head>
     <body>
 	    <h4 id="davidson_logo">DAVIDSON COLLEGE</h4>
-	    <div id="upload_div">
+	    <div id="upload_div_login">
 		<img src="https://github.com/asalexanderlee/syllabus_project/blob/upload_form_hermon/ChambersBuilding_AboutPage.jpg?raw=true" id="chambers_img">			
 
-        <h2 id="syllabus_upload">Syllabus Upload</h2>
+        <h2 id="syllabus_upload_load">Syllabus Upload</h2>
         {% set pop_courses = False %}
         {% set submit_courses = False %}
         
 		<form action="{{ url_for('get_courses') }}" method="post" enctype="multipart/form-data">
 												
-		<span class="input_text">Davidson Username: <input id="username" type="text" name="username" required value="{{ username }}"></span>
+		<span class="input_text">Davidson username:<input id="username" type="text" name="username" required value="{{ username }}"></span>
 		<br>	
 		<span class="input_text">Academic period: </span>
 			<select name="semester">
