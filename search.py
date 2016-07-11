@@ -2,6 +2,7 @@ from flask import Flask, render_template, redirect, url_for, request
 from flask_sqlalchemy import SQLAlchemy
 from make_new_database import *
 import dropbox
+from operator import attrgetter
 
 app = Flask(__name__)
 app.debug=True
@@ -63,7 +64,7 @@ def intersection_of(a_list):
 	intesection_set=set(a_list[0])
 	for i in a_list:
 		intesection_set = (set(i) & intesection_set)
-		
+	
 	return list(intesection_set)
 
 def union_of(a_list):
@@ -157,7 +158,7 @@ def general_search(query):
 	The query should be a string with keywords separated
 	by space.The results will fulfill all specifications
 	of space separated keywords - so this is like an 
-	"and search"
+	"and" search
 	"""
 	query= query.split(" ")
 	all_courses= Course.query.all()
@@ -410,7 +411,9 @@ def process_form():
 		
 		print len(final_query)
 		
-		results=final_query
+		#results=final_query
+		results=sorted(final_query, key=attrgetter('subject', 'course_num'))
+		
 		msg = ""
 		
 		if (final_query_len == 0):
