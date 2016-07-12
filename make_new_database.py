@@ -84,6 +84,7 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
 
 db = SQLAlchemy(app)
 
+	
 class Course(db.Model):
     __tablename__='courses'
     id = db.Column(db.Integer, primary_key=True)
@@ -104,14 +105,16 @@ class Course(db.Model):
     class_time = db.Column(db.String(20))
     bldg_code = db.Column(db.String(10))
     room_code = db.Column(db.String(10))
-    instructor1 = db.Column(db.String(30))
-    instructor2 = db.Column(db.String(30))
-    instructor3 = db.Column(db.String(30))
+    instructor1 = db.Column(db.String(30),db.ForeignKey('professor.dbname'))
+    instructor2 = db.Column(db.String(30),db.ForeignKey('professor.dbname'))
+    instructor3 = db.Column(db.String(30),db.ForeignKey('professor.dbname'))
     course_notes = db.Column(db.String(20))
     course_attrib = db.Column(db.String(20))
     max_enroll = db.Column(db.String(10))
     curr_enroll = db.Column(db.String(10))
     seats_remain = db.Column(db.String(10))
+    
+    
     
     syllabus_link = db.Column(db.String(1000), default="")
     visitable= db.Column(db.String(100), default="Can visit" )
@@ -119,6 +122,8 @@ class Course(db.Model):
     learning_outcomes = db.Column(db.String(2000), default="Cut learning outcomes from syllabus and paste them here")
     lo_status = db.Column(db.String(50), default="Not submitted") 
     all_data = db.Column(db.String(1000))
+    
+    
     
     def __init__(self, acad_period, major_code, subject, course_num, seq_num,
                  CRN, course_title, credit_hrs, crs_cred_range, cred_hr_session,
@@ -158,16 +163,64 @@ class Course(db.Model):
 	self.privacy = privacy
 	self.learning_outcomes = learning_outcomes
 	self.lo_status = lo_status
-	self.all_data = (acad_period+major_code+subject+course_num+seq_num+
-	                 CRN+course_title+credit_hrs+crs_cred_range+
+	self.all_data = (acad_period+subject+course_num+seq_num+
+	                 CRN+major_code+course_title+credit_hrs+crs_cred_range+
 	                 cred_hr_session+meet_days+begin_time+end_time+
 	                 class_time+bldg_code+room_code+instructor1+
 	                 instructor2+instructor3+course_notes+course_attrib+
 	                 max_enroll+curr_enroll+seats_remain+syllabus_link+
 	                 visitable+privacy+learning_outcomes+lo_status)
-
     
 	
+    
+class Professor(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    
+    email = db.Column(db.String(30))
+    fullname = db.Column(db.String(30))
+    dbname = db.Column(db.String(30))
+    
+    primary_classes = db.relationship("Course", foreign_keys = [Course.instructor1])
+    secondary_classes = db.relationship("Course", foreign_keys = [Course.instructor2])
+    tertiary_classes = db.relationship("Course", foreign_keys = [Course.instructor3])
+    
+    def __init__(self,dbname,full_name,username):
+	self.dbname=dbname
+	self.fullname = full_name
+	self.email = username	
+
+# Constant values that depend on the CSV file
+FACULTY_NAME = 1
+EMAIL = 4
+PROF_CSV = "FacultyInformation.csv"
+PROF2_CSV = "Additional.csv"
+# a session object that will be used to add data
+
+def make_faculty_fromCSV(csvFile):
+
+    faculty_list = []
+
+    # open file and create reader
+    with open(csvFile, 'rU') as c:
+	reader = csv.reader(c, delimiter=',', quotechar='"',
+                            skipinitialspace=True)
+
+	row_count = 0
+	for row in reader:
+	    if row_count != 0:
+
+		f_name = row[FACULTY_NAME].strip()
+		db_name = (f_name.split(",")[0].strip() + " " + 
+		           f_name.split(",")[1].strip()[:1])
+		f_email = row[EMAIL].strip()
+
+		a_faculty = Professor(db_name,f_name,f_email)
+		
+		faculty_list.append(a_faculty)
+
+	    row_count+=1
+	    
+    return faculty_list
 	
 def build_db(courses):
     db.create_all()
@@ -186,8 +239,13 @@ def build_db(courses):
 	
 	db.session.add(course)
 	
-	
+    
+    faculty_list1 = make_faculty_fromCSV(PROF_CSV)
+    faculty_list2 = make_faculty_fromCSV(PROF2_CSV)
+    faculty_list = faculty_list1 + faculty_list2
+    db.session.add_all(faculty_list)
     db.session.commit()
+    
     print "CSV COUNT = " + str(count)
     q = Course.query.count()
     print "DATABASE COUNT = ", q 
@@ -202,12 +260,12 @@ def index():
     return render_template('show_all_sylman.html', courses=courses)
 
 def main():
-    filename = "static/1617ClassSchedule.csv"
-    courses = read_csv(filename)
-    ##build_db(courses)
-    
-    logging.warning("MAIN")
+    #filename = "static/1617ClassSchedule.csv"
+    #courses = read_csv(filename)
+    #build_db(courses)
+
     app.run(debug=True)
 
 if __name__ == "__main__":
     main()
+    

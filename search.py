@@ -4,6 +4,7 @@ from flask_sqlalchemy import SQLAlchemy
 from make_new_database import *
 import dropbox
 from operator import attrgetter
+import logging
 
 app = Flask(__name__)
 app.debug=True
@@ -351,6 +352,7 @@ def home():
 def process_form():
 
 	if request.method == "POST":
+		logging.warning("posted!")
 		query_ob = db.session.query(Course)
 
 		full_query=[]
@@ -410,9 +412,13 @@ def process_form():
 		
 		final_query_len = len(final_query)
 		
-		print len(final_query)
-		
-		results=sorted(final_query, key=attrgetter('subject', 'course_num'))
+		#print len(final_query)
+		for f in final_query:
+			logging.warning(f.course_title)
+		results=sorted(final_query, key=attrgetter('all_data'))
+		for e in results:
+			logging.warning(e.course_title)
+			
 		
 		msg = ""
 		
