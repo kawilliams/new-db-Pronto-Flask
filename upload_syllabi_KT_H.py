@@ -91,9 +91,14 @@ def get_courses():
             semester = request.form['semester']
            
             if db_name in PROFLIST: 
+		
                 acad_period = request.form['semester'] 
                 # find user's courses
-                unique, two_found = current_course(db_name,semester)   
+                unique, two_found = current_course(db_name,semester) 
+		if unique == []:
+		    flash('No courses found for '+db_name+' for semester '+semester)
+		    return render_template('Prof_Login.html', username='', 
+                                  most_recent=["201601","201602"])  
                 unique = determine_unique(unique)
                 return render_template('my_courses.html', courses=unique, 
                                        db_name=db_name, semester=semester)
@@ -103,19 +108,19 @@ def get_courses():
 	    searches = []
 	    
 	    for i in range(4, len(query)):
-		print query[:i+1]
+		#print query[:i+1]
 		searchterm =  "%"+str(query[:i]).strip()+"%"
-		searches = Course.query.\
+		searches = Course.query.filter_by(acad_period=semester).\
 	                    filter(Course.instructor1.like(searchterm)).all()
 		if len(searches) > 0:
 		    break
-		
+	    back_searches = []
 	    if len(searches) == 0:
-    
+		
 		for i in range(len(query)-3,1,-1):
-		    print query[i:]
+		    #print query[i:]
 		    searchterm =  "%"+str(query[i:]).strip()+"%"
-		    back_searches = Course.query.\
+		    back_searches = Course.query.filter_by(acad_period=semester).\
 			        filter(Course.instructor1.like(searchterm)).all()
 		    if len(back_searches) > 0:
 			break	    
@@ -127,11 +132,11 @@ def get_courses():
 	              most_recent=["201601","201602"]) 
 	    
 	    elif len(searches) == 0 and len(back_searches) != 0:
-		print back_searches[0].instructor1
+		
 		unique, two_found = current_course(back_searches[0].instructor1, semester)
-		print unique
+		
 		if len(unique) > 0:
-		    
+		    unique = determine_unique(unique)
 		    return render_template('my_courses.html', courses=unique, 
 			                   db_name=unique[0].instructor1, 
 			                   semester=semester)
@@ -144,9 +149,10 @@ def get_courses():
 	    elif len(searches) != 0:
 		print searches[0].instructor1
 		unique, two_found = current_course(searches[0].instructor1, semester)
-		print unique
+		#print unique
 		if len(unique) > 0:
-		    
+		    unique = determine_unique(unique)
+		    print unique[0].instructor1
 		    return render_template('my_courses.html', courses=unique, 
 		                           db_name=unique[0].instructor1, 
 		                           semester=semester)
@@ -242,7 +248,10 @@ def make_updates(): #
                 
             new_visitable = request.form[vis]
             new_privacy = request.form[prv]
-            new_lo_txt = request.form[lo_txt]   
+            new_lo_txt = request.form[lo_txt] 
+	    print unique[i].course_title
+	    print new_visitable
+	    # for unique[i].course_title and unique[i].section and CRN mathc, updae
             if len(new_syllabus.filename) > 0:
                 changed_syl_list.append(course_name)
                 
@@ -253,7 +262,7 @@ def make_updates(): #
                 setattr(unique[i], 'syllabus_link', response['path']) 
                 
                 # update secondary courses
-                update_secondary(primary, secondary, response['path'])
+                update_secondary(unique[i],'syllabus_link',response['path'])
                 
                 print unique[i].course_title, unique[i].CRN, unique[i].syllabus_link
                 
@@ -267,7 +276,12 @@ def make_updates(): #
             setattr(unique[i], 'privacy', new_privacy)
             setattr(unique[i], 'visitable', new_visitable)
             setattr(unique[i], 'learning_outcomes', new_lo_txt) 
-            
+	    
+            update_secondary(unique[i], 'privacy', new_privacy)
+            update_secondary(unique[i], 'visitable', new_visitable)
+            update_secondary(unique[i], 'learning_outcomes', new_lo_txt) 	    
+	    
+
 
         db.session.commit()
         
@@ -280,11 +294,21 @@ def make_updates(): #
     return render_template('Prof_Login.html', most_recent=["201601", "201602"])
 
 
-def update_secondary(primary, secondary, file_path):
-    for c in primary:
-        setattr(c, 'syllabus_link', file_path)
-    for c in secondary:
-        setattr(c, 'syllabus_link', file_path)
+def update_secondary(c, attribute, characteristic):
+    """ c is a Course object, the primary one.
+    """
+    act_courses = Course.query.filter_by(acad_period=c.acad_period).\
+        filter_by(course_title=c.course_title).\
+        filter_by(CRN=c.CRN).all()
+    
+    for a in act_courses:
+        setattr(a, attribute, characteristic)
+
+    reg_courses = Course.query.filter_by(acad_period=c.acad_period).\
+        filter(Course.course_title.like(c.CRN)).all()
+    
+    for r in reg_courses:
+	setattr(r, attribute, characteristic)
     return
 
 
