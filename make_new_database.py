@@ -187,8 +187,8 @@ class Professor(db.Model):
 # Constant values that depend on the CSV file
 FACULTY_NAME = 1
 EMAIL = 4
-PROF_CSV ="FacultyInformation.csv"
-
+PROF_CSV = "FacultyInformation.csv"
+PROF2_CSV = "Additional.csv"
 # a session object that will be used to add data
 
 def make_faculty_fromCSV(csvFile):
@@ -235,7 +235,9 @@ def build_db(courses):
 	db.session.add(course)
 	
     
-    faculty_list = make_faculty_fromCSV(PROF_CSV)
+    faculty_list1 = make_faculty_fromCSV(PROF_CSV)
+    faculty_list2 = make_faculty_fromCSV(PROF2_CSV)
+    faculty_list = faculty_list1 + faculty_list2
     db.session.add_all(faculty_list)
     db.session.commit()
     
@@ -255,10 +257,10 @@ def index():
 def main():
     filename = "static/1617ClassSchedule.csv"
     courses = read_csv(filename)
-    #build_db(courses)
+    build_db(courses)
     
-    logging.warning("MAIN")
-    app.run(debug=True)
+    #logging.warning("MAIN")
+    #app.run(debug=True)
 
 if __name__ == "__main__":
     main()
