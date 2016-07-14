@@ -87,7 +87,7 @@ def get_courses():
         elif len(username) > 3:       
 	    
 	    prof = Professor.query.filter_by(email=username).all()
-	    print "Prof:", prof
+	    print "90 Prof:", prof
             semester = request.form['semester']
            
 	    # there exists exactly one professor with that username
@@ -110,7 +110,7 @@ def get_courses():
      
 
 def current_course(prof, semester):
-    print prof
+   
     primary = prof.primary_classes
     secondary = prof.secondary_classes
     tertiary = prof.tertiary_classes      
@@ -196,7 +196,7 @@ def make_updates(): #
             new_privacy = request.form[prv]
             new_lo_txt = request.form[lo_txt] 
 
-	    # for unique[i].course_title and unique[i].section and CRN mathc, updae
+	    # for unique[i].course_title and unique[i].section and CRN match, update
             if len(new_syllabus.filename) > 0:
                 changed_syl_list.append(course_name)
                 
@@ -209,7 +209,7 @@ def make_updates(): #
                 # update secondary courses
                 update_secondary(unique[i],'syllabus_link',response['path'])
                 
-                print unique[i].course_title, unique[i].CRN, unique[i].syllabus_link
+                print "212", unique[i].course_title, unique[i].CRN, unique[i].syllabus_link
                 
             if new_visitable != unique[i].visitable:
                 changed_vis_list.append(course_name)
@@ -249,10 +249,14 @@ def update_secondary(c, attribute, characteristic):
     for a in act_courses:
         setattr(a, attribute, characteristic)
 
+    crn_to_find = "%"+str(c.CRN)
     reg_courses = Course.query.filter_by(acad_period=c.acad_period).\
-        filter(Course.course_title.like(c.CRN)).all()
+        filter_by(instructor1=c.instructor1).\
+        filter(Course.course_title.like(crn_to_find)).all()
+
     
     for r in reg_courses:
+	print "259", r.course_title
 	setattr(r, attribute, characteristic)
     return
 

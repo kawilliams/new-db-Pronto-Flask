@@ -352,7 +352,7 @@ def home():
 def process_form():
 
 	if request.method == "POST":
-		logging.warning("posted!")
+		
 		query_ob = db.session.query(Course)
 
 		full_query=[]
@@ -413,11 +413,11 @@ def process_form():
 		final_query_len = len(final_query)
 		
 		#print len(final_query)
-		for f in final_query:
-			logging.warning(f.course_title)
+		#for f in final_query:
+			#logging.warning(f.course_title)
 		results=sorted(final_query, key=attrgetter('all_data'))
-		for e in results:
-			logging.warning(e.course_title)
+		#for e in results:
+			#logging.warning(e.course_title)
 			
 		
 		msg = ""
