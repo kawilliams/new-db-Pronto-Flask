@@ -89,7 +89,7 @@ def count_mis_syll(subj):
 def count_mis_prof(subj):
     """
     Get the number of professors who haven't yet submitted a syllabus for
-    any of their classes in that subjectartment.
+    any of their classes in that subject.
     """
     semester=determine_semester()
     if subj != "":
@@ -104,10 +104,39 @@ def count_mis_prof(subj):
 	#pro_miss.add(i.instructor2.strip())
 	#pro_miss.add(i.instructor3.strip())
     if "" in pro_miss:
-	pro_miss.remove('')
+	pro_miss.remove('')   
 	
     return str(len(pro_miss))
 
+def binary_prof(num_prof_is_missing):
+    if num_prof_is_missing > 0:
+	return 1
+    return 0
+    
+def syllabi_prof(prof, semester, subject):
+    prof_courses = Course.query.filter_by(instructor1=prof).\
+        filter_by(syllabus_link="").\
+        filter_by(acad_period=semester).\
+        filter_by(subject=subject).all()
+    unique_courses = determine_unique(prof_courses)
+    for ea in unique_courses:
+	print ea.course_title, ea.seq_num, ea.CRN
+    return len(unique_courses)
+
+def determine_unique(primary):
+    unique = []
+    for course in primary:
+        if "REG" not in course.course_title:
+            if not (course.CRN in build_CRN_string(unique)):
+                unique.append(course)
+    return unique
+
+def build_CRN_string(unique):
+    """ Helper function for determine_unique """
+    CRN_string =""
+    for i in unique:
+        CRN_string += i.CRN+" "
+    return CRN_string
     
 
 
@@ -254,15 +283,15 @@ def manage_form():
 		
     	    profs_courses = subject_courses.filter_by(instructor1=sub).all()
             profList = format_prof(prof_inDep,active_subj)
-	  
+	    num_prof_is_missing = syllabi_prof(active_pro, semester, active_subj)
     	    return render_template("syllabi_manager.html", deps=subjList,
 	                            depsSorted=sorted(subjList.keys()),
 	                            depBtnOn=subject_btn_on,profBtnOn=prof_btn_on,
 	                            profs=profList,
 	                            profsSorted=sorted(profList.keys()),
 	                            profs_courses=profs_courses,
-	                            miss_syl=count_mis_syll(active_subj),
-	                            miss_prof=count_mis_prof(active_pro),
+	                            miss_syl=num_prof_is_missing,
+	                            miss_prof=binary_prof(num_prof_is_missing),
 	                            active_dep=active_subj,
 	                            active_prof=active_pro,
 	                            recipients=profs_no_syl,
