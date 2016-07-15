@@ -255,9 +255,8 @@ def update_secondary(c, attribute, characteristic):
 
     crn_to_find = "%"+str(c.CRN)
     reg_courses = Course.query.filter_by(acad_period=c.acad_period).\
-        filter_by(instructor1=c.instructor1).\
         filter(Course.course_title.like(crn_to_find)).all()
-
+	#filter_by(instructor1=c.instructor1).\
     
     for r in reg_courses:
 	print "259", r.course_title
