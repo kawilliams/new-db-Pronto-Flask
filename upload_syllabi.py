@@ -87,6 +87,8 @@ def get_courses():
         elif len(username) > 3:       
 	    
 	    prof = Professor.query.filter_by(email=username).all()
+	    if prof == []:
+		flash('Username does not exist. Please check your spelling and try again')
 	    print "90 Prof:", prof
             semester = request.form['semester']
            
@@ -101,8 +103,10 @@ def get_courses():
 		    return render_template('Prof_Login.html', username='', 
                                   most_recent=["201601","201602"])  
                 unique = determine_unique(primary)
+		unique2 = determine_unique(secondary)
                 return render_template('my_courses.html', courses=unique, 
-                                       db_name=prof.dbname, semester=semester)
+                                       db_name=prof.dbname, semester=semester,
+		                       inst2_courses=unique2)
             
 	               
     return render_template('Prof_Login.html', username="", 
