@@ -443,8 +443,8 @@ def process_search():
 
 		query_term = str(request.form["gen_search"])
 		
-		results = general_search(query_term)
-		
+		results = general_search(query_term) 
+		results = sorted(results, key=attrgetter('all_data'))
 		msg = ""
 		if (len(results) == 0):
 			msg = "Sorry, no courses found. Try again."
