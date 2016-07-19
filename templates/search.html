@@ -722,10 +722,17 @@ function closeDescription(divID) {
                   <span onclick="accFunc('acc_content_id_{{loop.index0}}')">
 	                  <table class="header_table_result">
 		                  <tr>
-		                  <td class="courseLink"><b>{{i.subject}} {{i.course_num}} {% if i.seq_num != '0' %}{{i.seq_num}}{% endif %}[{{i.major_code}}]</b>: <u class="courseLink" onclick="showDescription('course_desc_div', '{{i.subject}}', '{{i.course_num}}')">{{i.course_title}}</u></td>
-		                  <td class="prof_result">{{i.instructor1}}</td>
-		                  <td class="CRN_result"><span style="margin-right:10%;">CRN: {{i.CRN}}</span></td>
-		                  <td class="x_result"><span onclick="document.getElementById('acc_id_{{loop.index0}}').style.display='none'" class="w3-closebtn w3-margin-right w3-medium">x</span></td>
+		                  <td class="courseLink" style="width:50%"><b>{{i.subject}} {{i.course_num}} {% if i.seq_num != '0' %}{{i.seq_num}}{% endif %}[{{i.major_code}}]</b>: <u class="courseLink" onclick="showDescription('course_desc_div', '{{i.subject}}', '{{i.course_num}}')">{{i.course_title}}</u></td>
+		                  <td class="sem_result" style="width:15%">
+			                  {% if i.acad_period[-1] == '1' %}
+			                  Fall {{ i.acad_period[:4] }}
+			                  {% else %}
+			                  Spring {{ ((i.acad_period[:4]|int)+1)|string }}
+			                  {% endif %}
+			                  </td>
+		                  <td class="prof_result" style="width:15%">{{i.instructor1}}</td>
+		                  <td class="CRN_result" style="width:10%"><span style="margin-right:10%;">CRN: {{i.CRN}}</span></td>
+		                  <td class="x_result" style="width:5%"><span onclick="document.getElementById('acc_id_{{loop.index0}}').style.display='none'" class="w3-closebtn w3-margin-right w3-medium">x</span></td>
 		                  </tr>
 			          </table>
 			      </span>
