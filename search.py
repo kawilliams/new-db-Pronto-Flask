@@ -512,13 +512,25 @@ def process_search():
 		
 		results = general_search(query_term) 
 		results = sorted(results, key=attrgetter('all_data'))
+		
 		msg = ""
 		if (len(results) == 0):
 			msg = "Sorry, no courses found. Try again."
+		 
+		if (len(query_term) == 6) and (query_term[-2:] == '01'):
+			formatted_yr = "Fall "+query_term[:4]
+		if (len(query_term) == 6) and (query_term[-2:] == '02'):
+			formatted_yr = "Spring "+str(int(query_term[:4])+1)
+		else:
+			formatted_yr = 'All semesters'
+			
+		final_query_len = len(results)
 		return render_template("search.html",search_results=results,
 		                       message = msg,profs=ALL_PROFESSORS,
 		                       semesters=ALL_SEMESTERS,
-		                       deps=ALL_DEPS, deps_full=ALL_DEPS_FULL)
+		                       deps=ALL_DEPS, deps_full=ALL_DEPS_FULL,
+		                       chosen_year=formatted_yr,
+		                       result_count=final_query_len)
 
 	else:
 		return redirect(url_for("home"))
