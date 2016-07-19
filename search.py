@@ -149,10 +149,21 @@ def dep_list():
 
 	return deps
 
+def sem_list():
+	"""
+	A function to get all the departments
+	"""
+	courses = Course.query.all()
+	sems = set()
+	for i in courses:
+		sems.add(str(i.acad_period))
+		
+	sems = sorted(list(sems))
+	return sems
 
 ALL_DEPS = dep_list()
 ALL_PROFESSORS = prof_list()
-
+ALL_SEMESTERS = sem_list()
 
 	
 def general_search(query):
@@ -345,7 +356,9 @@ def find_full_deps(dep_list):
 @app.route("/")
 def home():
 	full_dep = find_full_deps(ALL_DEPS)
-	return render_template("search.html",profs=ALL_PROFESSORS, 
+	print "ALL SEMESTERS", ALL_SEMESTERS
+	return render_template("search.html",semesters=ALL_SEMESTERS, 
+	                       profs=ALL_PROFESSORS, 
 	                       deps=ALL_DEPS, deps_full=full_dep)
 
 @app.route("/search",methods=["POST","GET"])
