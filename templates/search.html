@@ -14,7 +14,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Search Page</title>
 </header>
-<body onload="findCurrentDate()">
+<!--<body onload="findCurrentDate()">-->
+<body>
 	
 <script>
 	
@@ -398,17 +399,26 @@ function closeDescription(divID) {
 			<li class="" id="gen_search_mobile"><i class="material-icons" id="icon_search_mobile">search</i></li>
 	  		<input type="submit" id="submit_search_mobile" name="gen_search_btn" hidden></form>
 			<p id="filter_res"><b>Filter Results</b></p>
-		<form action={{url_for("process_form")}} method="post">
+		
 		
 		
 	<!--Semester ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
-		
+		<script>
+			function submitOption(){
+				var subBtn = document.getElementById("submit_btn");		
+				var selectMenu = document.getElementById('year_dropdwn');
+				subBtn.value = selectMenu.options[selectMenu.selectedIndex].innerHTML;
+				subBtn.click();	
+			}
+		</script>
 		<div class="w3-accordion">
     		<a onclick="accFunc('year_acc')" href="#">
       		By Semester <i class="fa fa-caret-down"></i>
     		</a>
     		<div id="year_acc" class="w3-accordion-content w3-padding">
-      			<select name="years" class="w3-select w3-border w3-padding" id="year_dropdwn">
+	    		<form action={{ url_for('process_semester') }} method="post">
+      			<select name="years" class="w3-select w3-border w3-padding" id="year_dropdwn" onchange="submitOption();">
+	      			<option value="Choose one" id="choose_one" class="year_li">Choose one</option>
 	      			{% for i in semesters %}
 	      		<option value="{{ i }}" id="{{ i }}" class="year_li">
 		      		{% set fall_year = i[:4] %}
@@ -420,21 +430,13 @@ function closeDescription(divID) {
 		      		{% endif %}
 	      		</option>
 					{% endfor %}
-  				<!--<option value="201401" id="201401" class="year_li">Fall 2014</option>
-  				<option value="201302" id="201302" class="year_li">Spring 2014</option>
-  				<option value="201301" id="201301" class="year_li">Fall 2013</option>
-  				<option value="201202" id="201202" class="year_li">Spring 2013</option>
-  				<option value="201201" id="201201" class="year_li">Fall 2012</option>
-  				<option value="201102" id="201102" class="year_li">Spring 2012</option>			
-  				<option value="201101" id="201101" class="year_li">Fall 2011</option>
-  				<option value="201002" id="201002" class="year_li">Spring 2011</option>
-  				<option value="201001" id="201001" class="year_li">Fall 2010</option>
-  				<option value="200902" id="200902" class="year_li">Spring 2010</option>
-  				<option value="200901" id="200901" class="year_li">Fall 2009</option>-->
+ 
 				</select>
+				<input type="submit" id="submit_btn" name="submit" value="" style="display:none;">
+				</form>
     		</div>
     	</div>
-    	
+    	<form action={{url_for("process_form")}} method="post">
     	
 	<!--Professors ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
 
@@ -655,7 +657,7 @@ function closeDescription(divID) {
     <input type="text" id="times" name="times" value="" hidden>
     <input type="text" id="distri" name="distri" value="" hidden>
     <input type="text" id="class_size" name="class_size" value="" hidden>
-    <input type="submit" onclick="createQueryStr()" class="w3-btn-block" value="Filter by Selections">
+    <input type="submit" name="submit" onclick="createQueryStr()" class="w3-btn-block" value="Filter by Selections">
 	</form>
 	<input type="button" class="w3-btn-block" id="clear-btn" value="Clear All">
 	</nav>
@@ -696,7 +698,10 @@ function closeDescription(divID) {
 	<!--Description ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
 		<div id="descript_page">
 			<h5>Welcome to the Syllabi Search Page!</h5> 
-			<p>In order to find a class, either filter using the navigation to your left or search using the central search bar. If you are an administrator, login on the left navigation. If you are a professor looking to upload a syllabus, contact an administrator for access. Thank you very much for using this page! Good day. </p>
+			<p>In order to find a class, begin by selecting the semester you wish to view. When the page reloads, filter using the navigation to your left or search using the central search bar. If you are an administrator, login on the left navigation. If you are a professor looking to upload a syllabus, contact an administrator for access. 			      			
+				
+			</p>
+
 		</div>
 		
 		
