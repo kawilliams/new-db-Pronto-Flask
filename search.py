@@ -430,6 +430,9 @@ def process_form():
 		
 		acd_prd = request.form["period"]
 		print "acd_prd", acd_prd 
+		if acd_prd == "Choose one":
+			acd_prd = determine_semester()
+			print acd_prd		
 		prof = request.form["prof_form"].split(" or ")
 		if prof != [u'']:
 			full_query += prof
@@ -463,8 +466,9 @@ def process_form():
 		q6 = filter_distr(dist)
 		q7 = filter_class_size(class_size)
 
+
 		year = (str(acd_prd))[0:4]
-		semester = (str(acd_prd))[4:]
+		semester = (str(acd_prd))[4:]			
 		if semester == "01":
 			semester = "Fall"
 		else:
@@ -472,7 +476,9 @@ def process_form():
 			year = int(float(year)) + 1
 
 		formatted_yr = semester + " " + str(year)
-
+		
+			
+			
 		final_query = intersection_of([q1,q2,q3,q4,q5,q6,q7])
 		
 		final_query_len = len(final_query)
@@ -485,13 +491,15 @@ def process_form():
 			msg = "Sorry, no courses found. Try again."
 
 		return render_template("search.html",search_results=results,
-		message = msg,profs=ALL_PROFESSORS, deps=ALL_DEPS,
-		semesters=ALL_SEMESTERS,
-		deps_full=full_dep,
-		kept_values=full_query,
-		kept_values_len=len(full_query),
-		semester=acd_prd,
-		chosen_year=formatted_yr, result_count=final_query_len)
+	        message = msg,profs=ALL_PROFESSORS, deps=ALL_DEPS,
+	        semesters=ALL_SEMESTERS,
+	        deps_full=full_dep,
+	        kept_values=full_query,
+	        kept_values_len=len(full_query),
+	        semester=acd_prd,
+	        chosen_year=formatted_yr, result_count=final_query_len)
+		
+			
 
 	else:
 		return redirect(url_for("home"))
