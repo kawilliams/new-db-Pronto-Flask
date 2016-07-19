@@ -4,7 +4,9 @@ from flask_sqlalchemy import SQLAlchemy
 from make_new_database import *
 import dropbox
 from operator import attrgetter
+import datetime
 import logging
+
 
 app = Flask(__name__)
 app.debug=True
@@ -80,6 +82,19 @@ def union_of(a_list):
 		
 	return list(union_set)
 
+def determine_semester():
+    
+	current = datetime.date.today()
+	first_sem = current.replace(month=5, day=20), current.replace(month=12, day=20)
+	if first_sem[0] <= current <= first_sem[1]:
+		# first semester
+		return str(current.year) + "01"
+	else:
+		# second semester
+		previous_yr = current.replace(month=1, day=1) - datetime.timedelta(days=1)
+		return str(previous_yr.year) + "02"
+
+
 def start_times():
 	"""
 	A function that gets all the possible start times of our courses
@@ -117,11 +132,11 @@ def start_time_map():
 		
 	return time_map
 
-def prof_list():
+def prof_list(current_semester):
 	"""
 	A function to get a list of all Professors
 	"""
-	courses = Course.query.all()
+	courses = Course.query.filter_by(acad_period=current_semester).all()
 	profs = set()
 	for i in courses:
 		profs.add(str(i.instructor1))
@@ -135,11 +150,11 @@ def prof_list():
 	return profs
 
 
-def dep_list():
+def dep_list(current_semester):
 	"""
 	A function to get all the departments
 	"""
-	courses = Course.query.all()
+	courses = Course.query.filter_by(acad_period=current_semester).all()
 	deps = set()
 	for i in courses:
 		if str(i.subject) != "":
@@ -160,9 +175,9 @@ def sem_list():
 		
 	sems = sorted(list(sems))
 	return sems
-
-ALL_DEPS = dep_list()
-ALL_PROFESSORS = prof_list()
+current_semester = determine_semester()
+ALL_DEPS = dep_list(current_semester)
+ALL_PROFESSORS = prof_list(current_semester)
 ALL_SEMESTERS = sem_list()
 
 	
@@ -355,11 +370,48 @@ def find_full_deps(dep_list):
 	
 @app.route("/")
 def home():
-	full_dep = find_full_deps(ALL_DEPS)
-	print "ALL SEMESTERS", ALL_SEMESTERS
+	full_dep = find_full_deps(ALL_DEPS)	
 	return render_template("search.html",semesters=ALL_SEMESTERS, 
 	                       profs=ALL_PROFESSORS, 
 	                       deps=ALL_DEPS, deps_full=full_dep)
+
+@app.route("/semester",methods=["POST","GET"])
+def process_semester():
+	
+	if request.method == "POST":
+		
+		semester = request.form["years"] 
+		ALL_DEPS = dep_list(semester)
+		ALL_PROFESSORS = prof_list(semester)
+		full_dep = find_full_deps(ALL_DEPS)
+		results = Course.query.filter_by(acad_period=semester).all()
+		query_len = len(results)
+		msg = ""
+		if query_len == 0:
+			msg = "Sorry, no courses found. Try a different semester."
+			
+		year = (str(semester))[0:4]
+		acad_period = (str(semester))[4:]
+		if acad_period != "Choose one":
+			if acad_period == "01":
+				acad_period = "Fall"
+			else:
+				acad_period = "Spring"
+				year = int(float(year)) + 1
+	
+			formatted_yr = acad_period + " " + str(year)
+			
+			return render_template("search.html", semesters=ALL_SEMESTERS, 
+				               profs=ALL_PROFESSORS, deps=ALL_DEPS, 
+				               deps_full=full_dep, selected_sem=semester,
+				               search_results=results, message=msg,
+				               chosen_year=formatted_yr, result_count=query_len)
+		else:
+			return redirect(url_for("home"))			
+
+	else:
+		return redirect(url_for("home"))
+
 
 @app.route("/search",methods=["POST","GET"])
 def process_form():
@@ -377,7 +429,7 @@ def process_form():
 		full_dep = find_full_deps(ALL_DEPS)
 		
 		acd_prd = request.form["period"]
-
+		print "acd_prd", acd_prd 
 		prof = request.form["prof_form"].split(" or ")
 		if prof != [u'']:
 			full_query += prof
@@ -424,15 +476,9 @@ def process_form():
 		final_query = intersection_of([q1,q2,q3,q4,q5,q6,q7])
 		
 		final_query_len = len(final_query)
-		
-		#print len(final_query)
-		#for f in final_query:
-			#logging.warning(f.course_title)
+
 		results=sorted(final_query, key=attrgetter('all_data'))
-		#for e in results:
-			#logging.warning(e.course_title)
-			
-		
+	
 		msg = ""
 		
 		if (final_query_len == 0):
@@ -440,6 +486,7 @@ def process_form():
 
 		return render_template("search.html",search_results=results,
 		message = msg,profs=ALL_PROFESSORS, deps=ALL_DEPS,
+		semesters=ALL_SEMESTERS,
 		deps_full=full_dep,
 		kept_values=full_query,
 		kept_values_len=len(full_query),
@@ -450,7 +497,6 @@ def process_form():
 		return redirect(url_for("home"))
 
 @app.route("/searchany",methods=["POST","GET"])
-
 def process_search():
 	if request.method == "POST":
 
@@ -463,6 +509,7 @@ def process_search():
 			msg = "Sorry, no courses found. Try again."
 		return render_template("search.html",search_results=results,
 		                       message = msg,profs=ALL_PROFESSORS,
+		                       semesters=ALL_SEMESTERS,
 		                       deps=ALL_DEPS, deps_full=ALL_DEPS_FULL)
 
 	else:
