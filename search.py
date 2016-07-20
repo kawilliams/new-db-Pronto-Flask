@@ -4,6 +4,7 @@ from flask_sqlalchemy import SQLAlchemy
 from make_new_database import *
 import dropbox
 from operator import attrgetter
+import logging
 
 app = Flask(__name__)
 app.debug=True
@@ -297,34 +298,26 @@ def filter_days(searchterm):
 
 
 
-def filter_class_size(searchterms):
+def filter_class_size(searchterm):
 	"""
-	Input - a list of string, where each string is either "0 - 6",
-		"6 - 12", "12 - 20" or "20 +"
+	Input - a string that indicates a range--in the form: 1-6"
 		
-	Returns - all courses whoes max class size is in any of the given 
+	Returns - all courses whose max class size is in any of the given 
 	          ranges
 		  
-	For example an input ["20 +","0 - 6"] will give us all the classes
-	whose max class size is in the range 0-6 or above 20
+	For example an input ["5-16"] will give us all the classes
+	whose max class size is in the range 5-16
 	"""
-	if (len(searchterms)==1 and str(searchterms[0])==""):
+	if (searchterm == ""):
 		return Course.query.all()
 	
 	full_searchterms = []
-	for i in searchterms:
-		if (i == "0 - 6"):
-			for n in range(6):
-				full_searchterms.append(str(n))
-		if (i == "6 - 12"):
-			for n in range(6,13):
-				full_searchterms.append(str(n))
-		if (i == "12 - 20"):
-			for n in range(12,20):
-				full_searchterms.append(str(n))
-		if (i == "20 +"):
-			for n in range(20,40):
-				full_searchterms.append(str(n))			
+	
+	searchterm = searchterm.split("-")
+	first_num = int(searchterm[0])
+	sec_num = int(searchterm[1])
+	for n in range(first_num,sec_num):
+		full_searchterms.append(str(n))		
 	
 	return  Course.query.filter(Course.max_enroll.
 		in_(full_searchterms)).all()	
@@ -351,6 +344,7 @@ def home():
 def process_form():
 
 	if request.method == "POST":
+		
 		query_ob = db.session.query(Course)
 
 		full_query=[]
@@ -384,9 +378,7 @@ def process_form():
 		if dist != [u'']:
 			full_query += set(dist)
 		
-		class_size = request.form['class_size'].split(" or ")
-		if class_size != [u'']:
-			full_query += class_size
+		class_size = request.form['class_size']
 		
 		q1 = filter_acadPeriod(acd_prd)
 		q2 = filter_subject(dep)
@@ -410,9 +402,13 @@ def process_form():
 		
 		final_query_len = len(final_query)
 		
-		print len(final_query)
-		
-		results=sorted(final_query, key=attrgetter('subject', 'course_num'))
+		#print len(final_query)
+		#for f in final_query:
+			#logging.warning(f.course_title)
+		results=sorted(final_query, key=attrgetter('all_data'))
+		#for e in results:
+			#logging.warning(e.course_title)
+			
 		
 		msg = ""
 		
@@ -424,7 +420,7 @@ def process_form():
 		deps_full=full_dep,
 		kept_values=full_query,
 		kept_values_len=len(full_query),
-		semester=acd_prd,
+		semester=acd_prd,class_size_kept=str(class_size),
 		chosen_year=formatted_yr, result_count=final_query_len)
 
 	else:
