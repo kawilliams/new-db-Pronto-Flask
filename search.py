@@ -440,7 +440,8 @@ def process_search():
 			msg = "Sorry, no courses found. Try again."
 		return render_template("search.html",search_results=results,
 		                       message = msg,profs=ALL_PROFESSORS,
-		                       deps=ALL_DEPS, deps_full=ALL_DEPS_FULL)
+		                       deps=ALL_DEPS, deps_full=ALL_DEPS_FULL,
+		                       result_count=len(results))
 
 	else:
 		return redirect(url_for("home"))
