@@ -1048,6 +1048,7 @@
 				<table class="header_results_table">
 					<tr>
 						<td class="courseLink"><b>{{i.subject}} {{i.course_num}} {% if i.seq_num != '0' %}{{i.seq_num}}{% endif %}[{{i.major_code}}]</b>: <u onclick="showDescription('course_desc_div', '{{i.subject}}', '{{i.course_num}}')">{{i.course_title}}</u></td>
+						<td>{{ i.acad_period }}</td>
 						<td class="prof_result">{{i.instructor1}}</td>
 						<td class="CRN_result"><span style="margin-right:10%;">CRN: {{i.CRN}}</span></td>
 						<td class="x_result"><span onclick="document.getElementById('acc_{{loop.index0}}').style.display='none'" style="font-size:23px;" class="close_icon">&times;</span></td>
