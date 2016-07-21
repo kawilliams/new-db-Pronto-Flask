@@ -91,7 +91,7 @@
 					box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2), 0 4px 10px 0 rgba(0, 0, 0, 0.19);
 					overflow:scroll;
 					min-width:310px;
-					z-index:5;	
+					z-index:5;
 				}
 				#filter::-webkit-scrollbar{
 					display:none;	
@@ -134,7 +134,8 @@
 					border-radius:3px;
 					font-size:14px;
 					margin:10px;
-					margin-top:10px;
+					margin-top:5px;
+					margin-bottom:2px;
 					background-color:#eeeeee;	
 				}
 				#prof_search_id:focus{
@@ -145,13 +146,13 @@
 					width:90%;
 					margin:0 auto;
 					text-align:left;
-					height:250px;
+					height:180px;
    					overflow:scroll;
    					overflow-x:hidden;	
 				}
 				#prof_list p{
 					display:block;
-					padding:10px;
+					padding:6px;
 					border-bottom:2px solid #e6e6e6;
 					width:100% - 7px;
 					margin:0px;
@@ -166,7 +167,8 @@
 					margin-left:10px;	
 				}
 				#dept_table td{
-					width:33%;		
+					width:33%;
+					font-size:14px;		
 				}
 				.dept_text:hover, .dist_text:hover{
 					cursor:help;
@@ -200,12 +202,14 @@
 				li{
 					display:block;	
 					padding:5px;
+					font-size:14px;
 				}
 				.distr-half{
 					text-align:left;	
 				}
 				.distr_choice{
-					margin-bottom:5px;	
+					margin-bottom:5px;
+					font-size:14px;	
 				}
 				.class_size_li{
 					margin-left:30%;	
@@ -334,8 +338,8 @@
 					font-size:17px;
 					color:white;
 					text-align: center;
-					margin-top:30px;
-					display:none;
+					margin-top:50px;
+					z-index:2;
 				}
 				#results{
 				  background-color:white;
@@ -442,6 +446,13 @@
 					padding:7px;
 					cursor:pointer;
 				}
+				#result_count{
+					color:white;
+					margin:0px;
+					float:left;
+					margin-top:20px;
+					margin-left:5%;	
+				}
 				
 				@media only screen and (max-width:1200px){
 					#filter{
@@ -526,6 +537,10 @@
 					label.style.color = 'black';
 					checkbox.checked = false;	
 				}
+				
+				document.getElementById('from-class-size-select').options[0].selected = true;
+				var toSelect = document.getElementById('to-class-size-select');
+				toSelect.options[toSelect.length - 1].selected = true;
 			}
 			
 			/*------------------------Professor Search Function----------------------*/
@@ -791,7 +806,7 @@
 		
 			<div class="accordion">
 				<p class="accordion-header" onclick="toggleAcc('prof-acc-content');">By Professor</p>
-				<div id="prof-acc-content" class="accordion-content filter_card">
+				<div id="prof-acc-content" style="font-size:14px;" class="accordion-content filter_card">
 						<input type="text" oninput="filterProfs()" name="prof_search" id="prof_search_id" placeholder="Search for a professor"/>
 						<div> <!-- placeholder -->
 						<div> <!-- placeholder -->
@@ -979,7 +994,7 @@
 		
 		<input type="submit" onclick="createQueryStr()" class="filter_button" value="Filter by Selections">
 		</form>
-		<input type="button" class="filter_button" id="clear-btn" value="Clear All" onclick="clearAll();">
+		<input type="button" class="filter_button" id="clear-btn" value="Reset" onclick="clearAll();">
 		</div> <!-- End filter -->
 		
 		<p id="menu-icon" onclick="toggleFilter(false);">&#9776;</p>
@@ -1023,13 +1038,20 @@
 	
 		{% if chosen_year and not message %}
 			<p id="displayed_yr"><i>{{chosen_year}}</i>
+		
+			{% if result_count %}
+				<span>&nbsp;&nbsp;&nbsp;Total Results: {{result_count}}</span>
+			{% endif %}
+			</p>
 		{% endif %}
 		
 		{% if result_count %}
-			&nbsp;&nbsp;&nbsp;Total Results: {{result_count}}
+			<span id="result_count">&nbsp;&nbsp;&nbsp;Total Results: {{result_count}}</span>
 		{% endif %}
-		</p>
+		
+		{% if not message %}
 		<span id="open-close-btn" onclick="toggleOpenCloseBtn();">Open All</span>
+		{% endif %}
 			
 		{% if message %}
 			<p id="error_msg">{{message}}</p>
