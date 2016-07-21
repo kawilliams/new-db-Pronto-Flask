@@ -1,0 +1,463 @@
+<!DOCTYPE>
+	<html>
+		<header>
+			<script>window.jQuery || document.write('<script src="{{
+  url_for('static', filename='jquery-3.1.0.min.js') }}">\x3C/script>')</script>
+			<meta charset="utf-8">
+			<meta name="viewport" content="width=device-width, initial-scale=1">
+			<link rel="stylesheet" type="text/css" href="{{url_for('static', filename='search.css')}}">
+			<script type="text/javascript" src="{{ url_for('static', filename='search.js') }}"></script>
+			<script type="text/javascript" src="{{url_for('static', filename='jquery-3.1.0.min.js') }}"></script>
+			<title>FindACourse</title>
+		</header>
+		<body onload="findCurrentDate()">
+			
+		
+		<!-- Contains an iframe with a course description -->
+		<div id="course_desc_div">
+			<p id="put_here"></p>
+			<input type="button" id="close_desc" value="Close" name="close" onclick="closeDescription('course_desc_div')"/>
+		</div>
+	
+	
+		<!--~~~~~~~~~~~~~~~~ Blackout ~~~~~~~~~~~~~~~~~~~~~-->
+		<div id="blackout">
+		</div>
+		
+		<!--~~~~~~~~~~~~~~~~~~~~~~~~~~Help ~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+
+		<div id="help_div">
+			<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/8d/VisualEditor_-_Icon_-_Close.svg/1000px-VisualEditor_-_Icon_-_Close.svg.png" id="close_btn_help" onclick="closeDiv('help_div')"/>
+			<p class="question"><b>Q: How can I search by semester?</b></p>
+			<p class="answer">A: For the Fall semester, type in the year followed by "01" (Ex: "201601"). For the Spring semester, type in the previous year followed by "02" (Ex:"201602").</p>
+			<p class="question"><b>Q: How can I view the course descriptions?</b></p>
+			<p class="answer">A: Each entry title is underlined, which indicates that there is a course description available. Click on each of these titles to view a pop-up with additional course information.</p>
+		</div>
+		
+		
+<!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Sidenav ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+
+		<div id="filter">
+			<p id="close_icon" onclick="toggleFilter(true);">&times;</p>
+			<p id="filter_results">Filter Results</p>
+			<form action={{url_for("process_form")}} method="post">
+			
+			
+		<!--Semester ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+		
+			<div class="accordion">
+				<p class="accordion-header" onclick="toggleAcc('year-acc-content');">By Semester</p>
+				<div id="year-acc-content" class="accordion-content" style="display:block;">
+					<select name="years" id="year_dropdwn">
+						<option value="201602" id="201602" class="year_li">Spring 2017</option>
+						<option value="201601" id="201601" class="year_li">Fall 2016</option>
+						<option value="201502" id="201502" class="year_li">Spring 2016</option>
+						<option value="201501" id="201501" class="year_li">Fall 2015</option>
+						<option value="201402" id="201402" class="year_li">Spring 2015</option> 				
+						<option value="201401" id="201401" class="year_li">Fall 2014</option>
+						<option value="201302" id="201302" class="year_li">Spring 2014</option>
+						<option value="201301" id="201301" class="year_li">Fall 2013</option>
+						<option value="201202" id="201202" class="year_li">Spring 2013</option>
+						<option value="201201" id="201201" class="year_li">Fall 2012</option>
+						<option value="201102" id="201102" class="year_li">Spring 2012</option>			
+						<option value="201101" id="201101" class="year_li">Fall 2011</option>
+						<option value="201002" id="201002" class="year_li">Spring 2011</option>
+						<option value="201001" id="201001" class="year_li">Fall 2010</option>
+						<option value="200902" id="200902" class="year_li">Spring 2010</option>
+						<option value="200901" id="200901" class="year_li">Fall 2009</option>
+					</select>
+				</div> <!-- End accordion content -->
+			</div> <!-- End accordion -->
+			
+			
+		<!--Professors ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+		
+			<div class="accordion">
+				<p class="accordion-header" onclick="toggleAcc('prof-acc-content');">By Professor</p>
+				<div id="prof-acc-content" style="font-size:14px;" class="accordion-content filter_card">
+						<input type="text" oninput="filterProfs()" name="prof_search" id="prof_search_id" placeholder="Search for a professor"/>
+						<div> <!-- placeholder -->
+						<div> <!-- placeholder -->
+      					<div id="prof_list">	
+	    					{% for i in profs %}
+    						<p><input type="checkbox" class="choices prof prof_check" id="{{i}}" value="{{i}}" onclick="toggleCheckbox('{{i}}_label');"><label id="{{i}}_label" for="{{i}}" class="checkbox-label">{{i}}</label></p>
+    						{% endfor %}
+    					</div> <!-- End prof_list -->
+    				</div> <! End placeholder -->
+    				</div> <! End placeholder -->
+				</div> <!-- End accordion content -->
+			</div> <!-- End accordion -->
+			
+			
+		<!--Departments ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+		
+			<div class="accordion">
+				<p class="accordion-header" onclick="toggleAcc('dept-acc-content');">By Department</p>
+				<div id="dept-acc-content" class="accordion-content filter_card">
+						<table id="dept_table">
+							<tr>
+							{% for i in deps %}
+								<td><input type="checkbox" class="choices dept_check" id='{{i}}' value='{{i}}' onclick="toggleCheckbox('{{i}}_label');"/><label for='{{i}}' class="help checkbox-label" id='{{i}}_label' onmouseover="showTooltip('{{i}}_span', 'block');" onmouseout="hideTooltip('{{i}}_span');">{{i}}<span class="tooltip" id="{{i}}_span">{{deps_full[loop.index0]}}</span></label></td>
+								
+								{% if loop.index%3 == 0 %}
+							</tr>
+							<tr>	
+								{% endif %}
+							{% endfor %}
+							</tr>
+						</table>
+						
+				</div> <!-- End accordion content -->
+			</div> <!-- End accordion -->
+			
+			
+		<!--Day ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+		
+			<div class="accordion">
+				<p class="accordion-header" onclick="toggleAcc('day-acc-content');">By Day</p>
+				<div id="day-acc-content" class="accordion-content">
+					<div> <!-- Placeholder -->
+					<div> <!-- Placeholder -->
+					<div id="day_list" class="filter_card">
+						<p class="day_li"><input type="checkbox" id="mwf" class="day_check choices" value="mwf" onclick="toggleCheckbox('mwf_label');"><label for="mwf" id="mwf_label" class="checkbox-label">MWF</label></p>
+      					<p class="day_li"><input type="checkbox" id="tr" class="day_check choices" value="tr" onclick="toggleCheckbox('tr_label');"><label for="tr" id="tr_label" class="checkbox-label">TR</label></p>
+					</div> <!-- End filter_card -->
+					</div> <!-- End placeholder -->
+					</div> <! End placeholder -->
+				</div> <!-- End accordion content -->
+			</div> <!-- End accordion -->
+			
+			
+		<!--Time ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+		
+			<div class="accordion">
+				<p class="accordion-header" onclick="toggleAcc('time-acc-content');">By Time</p>
+				<div id="time-acc-content" class="accordion-content filter_card">
+				<div> <!-- Placeholder -->
+						
+				<!--Heading (Morning/Afternoon) ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+	    				<div id="morn_aft">
+							<div id="morn_class_div"><input type="checkbox" id="morn_classes" class="choices" onclick="toggleCheckbox('morn_classes_label');toggleMornAft('morn_check', this);"><label for="morn_classes" id="morn_classes_label" class="checkbox-label">Morning</label></div>
+							
+							<div id="aft_class_div"><input type="checkbox" id="aft_classes" class="choices" onclick="toggleCheckbox('aft_classes_label');toggleMornAft('aft_check', this);"><label for="aft_classes" id="aft_classes_label" class="checkbox-label">Afternoon</label></div>
+						</div> <!-- End morn_aft -->
+										
+				<!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+				
+				
+			    		<div class="time-half" id="time_MWF_div">
+    					<ul id="time_list_MWF">
+      						<li><input type="checkbox" id="time_0830" class="morn_check time_check choices" value="0830" onclick="toggleCheckbox('time_0830_label');"><label for="time_0830" id="time_0830_label" class="checkbox-label">8:30am</label></li>
+      						<li><input type="checkbox" id="time_0930" class="morn_check time_check choices" value="0930" onclick="toggleCheckbox('time_0930_label');"><label for="time_0930" id="time_0930_label" class="checkbox-label">9:30am</label></li>
+      						
+      						<li><input type="checkbox" id="time_1030" class="morn_check time_check choices" value="1030" onclick="toggleCheckbox('time_1030_label');"><label for="time_1030" id="time_1030_label" class="checkbox-label">10:30am</label></li>
+      						
+      						<li><input type="checkbox" id="time_1130" class="morn_check time_check choices" value="1130" onclick="toggleCheckbox('time_1130_label');"><label for="time_1130" id="time_1130_label" class="checkbox-label">11:30am</label></li>
+      						
+	  						<li><input type="checkbox" id="time_1230" class="aft_check time_check choices" value="1230" onclick="toggleCheckbox('time_1230_label');"><label for="time_1230" id="time_1230_label" class="checkbox-label">12:30pm</label></li>
+	  						
+							<li><input type="checkbox" id="time_0130" class="aft_check time_check choices" value="0130" onclick="toggleCheckbox('time_0130_label');"><label for="time_0130" id="time_0130_label" class="checkbox-label">1:30pm</label></li>
+							
+							<li><input type="checkbox" id="time_0230" class="aft_check time_check choices" value="0230" onclick="toggleCheckbox('time_0230_label');"><label for="time_0230" id="time_0230_label" class="checkbox-label">2:30pm</label></li>
+							
+							<li><input type="checkbox" id="time_0330" class="aft_check time_check choices" value="0330" onclick="toggleCheckbox('time_0330_label');"><label for="time_0330" id="time_0330_label" class="checkbox-label">3:30pm</label></li>
+    					</ul>
+    					</div> <!-- End time MWF -->
+	    					
+			    		<div class="time-half time_list" id="time_TR_div">
+    					<ul id="time_list_TR">
+	 						<li><input type="checkbox" id="time_0815" class="morn_check time_check choices" value="0815" onclick="toggleCheckbox('time_0815_label');"><label for="time_0815" id="time_0815_label" class="checkbox-label">8:15am</label></li>
+      						<li><input type="checkbox" id="time_0940" class="morn_check time_check choices" value="0940" onclick="toggleCheckbox('time_0940_label');"><label for="time_0940" id="time_0940_label" class="checkbox-label">9:40am</label></li>
+      						<li><input type="checkbox" id="time_1215" class="aft_check time_check choices" value="1215" onclick="toggleCheckbox('time_1215_label');"><label for="time_1215" id="time_1215_label" class="checkbox-label">12:15pm</label></li>
+      						<li><input type="checkbox" id="time_0140" class="aft_check time_check choices" value="0140" onclick="toggleCheckbox('time_0140_label');"><label for="time_0140" id="time_0140_label" class="checkbox-label">1:40pm</label></li>
+	  						<li><input type="checkbox" id="time_0315" class="aft_check time_check choices" value="0315" onclick="toggleCheckbox('time_0315_label');"><label for="time_0315" id="time_0315_label" class="checkbox-label">3:15pm</label></li>
+						</ul>
+						</div> <!-- End time TR -->
+					</div> <!-- End placeholder -->
+				</div> <!-- End accordion content -->
+			</div> <!-- End accordion -->
+			
+			
+		<!--Distribution Requirements ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+		
+			<div class="accordion">
+				<p class="accordion-header" onclick="toggleAcc('distr-acc-content');">By Distribution Requirement</p>
+				<div id="distr-acc-content" class="accordion-content">
+					<div> <!-- placeholder -->
+					<div> <!-- placeholder -->
+					<div class="filter_card" style="text-align:left;">
+						
+		    			<div class="distr_choice"><input type="checkbox" value="HTRQ" id="htrq" class="dist_req_check choices" onclick="toggleCheckbox('htrq_label');"><label for="htrq" id="htrq_label" class="help checkbox-label" onmouseover="showTooltip('HTRQ_tooltip', 'inline');" onmouseout="hideTooltip('HTRQ_tooltip');">Historical Thought  <span class="tooltip" id="HTRQ_tooltip">HTRQ</span></label></div>
+			    			
+						<div class="distr_choice"><input type="checkbox" value="LBRQ" id="lbrq" class="dist_req_check choices" onclick="toggleCheckbox('lbrq_label');"><label for="lbrq" id="lbrq_label" class="help checkbox-label" onmouseover="showTooltip('LBRQ_tooltip', 'inline');" onmouseout="hideTooltip('LBRQ_tooltip');">Liberal Studies  <span class="tooltip" id="LBRQ_tooltip">LBRQ</span></label></div>
+			
+						<div class="distr_choice"><input type="checkbox" value="LTRQ" id="ltrq" class="dist_req_check choices" onclick="toggleCheckbox('ltrq_label');"><label for="ltrq" id="ltrq_label" class="help checkbox-label" onmouseover="showTooltip('LTRQ_tooltip','inline');" onmouseout="hideTooltip('LTRQ_tooltip');">Literary Studies, Creative Writing, and Rhetoric  <span class="tooltip" id="LTRQ_tooltip">  LTRQ</span></label></div>
+							
+						<div class="distr_choice"><input type="checkbox" value="MQRQ" id="mqrq" class="dist_req_check choices" onclick="toggleCheckbox('mqrq_label');"><label for="mqrq" id="mqrq_label" class="help checkbox-label" onmouseover="showTooltip('MQRQ_tooltip','inline');" onmouseout="hideTooltip('MQRQ_tooltip');">Mathematical and Quantitative Thought  <span class="tooltip" id="MQRQ_tooltip">  MQRQ</span></label></div>
+							
+		    			<div class="distr_choice"><input type="checkbox" value="NSRQ" id="nsrq" class="dist_req_check choices" onclick="toggleCheckbox('nsrq_label');"><label for="nsrq" id="nsrq_label" class="help checkbox-label" onmouseover="showTooltip('NSRQ_tooltip','inline');" onmouseout="hideTooltip('NSRQ_tooltip');">Natural Science  <span class="tooltip" id="NSRQ_tooltip">NSRQ</span></label></div>
+			    			
+						<div class="distr_choice"><input type="checkbox" value="SSRQ" id="ssrq" class="dist_req_check choices" onclick="toggleCheckbox('ssrq_label');"><label for="ssrq" id="ssrq_label" class="help checkbox-label" onmouseover="showTooltip('SSRQ_tooltip','inline');" onmouseout="hideTooltip('SSRQ_tooltip');">Social-Scientific Thought  <span class="tooltip" id="SSRQ_tooltip">SSRQ</span></label></div>
+							
+						<div class="distr_choice"><input type="checkbox" value="VPRQ" id="vprq" class="dist_req_check choices" onclick="toggleCheckbox('vprq_label');"><label for="vprq" id="vprq_label" class="help checkbox-label" onmouseover="showTooltip('VPRQ_tooltip','inline');" onmouseout="hideTooltip('VPRQ_tooltip');">Visual and Performing Arts  <span class="tooltip" id="VPRQ_tooltip">VPRQ</span></label></div>
+							
+						<div class="distr_choice"><input type="checkbox" value="PRRQ" id="prrq" class="dist_req_check dist_req_li choices" onclick="toggleCheckbox('prrq_label');"><label for="prrq" id="prrq_label" class="help checkbox-label" onmouseover="showTooltip('PRRQ_tooltip','inline');" onmouseout="hideTooltip('PRRQ_tooltip');">Philosophical and Religious Perspectives  <span class="tooltip" id="PRRQ_tooltip">PRRQ</span></label></div>
+							
+						<div class="distr_choice"><input type="checkbox" value="CULT" id="cult" class="dist_req_check dist_req_li choices" onclick="toggleCheckbox('cult_label');"><label for="cult" id="cult_label" class="help checkbox-label" onmouseover="showTooltip('CULT_tooltip','inline');" onmouseout="hideTooltip('CULT_tooltip');">Cultural Diversity  <span class="tooltip" id="CULT_tooltip">CULT</span></label></div>
+						
+					</div> <!-- End filter_card -->
+					</div> <!-- End placeholder -->
+					</div> <!-- End placeholder -->
+				</div> <!-- End accordion content -->
+			</div> <!-- End accordion -->
+			
+			
+		<!--Class Size ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+		
+			<div class="accordion">
+				<p class="accordion-header" onclick="toggleAcc('class-size-acc-content');">By Class Size</p>
+				<div id="class-size-acc-content" class="accordion-content filter_card">
+					<div class="class-size-half">
+						<span>From: </span>
+						<select id="from-class-size-select" style="width:40px;">
+							<script>
+								for (var i = 1; i < 35; i++){
+									var option = document.createElement("option");	
+									option.appendChild(document.createTextNode(String(i)));
+									option.value = "from_" + String(i);
+									document.getElementById('from-class-size-select').appendChild(option);
+								}
+							</script>
+						</select>
+					</div> <!-- End class size half -->
+					
+					<div class="class-size-half">
+						<span>To: </span>
+						<select id="to-class-size-select" style="width:50px;">
+						<script>
+							for (var i = 2; i < 36; i++){
+								var option = document.createElement("option");	
+								option.appendChild(document.createTextNode(String(i)));
+								option.value = "to_" + String(i);
+								if (i == 35){
+									option.selected = true;	
+								}
+								document.getElementById('to-class-size-select').appendChild(option);
+							}
+						</script>
+						</select>
+					</div> <!-- End class size half -->
+					
+				</div> <!-- End accordion content -->
+			</div> <!-- End accordion -->
+			
+		<!--Form Submission and Clear/Filter Buttons ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+
+		<input type="text" id="dep" name="dep" value="" hidden>
+		<input type="text" id="period" name="period" value="" hidden>
+		<input type="text" id="prof_form" name="prof_form" value="" hidden>
+		<input type="text" id="days" name="days" value="" hidden>
+		<input type="text" id="times" name="times" value="" hidden>
+		<input type="text" id="distri" name="distri" value="" hidden>
+		<input type="text" id="class_size" name="class_size" value="" hidden>
+		
+		<input type="submit" onclick="createQueryStr()" class="filter_button" value="Filter by Selections">
+		</form>
+		<input type="button" class="filter_button" id="clear-btn" value="Reset" onclick="clearAll();">
+		</div> <!-- End filter -->
+		
+		<p id="menu-icon" onclick="toggleFilter(false);">&#9776;</p>
+		
+	
+		
+		
+<!--~~~~~~~~~~~~~~~~~~~~~ Main ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+ 
+		<div id="main">
+			
+			<p id="davidson_logo">DAVIDSON COLLEGE</p>   <!--Logo-->
+			
+			
+			<!-- Search box ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+			
+			<div id="opq_search_box">
+				
+				<p id="by_keyword_home">Search By Keyword:</p>
+				<form action={{url_for("process_search")}} method="post">
+				<table id="search_bar">
+					<tr>
+						<td id="search_home_td"><input class="search" id="search_home" name="gen_search" placeholder="Search..." autofocus/></td>
+						<td id="search_btn_home_td"><img src="https://cdn4.iconfinder.com/data/icons/ionicons/512/icon-ios7-search-strong-128.png" id="search_btn_home" onclick="document.getElementById('hidden_search_home').click();"></td>
+						<td style="display:none;padding-left:10px;padding-top:0px;" id="help_td"><p id="help" onclick="document.getElementById('help_div').style.display = 'block';document.getElementById('blackout').style.display = 'block';">Help</p></td>
+					</tr>
+				</table>
+				<input type="submit" id="hidden_search_home" name="gen_search_btn" style="display:none;"></form>
+			</div> <!-- End opq-search-box -->
+		
+		
+	<!--Description ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+		<div id="descript_page">
+			<p style="font-size:18px;font-family:'verdana';">Welcome to FindACourse!</p> 
+			<p>In order to find a class, either filter using the navigation to your left or search using the central search bar. If you are an administrator, login on the left navigation. If you are a professor looking to upload a syllabus, contact an administrator for access. Thank you very much for using this page! Good day. </p>
+		</div> <!-- End descript page -->
+		
+	
+	
+	<!-- Result Div ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+	
+		{% if chosen_year and not message %}
+			<p id="displayed_yr"><i>{{chosen_year}}</i>
+		
+			{% if result_count %}
+				<span>&nbsp;&nbsp;&nbsp;Total Results: {{result_count}}</span>
+			{% endif %}
+			</p>
+
+		{% elif result_count %}
+			<span id="result_count">&nbsp;&nbsp;&nbsp;Total Results: {{result_count}}</span>
+		{% endif %}
+		
+		{% if not message %}
+		<span id="open-close-btn" onclick="toggleOpenCloseBtn();">Open All</span>
+		{% endif %}
+			
+		{% if message %}
+			<p id="error_msg">{{message}}</p>
+		{% endif %}
+		
+		<div id="results">
+			{% for i in search_results %}
+			<div class="acc-results" id="acc_{{loop.index0}}">
+				
+				<span class="acc-header-results" onclick="toggleAcc('acc_content_{{loop.index0}}');">
+				<table class="header_results_table">
+					<tr>
+						<td class="courseLink"><b>{{i.subject}} {{i.course_num}} {% if i.seq_num != '0' %}{{i.seq_num}}{% endif %}[{{i.major_code}}]</b>: <u class="iframe_link" onclick="showDescription('course_desc_div','{{i.subject}}','{{i.course_num}}');">{{i.course_title}}</u></td>
+						<td class="prof_result">{{i.instructor1}}</td>
+						<td class="CRN_result"><span style="margin-right:10%;">CRN: {{i.CRN}}</span></td>
+						<td class="x_result"><span onclick="document.getElementById('acc_{{loop.index0}}').style.display='none'" style="font-size:23px;" class="close_icon">&times;</span></td>
+				  </tr>
+				</table>
+				</span> <!-- End header -->
+				
+				
+				<div id="acc_content_{{loop.index0}}" class="acc-content-results" style="margin-top:10px;background-color:#d9d9d9; padding:5px;">
+			  	<table class="results_table">
+				  <tr>
+					<td class="results_th">Time:</td>
+					<td class="results_th">Days:</td>
+					<td class="results_th">Place:</td>
+					<td class="results_th">Distr. Req.'s:</td>
+					{% if i.course_notes == "" %}
+					
+					{% else %}
+						<td class="results_th">Notes</td>
+					{% endif %}
+					<td class="results_th">Class Size:</td> 
+					<td class="results_th">Visit:</td>
+					<td class="results_th">Syllabus</td>
+				</tr>
+				<tr>
+					<td class="results_td">{{i.class_time}}</td>
+					<td class="results_td">{{i.meet_days}}</td>
+					<td class="results_td">{{i.bldg_code + " " + i.room_code }}</td>
+					<td class="results_td">{{i.course_attrib}}</td>
+					{% if i.course_notes == "" %}
+						
+					{% else %}
+						<td class="results_td">{{i.course_notes}}</td>
+					{% endif %}
+					<td class="results_td">{{i.max_enroll}}</td>
+					<td class="results_td">{{i.visitable}}</td>
+					<td class="results_td"><u><a href = {{url_for('download',file_path=i.syllabus_link)}} target = "blank" style="cursor:pointer;">{{i.syllabus_link}}</a></u></td>
+				</tr>                    
+			  </table>
+			  </div> <!-- End acc content -->
+			</div> <!-- End accordion -->
+			{% endfor %}
+		</div> <!-- End "results" -->
+		</div> <!-- End main -->
+		
+		{% if search_results %}
+			<script>
+				showResults();				
+			</script>
+	  {% elif message %}
+			<script>
+				showNoResults();
+			</script>	
+		  {% endif %}
+		  
+		  <script>
+			 var openAccs = [];
+			 var mornTimes = 0;
+			 var aftTimes = 0;
+		 </script>
+		{% for i in kept_values %}
+		<script>
+			var allInputs = document.getElementsByTagName("input");
+			
+			for(var x = 0; x < allInputs.length; x++){
+				var curElem = allInputs[x];
+				if(curElem.value == "{{i}}"){
+					curElem.checked = true;
+					if (hasClass(curElem, "morn_check")){
+						mornTimes++;
+					}
+					if (hasClass(curElem, "aft_check")){
+						aftTimes++;
+					}
+					
+					var inputLabel = curElem.id + "_label";
+					document.getElementById(inputLabel).style.color = '#248f8f';
+					var accId = curElem.parentElement.parentElement.parentElement.parentElement.parentElement.id;
+					
+					if (openAccs.indexOf(accId) === -1){
+						openAccs.push(accId);
+						document.getElementById(accId).style.display = 'block';
+					}	
+				}	
+			}
+			if (mornTimes === 6){
+				var mornId = "morn_classes"
+				var mornLabel = mornId + "_label"
+				document.getElementById(mornId).checked = true;
+				document.getElementById(mornLabel).style.color = '#248f8f';	
+			}
+			if (aftTimes === 7){
+				var aftId = "aft_classes"
+				var aftLabel = aftId + "_label"
+				document.getElementById(aftId).checked = true;
+				document.getElementById(aftLabel).style.color = '#248f8f';	
+			}
+				
+		</script>
+	{% endfor %}
+	
+	{% if semester %}
+	
+		<script>
+			keepSemester();
+		</script>
+	
+	{% endif %}
+	
+	{% if class_size_kept %}
+		
+		<script>
+			keepClassSize();
+		</script>
+		
+	{% endif %}
+		  
+	</body>
+</html>
+		
+		
+		
+		
+		
+		
+		
+		
+		
