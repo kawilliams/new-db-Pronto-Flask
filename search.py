@@ -434,13 +434,14 @@ def process_search():
 		query_term = str(request.form["gen_search"])
 		
 		results = general_search(query_term)
+		full_dep = find_full_deps(ALL_DEPS)
 		
 		msg = ""
 		if (len(results) == 0):
 			msg = "Sorry, no courses found. Try again."
 		return render_template("search.html",search_results=results,
 		                       message = msg,profs=ALL_PROFESSORS,
-		                       deps=ALL_DEPS, deps_full=ALL_DEPS_FULL,
+		                       deps=ALL_DEPS, deps_full=full_dep,
 		                       result_count=len(results))
 
 	else:
