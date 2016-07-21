@@ -1,6 +1,6 @@
 #!/usr/bin/python
 """
-Creates the course/syllabi database from a csv.
+Creates the course/syllabi database from a Banner dump csv.
 """
 
 import os
@@ -43,7 +43,7 @@ SEATS_REMAINING = 23
 
 def read_csv(filename):
     
-    """Reads in filename.csv, writes contents to nested list"""
+    """Reads in filename ('filename.csv'), writes contents to nested list"""
     
     courses = []   
     
@@ -59,9 +59,8 @@ def read_csv(filename):
             if header:
                 header = False
                 pass            
-            else:                
-
-                line[COURSE_ATTRIBUTES] = line[COURSE_ATTRIBUTES].replace(
+            else:     
+		line[COURSE_ATTRIBUTES] = line[COURSE_ATTRIBUTES].replace(
                     '\r\n', '')   
                 courses.append(line)
 		
@@ -71,7 +70,6 @@ def read_csv(filename):
 		    
 		    CRNs.add(line[CRN])
 		
-
     return courses
 
 ##########################################################################
@@ -84,8 +82,12 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
 
 db = SQLAlchemy(app)
 
+
 	
 class Course(db.Model):
+    """ 
+    Build outline for Course object. Link instructor# to Professor object 
+    """
     __tablename__='courses'
     id = db.Column(db.Integer, primary_key=True)
     
@@ -96,7 +98,7 @@ class Course(db.Model):
     seq_num = db.Column(db.String(10))
     CRN = db.Column(db.String(20))
     course_title = db.Column(db.String(50))
-    credit_hrs = db.Column(db.String(20))
+    credit_hrs = db.Column(db.Integer) # changed from string
     crs_cred_range = db.Column(db.String(20))
     cred_hr_session = db.Column(db.String(10))
     meet_days = db.Column(db.String(20))
@@ -110,9 +112,9 @@ class Course(db.Model):
     instructor3 = db.Column(db.String(30),db.ForeignKey('professor.dbname'))
     course_notes = db.Column(db.String(20))
     course_attrib = db.Column(db.String(20))
-    max_enroll = db.Column(db.String(10))
-    curr_enroll = db.Column(db.String(10))
-    seats_remain = db.Column(db.String(10))
+    max_enroll = db.Column(db.Integer) # changed from string
+    curr_enroll = db.Column(db.Integer) # changed from string
+    seats_remain = db.Column(db.Integer) # changed from string
     
     
     
@@ -132,7 +134,11 @@ class Course(db.Model):
                  course_attrib, max_enroll, curr_enroll, seats_remain, 
                  syllabus_link, visitable, privacy, learning_outcomes, 
                  lo_status): 
-	 
+	""" 
+	Initialization method. Note that the field 'all_data' is 
+	generated in this function, it is not passed as a parameter. 
+	""" 
+	
 	self.acad_period = acad_period
 	self.major_code = major_code
 	self.subject = subject
@@ -174,6 +180,13 @@ class Course(db.Model):
 	
     
 class Professor(db.Model):
+    """
+    Build outline for Professor object. Link primary_classes (those for which
+    the Professor is listed as instructor1), secondary_classes (those for 
+    which the Professor is listed as instructor2), and tertiary_classes (those 
+    for which the Professor is listed as instructor3) to the respective 
+    Course objects.
+    """
     id = db.Column(db.Integer, primary_key=True)
     
     email = db.Column(db.String(30))
@@ -189,15 +202,29 @@ class Professor(db.Model):
 	self.fullname = full_name
 	self.email = username	
 
+
+
 # Constant values that depend on the CSV file
 FACULTY_NAME = 1
 EMAIL = 4
-PROF_CSV = "FacultyInformation.csv"
-PROF2_CSV = "Additional.csv"
-# a session object that will be used to add data
+PROF_CSV = "FacultyInformation.csv" # file with most of the faculty
+PROF2_CSV = "Additional.csv" # faculty that weren't in PROF_CSV
+
+
+
 
 def make_faculty_fromCSV(csvFile):
-
+    """
+    Constructs Professor objects from a csv file that contains the professor's 
+    name and email address. The objects contain db_name (last name + ' ' + 
+    first initial e.g. Staff S), f_name (full name), f_email 
+    (username@davidson.edu).
+    
+    Parameters: 
+        csvFile - a csv file of professor information (full name, email)
+    Returns: 
+        faculty_list - a list of Professor objects
+    """
     faculty_list = []
 
     # open file and create reader
@@ -221,8 +248,18 @@ def make_faculty_fromCSV(csvFile):
 	    row_count+=1
 	    
     return faculty_list
+
 	
 def build_db(courses):
+    """
+    Builds a database of Courses from a list of the rows from the course csv.
+    Prints the number of rows and the number of database entries, which
+    should be equal.
+    
+    Parameters: 
+        courses - a list of rows (list) where each row is information about a course
+        
+    """
     db.create_all()
     count = 0
     for c in courses:	
@@ -255,15 +292,33 @@ def build_db(courses):
 
 @app.route('/', methods=['GET','POST'])        
 def index():
+    """
+    Index for displaying our database. 
+    """
     courses = Course.query.all()
-    logging.warning(len(courses))
     return render_template('show_all_sylman.html', courses=courses)
 
 def main():
+    """
+    To construct the database, comment in the first three lines with the 
+    app.run line commented out. Save this file. Run this file. Comment back 
+    out the three lines.
+    
+    To view the database, make sure the three lines are commented out. 
+    Comment-in the app.run line. Go to http://127.0.0.1:5000/
+    
+    If the database was built properly, in the terminal window you should
+    see "CSV COUNT" and "DATABASE COUNT" are equal. If DATABASE COUNT is
+    multiple times greater than CSV COUNT, check how you constructed the
+    database.
+    """
+    # Comment-in these 3 lines to build the database
     #filename = "static/1617ClassSchedule.csv"
     #courses = read_csv(filename)
     #build_db(courses)
+    # end of "Build Database" part
 
+    # Comment-in this line to view the database via an HTML page
     app.run(debug=True)
 
 if __name__ == "__main__":
