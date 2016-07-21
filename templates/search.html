@@ -63,7 +63,8 @@
 					top:20%;
 					left:48%;
 					width:30%;
-					z-index:2;	
+					z-index:2;
+					transition:0.5s;	
 				}
 				#close_btn_help{
 					float:right;
@@ -325,9 +326,9 @@
 				#displayed_yr{
 					margin-left:5%;
 					color:#e6e6e6;	
-					margin-top:15px;
-					margin-bottom:7px;
-					display:inline-block;
+					margin-top:25px;
+					margin-bottom:0px;
+					float:left;
 				}
 				#error_msg{
 					font-size:17px;
@@ -431,6 +432,16 @@
 				iframe::-webkit-scrollbar{
 					display:none;	
 				}
+				#open-close-btn{
+					margin-bottom:8px;
+					margin-top:10px;
+					float:right;	
+					margin-right:8%;
+					background-color:#660000;
+					color:white;
+					padding:7px;
+					cursor:pointer;
+				}
 				
 				@media only screen and (max-width:1200px){
 					#filter{
@@ -482,6 +493,7 @@
 					setTimeout(function(){menu.style.display = 'block';}, 400);
 					main.style.width = '100%';
 					main.style.marginLeft = "0%";
+					document.getElementById("help_div").style.left = '35%';
 				}
 				else{
 					filter.style.transition = '0.7s';
@@ -489,6 +501,7 @@
 					setTimeout(function(){menu.style.display = 'none';}, 300);
 					main.style.width = '75%';
 					main.style.marginLeft = "25%";
+					document.getElementById("help_div").style.left = '48%';
 				}	
 			}
 			function hasClass(element, clss) {
@@ -687,6 +700,32 @@
 				curDiv.style.display = "none";
 				document.getElementById("blackout").style.display = "none";
 			}
+			
+			function openCloseAllAccordions(open){
+				var accContents = document.getElementsByClassName('acc-content-results');
+				var display = 'none';
+				if (open){
+					display = 'block';	
+				}
+				for (var i = 0; i < accContents.length; i++){
+					accContents[i].style.display = display;
+				}
+			}
+			function toggleOpenCloseBtn(){
+				var openCloseBtn = document.getElementById('open-close-btn');
+				if (openCloseBtn.innerHTML == "Open All"){
+					openCloseBtn.style.backgroundColor = "white";
+					openCloseBtn.style.color = "#660000";
+					openCloseBtn.innerHTML = "Close All";
+					openCloseAllAccordions(true);
+				}	
+				else{
+					openCloseBtn.style.backgroundColor = "#660000";
+					openCloseBtn.style.color = "white";
+					openCloseBtn.innerHTML = "Open All";
+					openCloseAllAccordions(false);
+				}
+			}
 
 
 		</script>
@@ -708,6 +747,8 @@
 			<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/8d/VisualEditor_-_Icon_-_Close.svg/1000px-VisualEditor_-_Icon_-_Close.svg.png" id="close_btn_help" onclick="closeDiv('help_div')"/>
 			<p class="question"><b>Q: How can I search by semester?</b></p>
 			<p class="answer">A: For the Fall semester, type in the year followed by "01" (Ex: "201601"). For the Spring semester, type in the previous year followed by "02" (Ex:"201602").</p>
+			<p class="question"><b>Q: How can I view the course descriptions?</b></p>
+			<p class="answer">A: Each entry title is underlined, which indicates that there is a course description available. Click on each of these titles to view a pop-up with additional course information.</p>
 		</div>
 		
 		
@@ -987,9 +1028,12 @@
 		{% if result_count %}
 			&nbsp;&nbsp;&nbsp;Total Results: {{result_count}}
 		{% endif %}
-		</p><br>
+		</p>
+		<span id="open-close-btn" onclick="toggleOpenCloseBtn();">Open All</span>
 			
-		<p id="error_msg">{{message}}</p>
+		{% if message %}
+			<p id="error_msg">{{message}}</p>
+		{% endif %}
 		
 		<div id="results">
 			{% for i in search_results %}
