@@ -1,877 +1,1252 @@
-<!DOCTYPE html>
-<html>
-<header>	
-<link rel="stylesheet" type="text/css" href={{url_for('static', filename='search.css')}}>
-<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-<script>window.jQuery || document.write('<script src="{{
+
+			<script>window.jQuery || document.write('<script src="{{
   url_for('static', filename='jquery.js') }}">\x3C/script>')</script>
-<!--<script src="search_flask.js"></script>-->
-<!--<script src="static/courses.js"></script>-->
-<link rel="stylesheet" href="http://www.w3schools.com/lib/w3.css">
-<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
-
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Search Page</title>
-</header>
-<body onload="findCurrentDate()">
-	
-<script>
-	
-/*--------------------------Open and Close Sidenav---------------------*/
-
-function w3_open() {
-    document.getElementsByClassName("w3-sidenav")[0].style.display = "block";
-}
-function w3_close() {
-    document.getElementsByClassName("w3-sidenav")[0].style.display = "none";
-}
-
-
-/*---------------------Create query to pass to the db------------------*/
-
-function hasClass(element, cls) {
-    return (' ' + element.className + ' ').indexOf(' ' + cls + ' ') > -1;
-}
-
-function createQueryStr(){
-
-	var profStr = "";
-	var deptStr = "";
-	var dayStr = "";
-	var timeStr = "";
-	var distStr = "";
-	var semStr = "";
-	var classSizeStr = "";
-		
-	var checkedBoxes = document.getElementsByClassName("choices");
-	var i;
-	for(i = 0; i < checkedBoxes.length; i++){
-		var curElem = checkedBoxes[i];
-		if (curElem.checked){
-			if (hasClass(curElem, "prof_check")){
-				var replacemt;
-				if(profStr != ""){
-					replacemt = profStr.concat(" or ", curElem.value);
-				}
-				else{
-					replacemt = profStr.concat(curElem.value);
-						
-				}
-				profStr = replacemt;
-			}
-			if (hasClass(curElem, "dept_check")){
-				var replacemt;
-				if(deptStr != ""){
-					replacemt = deptStr.concat(" or ", curElem.value);
-				}
-				else{
-					replacemt = deptStr.concat(curElem.value);
-				}
-				deptStr = replacemt;
-			}
-			if (hasClass(curElem,"day_check")){
-				var replacemt;
-				if(dayStr != ""){
-					replacemt = dayStr.concat(" or ", curElem.value);
-				}
-				else{
-					replacemt = dayStr.concat(curElem.value);
-						
-				}
-				dayStr = replacemt;
-			}
-			if (hasClass(curElem,"time_check")){
-				var replacemt;
-				if(timeStr != ""){
-					replacemt = timeStr.concat(" or ", curElem.value);
-				}
-				else{
-					replacemt = timeStr.concat(curElem.value);
-						
-				}
-				timeStr = replacemt;
-			}
-			if (hasClass(curElem,"dist_req_check")){
-				var replacemt;
-				if(distStr != ""){
-					replacemt = distStr.concat(" or ", curElem.value);
-				}
-				else{
-					replacemt = distStr.concat(curElem.value);
-						
-				}
-				distStr = replacemt;
-			}
-			if (hasClass(curElem,"class_size_check")){
-				var replacemt;
-				if(classSizeStr != ""){
-					replacemt = classSizeStr.concat(" or ", curElem.value);
-				}
-				else{
-					replacemt = classSizeStr.concat(curElem.value);
-						
-				}
-				classSizeStr = replacemt;
-			}
-		}
-	}
+			<meta charset="utf-8">
+			<meta name="viewport" content="width=device-width, initial-scale=1">
+			<title>FindACourse</title>
 			
-	var semDropdown = document.getElementById("year_dropdwn");
-	var semChoices = semDropdown.options;
-	var semAns = semChoices[semDropdown.selectedIndex];
-	var replacemt;
-	replacemt = semStr.concat(semAns.value);
-	semStr = replacemt;
-
-	document.getElementById("period").value = semStr;
-	document.getElementById("prof_form").value = profStr;
-	document.getElementById("dep").value = deptStr;
-	document.getElementById("days").value = dayStr;
-	document.getElementById("times").value = timeStr;
-	document.getElementById("distri").value = distStr; 	
-	document.getElementById("class_size").value = classSizeStr;	
-}
-
-
-/*------------------------Open and Close Accordions-------------------*/
-
-function accFunc(id) {
-	
-    var x = document.getElementById(id);
-    if (x.className.indexOf("w3-show") == -1) {
-        x.className += " w3-show";
-        x.previousElementSibling.className += " w3-gray";
-    } else { 
-        x.className = x.className.replace(" w3-show", "");
-        x.previousElementSibling.className = 
-        x.previousElementSibling.className.replace(" w3-gray", "");
-    }
-}
-
-
-/*---------Check and Uncheck (Morning/Afternoon classes)---------------*/
-
-$(document).ready(function(){
-var mornClassOn = document.getElementById("morn_classes").checked;
-  $("#morn_classes").click(
-  	function(){
-	 	var labels = $(".morn");
-	 	var checkBoxes = $(".morn_check")
-     	checkBoxes.prop("checked", !mornClassOn);
-     	if (!mornClassOn){
-     		$(labels).css("color", "#248f8f");
-     		$("#morn_classes_label").css("color", '#248f8f');
-     	}
-     	else{
-	     	$(labels).css("color", 'black');
-     		$("#morn_classes_label").css("color", 'black');
-	    }
-     	mornClassOn = !mornClassOn;
-	});
-	
-	var aftClassOn = document.getElementById("aft_classes").checked;
-	$("#aft_classes").click(function(){
-		var labels = $(".aft");
-	  	var checkBoxes = $(".aft_check");
-      	checkBoxes.prop("checked", !aftClassOn);
-      	if (!aftClassOn){
-     		$(labels).css({"color":'#248f8f'});
-     		$("#aft_classes_label").css({"color":'#248f8f'});
-     	}
-     	else{
-	     	$(labels).css({"color":'black'});
-     		$("#aft_classes_label").css({"color":'black'});
-	    }
-      aftClassOn = !aftClassOn;
-	});
-	
-  $("#hidden_morn_classes").click(
-  	function(){
-	  	var labels = $(".morn");
-	 	var checkBoxes = $(".morn_check");
-     	checkBoxes.prop("checked", !mornClassOn);
-     	if (!mornClassOn){
-     		$(labels).css({"color":"#248f8f"});
-     		$("#hidden_morn_classes_label").css({"color":'#248f8f'});
-     	}
-     	else{
-	     	$(labels).css("color", 'black');
-     		$("#hidden_morn_classes_label").css({"color":'black'});
-	    }
-     	mornClassOn = !mornClassOn;
-	});
-	
-	$("#hidden_aft_classes").click(function(){
-		var labels = $(".aft");
-	  	var checkBoxes = $(".aft_check");
-      	checkBoxes.prop("checked", !aftClassOn);
-      	if (!aftClassOn){
-     		$(labels).css("color", '#248f8f');
-     		$("#hidden_aft_classes_label").css("color", '#248f8f');
-     	}
-     	else{
-	     	$(labels).css("color", 'black');
-     		$("#hidden_aft_classes_label").css("color", 'black');
-	    }
-      aftClassOn = !aftClassOn;
-	});
-	
-	
-/*------------------------Click hidden submit--------------------------*/
-	
-	$("#gen_search_btn_home").click(function(){
-		$("#hidden_search_home").click();
-	});
-	$("#gen_search_btn").click(function(){
-		$("#hidden_search").click();
-	});
-	$("#gen_search_mobile").click(function(){
-		$("#submit_search_mobile").click();
-	});
-	
-	
-/*------------------------General Check and Uncheck---------------------*/
-	
-	$(".checkbox").click(function(){
-		var labelID = this.id.concat("_label");
-		var label = document.getElementById(labelID);
+			<style>
+				body{
+				  background-color:#990000;
+				  min-width:600px;
+				  font-family:"Verdana";
+				}
+				#course_desc_div{
+					display:none;
+					background-color: #e6e6e6;
+					border:1px solid #e6e6e6;
+					border-radius:4px;
+					box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 8px 20px 0 rgba(0, 0, 0, 0.19);
+					padding:10px;
+					position:fixed;
+					top:5%;
+					left:43%;
+					width:40%;
+					z-index:2;
+					line-height:30px;	
+					font-size: 40%;
+					font-size:90%;	
+				}
+				#blackout{
+					position:fixed;
+					display:none;
+					z-index:1;
+					width:100%;
+					height:100%;
+					margin:0px;
+					top:0px;
+					left:0px;
+					background-color:black;
+					opacity:0.5;	
+				}
+				#help{
+					color:#990000;
+					padding:5px;
+					margin-left:10px;
+					width:35px;
+				}
+				#help:hover{
+					color:#800000;
+					cursor:pointer;
+					background-color:rgba(220, 200, 200, 0.8)	
+				}
+				#help_div{
+					display:none;
+					background-color:white;
+					border:1px solid #e6e6e6;
+					border-radius:4px;
+					box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 8px 20px 0 rgba(0, 0, 0, 0.19);
+					padding:15px;
+					position:fixed;
+					top:20%;
+					left:48%;
+					width:30%;
+					z-index:2;
+					transition:0.5s;	
+				}
+				#close_btn_help{
+					float:right;
+					margin:5px;	
+					width:25px;
+					height:25px;
+					cursor:pointer;
+				}
+				.question{
+					padding:5px;
+					border-bottom:2px solid #cccccc;
+				}
+				#filter{
+					padding-bottom:20px;
+					background-color:#eeeeee;
+					text-align:center;
+					text-decoration:none;
+					position:fixed;
+					top:0px;
+					left:0px;
+					height:100%;
+					width:25%;
+					transition:2s;
+					box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2), 0 4px 10px 0 rgba(0, 0, 0, 0.19);
+					overflow:scroll;
+					min-width:310px;
+					z-index:5;	
+				}
+				#filter::-webkit-scrollbar{
+					display:none;	
+				}
+				#filter_results{
+					font-weight:bold;
+					padding-bottom:5px;
+					border-bottom:2px solid lightgray;
+					margin:10px;
+					margin-top:2px;
+				}
+				.accordion-header{
+					margin:0px;
+					padding:10px;
+					transition:0.3s;	
+				}
+				.accordion-header:hover{
+					background-color:#d9d9d9;	
+					cursor:pointer;
+				}
+				.accordion-content{
+					margin:10px;
+					margin-top:0px;
+					margin-bottom:0px;
+					display:none;	
+				}
+				select{
+					width:90%;	
+				}
+				.filter_card{
+					background-color:white;
+					box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2), 0 4px 10px 0 rgba(0, 0, 0, 0.19);
+					border-radius:3px;
+					padding:10px;	
+				}
+				#prof_search_id{
+					width:90%;
+					padding:8px;
+					border:1px solid #cccccc;
+					border-radius:3px;
+					font-size:14px;
+					margin:10px;
+					margin-top:10px;
+					background-color:#eeeeee;	
+				}
+				#prof_search_id:focus{
+					outline:3px solid #cce6ff;
+					background-color:#cccccc;	
+				}
+				#prof_list{
+					width:90%;
+					margin:0 auto;
+					text-align:left;
+					height:250px;
+   					overflow:scroll;
+   					overflow-x:hidden;	
+				}
+				#prof_list p{
+					display:block;
+					padding:10px;
+					border-bottom:2px solid #e6e6e6;
+					width:100% - 7px;
+					margin:0px;
+				}
+				input[type=checkbox]{
+					margin-right:10px;
+					width:15px;
+					height:15px;	
+				}
+				#dept_table{
+					width:calc(100% - 20px);
+					margin-left:10px;	
+				}
+				#dept_table td{
+					width:33%;		
+				}
+				.dept_text:hover, .dist_text:hover{
+					cursor:help;
+				}
+				.tooltip{
+					background-color:black;
+					color:white;
+					padding:3px;
+					position:absolute;
+					z-index:24;
+					opacity:0.7;
+					display:none;
+					margin-left:5px;
+					font-size:14px;	
+				}
+				.day_li{
+					display:inline-block;
+					margin:0px;	
+					margin-left:20px;
+					margin-right:10px;			
+				}
+				.time-half, .class-size-half{
+					display:inline-block;
+					margin-left:2%;
+					margin-right:2%;
+					text-align:left;	
+				}
+				.time-half ul{
+					padding:0px;
+				}
+				li{
+					display:block;	
+					padding:5px;
+				}
+				.distr-half{
+					text-align:left;	
+				}
+				.distr_choice{
+					margin-bottom:5px;	
+				}
+				.class_size_li{
+					margin-left:30%;	
+				}
+				.filter_button{
+					width:95%;
+					padding:8px;
+					font-size:15.5px;
+					border:1px solid #cce6ff;
+					border-radius:3px;
+					background-color:#cce6ff;	
+					cursor:pointer;
+					transition:0.4s;
+					margin-top:15px;
+				}
+				.filter_button:hover{
+					box-shadow:0 0 15px gray;	
+				}
+				#clear-btn{
+					background-color:#cccccc;
+					border:1px solid #cccccc;	
+					margin-top:0px;
+					margin-bottom:30px;
+				}
+				#close_icon{
+					font-size:30px;
+					text-align:right;
+					margin:0px;
+					margin-top:2px;
+					margin-right:5px;
+					cursor:pointer;	
+				}
+				#menu-icon{
+					font-size:23px;
+					margin:0px;
+					position:absolute;
+					top:0px;
+					left:0px;	
+					display:none;
+					background-color:rgba(230, 210, 210, 0.8);
+  					padding:10px;
+  					padding-top:5px;
+  					border-bottom-right-radius:3px;
+  					cursor:pointer;
+				}
+				#main{
+					width:75%;	
+					margin-left:25%;
+					transition:1s;
+					overflow:hidden;
+					height:100%;
+				}
+				#descript_page{
+					background-color:rgba(250, 250, 250, 0.5);
+					padding:10px;
+					height:30%;
+					margin:0 auto;
+					margin-top:5%;
+					width:40%;
+					outline:1px solid black;
+					transition:0.5s;
+					text-align:center;
+					font-family:"cambria";
+					min-width:350px;
+				}
+				#opq_search_box{
+					background-color:rgba(230, 210, 210, 0.8);
+					margin:0 auto;
+					margin-top:140px;
+					height:150px;
+					width:300px;
+					border:1px solid #cccccc;
+					padding:10px;
+					padding-top:20px;
+					padding-left:30px;
+					padding-bottom:0px;
+					box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 8px 20px 0 rgba(0, 0, 0, 0.19);
+					transition:0.5s;
+				}
+				#by_keyword_home{
+					text-align:center;
+					transition:0.5s;	
+				}
+				#search_bar{
+					margin:0 auto;	
+				}
+				#search_home{
+					border:solid 1px #ccc;
+					border-radius:2px;
+					padding:7px 14px;
+					font-size:15px;	
+					transition:1.5s;	
+				}
+				#search_home:focus{
+					background-color: #cccccc;
+					outline:2px solid #cce6ff;
+				}
+				#search_btn_home{
+					background-color:#cce6ff;
+					width:25px;
+					height:25px;
+					padding:5px;
+					cursor:pointer;
+					transition:0.5s;	
+				}
+				#search_btn_home:hover{
+					background-color:#b3daff;	
+				}
+				#davidson_logo {
+					font-family: "copperplate gothic lite";
+					font-size: 50px;
+					text-align: center;	
+					text-shadow: 2px 2px 4px #FF0000;
+					font-weight:none;
+					margin-top:10px;
+					margin-bottom:10px;
+				}
+				#displayed_yr{
+					margin-left:5%;
+					color:#e6e6e6;	
+					margin-top:25px;
+					margin-bottom:0px;
+					float:left;
+				}
+				#error_msg{
+					font-size:17px;
+					color:white;
+					text-align: center;
+					margin-top:30px;
+					display:none;
+				}
+				#results{
+				  background-color:white;
+				  margin-top:5px;
+				  overflow-x:hidden;
+				  overflow-y:scroll;
+				  height:575px;
+				  width:90%;
+				  border-radius:4px;
+				  padding-top:20px;
+				  transition:1s;
+				  min-width:500px;
+				  margin:0 auto;
+				  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 8px 20px 0 rgba(0, 0, 0, 0.19);
+				  
+				  /* Purely for transitional purposes */
+				  z-index:-1;
+				  opacity:0.0;
+				  position:fixed;/*absolute;*/
+				  top:5%;
+				}
+				#results::-webkit-scrollbar{
+					display:none;
+				}
+				select{
+					padding:5px;
+					font-size:16px;	
+				}
+				.acc-results{
+				  border:1px solid #cccccc;
+				  border-radius:4px;
+				  background-color:#e6e6e6;
+				  box-shadow: 2px 2px 5px gray;
+				  z-index:3;
+				  width:95%;
+				  margin:0 auto;
+				  margin-bottom:10px;
+				  font-size:14px;
+				}
+				.acc-results:hover{
+				  cursor:pointer;
+				}
+				.acc-header-results{
+					background-color:#e6e6e6;
+				}
+				.header_results_table{
+					width:98%;
+					padding:10px;
+					font-size:14px;
+					table-layout:fixed;
+				}
+				.acc-content-results{
+					display:none;
+				}
+				.results_table{
+					width:100%;	
+					font-size:13px;
+				}
+				.results_th{
+					color:#800000;	
+				}
+				.courseLink{
+					width:50%;	
+				}	
+				.prof_result{
+					width:25%;
+					text-align:right;	
+				}
+				.CRN_result{
+					width:20%;
+					text-align:right;
+				}
+				.x_result{
+					width:5%;
+					text-align:right;
+				}	
+				#course_desc_div{
+					display:none;
+					background-color: #e6e6e6;
+					border:1px solid #e6e6e6;
+					border-radius:4px;
+					box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 8px 20px 0 rgba(0, 0, 0, 0.19);
+					padding:10px;
+					position:fixed;
+					top:5%;
+					left:43%;
+					width:40%;
+					z-index:2;
+					line-height:30px;	
+					font-size: 40%;
+				}
+				.NotesTooltip {
+					background-color:black;
+					color:white;
+					padding:3px;
+					position:absolute;
+					z-index:24;
+					opacity:0.7;
+					display:none;
+					margin-left:5px;
+					font-size:10px;	
+				}
+				.NotesContainer {
+					position: relative;
+					z-index: 10;
+				}
+				.NotesContainer:hover {
+					z-index:20;
+				}
+				.NotesContainer:hover .NotesTooltip {
+					display: block;
+				}
+				iframe{
+					border:1px solid #cccccc;	
+				}
+				iframe::-webkit-scrollbar{
+					display:none;	
+				}
+				#open-close-btn{
+					margin-bottom:8px;
+					margin-top:10px;
+					float:right;	
+					margin-right:8%;
+					background-color:#660000;
+					color:white;
+					padding:7px;
+					cursor:pointer;
+				}
+				
+				@media only screen and (max-width:1200px){
+					#filter{
+						margin-left:-1000px;
+					}
+					#main{
+						width:100% !important;	
+						margin-left:0% !important;
+					}
+					#menu-icon{
+						display:block;	
+					}	
+				}
+				
+			</style>
+		</header>
+		<body onload="findCurrentDate()">
+			
+		<script>
+			/* Generic function that closes any pop-up message */
+			function closeDiv(divID){
+				var curDiv = document.getElementById(divID);
+				curDiv.style.display = "none";
+				document.getElementById("blackout").style.display = "none";
+			}
+			/* Used to close the iframe description window */
+			function closeDescription(divID) {
+				var descriptionElem = document.getElementById("iframe_sur_div");
+				document.getElementById(divID).removeChild(descriptionElem);
+				closeDiv(divID);
+			}
+			/* Opens and Closes the Accordion */
+			function toggleAcc(accContentID){
+				var accContent = document.getElementById(accContentID);
+				if (accContent.style.display == 'block'){
+					accContent.style.display = 'none';
+				}
+				else{
+					accContent.style.display = 'block';	
+				}
+			}
+			function toggleFilter(closeFilter){
+				var filter = document.getElementById('filter');
+				var menu = document.getElementById('menu-icon');
+				var main = document.getElementById('main');
+				if (closeFilter){
+					filter.style.transition = '2s';
+					filter.style.marginLeft = '-1000px';	
+					setTimeout(function(){menu.style.display = 'block';}, 400);
+					main.style.width = '100%';
+					main.style.marginLeft = "0%";
+					document.getElementById("help_div").style.left = '35%';
+				}
+				else{
+					filter.style.transition = '0.7s';
+					filter.style.marginLeft = '0px';
+					setTimeout(function(){menu.style.display = 'none';}, 300);
+					main.style.width = '75%';
+					main.style.marginLeft = "25%";
+					document.getElementById("help_div").style.left = '48%';
+				}	
+			}
+			function hasClass(element, clss) {
+    			return (element.className).indexOf(clss) > -1;
+			}
+			function toggleCheckbox(checkboxLabelID){
+				var checkboxLabel = document.getElementById(checkboxLabelID);
+				var checkbox = document.getElementById(checkboxLabel.htmlFor);
+				if (checkbox.checked){
+					checkboxLabel.style.color = "#008080";
+				}
+				else{
+					checkboxLabel.style.color = "black";
+				}
+			}
+			function clearAll(){
+				var checkboxLabels = document.getElementsByClassName('checkbox-label');	
+				
+				for (var i = 0; i < checkboxLabels.length; i++){
+					var label = checkboxLabels[i];
+					var checkbox = document.getElementById(label.htmlFor);
+					label.style.color = 'black';
+					checkbox.checked = false;	
+				}
+			}
+			
+			/*------------------------Professor Search Function----------------------*/
+			function filterProfs(){
+				
+				var profs = document.getElementsByClassName("prof");
+				var curInput = document.getElementById("prof_search_id").value.toLowerCase();
+				var inputLen = curInput.length;
+				
+				var i;
+				for (i = 0; i < profs.length; i++){
+					var curElem = profs[i];
+					var curSubStr = curElem.value.substring(0,inputLen).toLowerCase();
+					
+					if (curSubStr !== curInput){
+						curElem.parentElement.style.display = "none";	
+					}	
+					else{
+						curElem.parentElement.style.display = "block";	
+					}
+				}
+			}
+			
+			function toggleMornAft(mornAftClassname, input){
+				var mornAftClasses = document.getElementsByClassName(mornAftClassname);
+				var check = false;
+				var color = 'black';
+				
+				if (input.checked){
+					check = true;
+					color = '#008080';
+				}
+				for (var i = 0; i < mornAftClasses.length; i++){
+					mornAftClasses[i].checked = check;
+					document.getElementById(mornAftClasses[i].id + '_label').style.color = color;
+				}
+			}
+			
+			
+			/*---------------------Create query to pass to the db------------------*/
+			function createQueryStr(){
+			
+				var profStr = "";
+				var deptStr = "";
+				var dayStr = "";
+				var timeStr = "";
+				var distStr = "";
+				var semStr = "";
+				var classSizeStr = "";
+					
+				var checkedBoxes = document.getElementsByClassName("choices");
+				for(var i = 0; i < checkedBoxes.length; i++){
+					var curElem = checkedBoxes[i];
+					if (curElem.checked){
+						if (hasClass(curElem, "prof_check")){
+							var replacemt;
+							if(profStr != ""){
+								replacemt = profStr.concat(" or ", curElem.value);
+							}
+							else{
+								replacemt = profStr.concat(curElem.value);
+									
+							}
+							profStr = replacemt;
+						}
+						if (hasClass(curElem, "dept_check")){
+							var replacemt;
+							if(deptStr != ""){
+								replacemt = deptStr.concat(" or ", curElem.value);
+							}
+							else{
+								replacemt = deptStr.concat(curElem.value);
+							}
+							deptStr = replacemt;
+						}
+						if (hasClass(curElem,"day_check")){
+							var replacemt;
+							if(dayStr != ""){
+								replacemt = dayStr.concat(" or ", curElem.value);
+							}
+							else{
+								replacemt = dayStr.concat(curElem.value);
+									
+							}
+							dayStr = replacemt;
+						}
+						if (hasClass(curElem,"time_check")){
+							var replacemt;
+							if(timeStr != ""){
+								replacemt = timeStr.concat(" or ", curElem.value);
+							}
+							else{
+								replacemt = timeStr.concat(curElem.value);
+									
+							}
+							timeStr = replacemt;
+						}
+						if (hasClass(curElem,"dist_req_check")){
+							var replacemt;
+							if(distStr != ""){
+								replacemt = distStr.concat(" or ", curElem.value);
+							}
+							else{
+								replacemt = distStr.concat(curElem.value);
+									
+							}
+							distStr = replacemt;
+						}
+					}
+				}
+				
+				var fromClassSize = document.getElementById('from-class-size-select');
+				var fromAns = (fromClassSize.options[fromClassSize.selectedIndex]).innerHTML;
+				var toClassSize = document.getElementById('to-class-size-select');
+				var toAns = (toClassSize.options[toClassSize.selectedIndex]).innerHTML;
+				if ((fromAns == "1") && (toAns == "35")){
+					classSizeStr = "";
+				}
+				else{
+					classSizeStr = fromAns + "-" + toAns;	
+				}
+				var semDropdown = document.getElementById("year_dropdwn");
+				var semChoices = semDropdown.options;
+				var semAns = semChoices[semDropdown.selectedIndex];
+				var replacemt;
+				replacemt = semStr.concat(semAns.value);
+				semStr = replacemt;
+			
+				document.getElementById("period").value = semStr;
+				document.getElementById("prof_form").value = profStr;
+				document.getElementById("dep").value = deptStr;
+				document.getElementById("days").value = dayStr;
+				document.getElementById("times").value = timeStr;
+				document.getElementById("distri").value = distStr; 	
+				document.getElementById("class_size").value = classSizeStr;	
+			}
+			/*-------------------------- Display Course Description ---------------------------*/
+			function showDescription(divID, katy, course_num){
+			
+				var curDiv = document.getElementById(divID);
+				curDiv.style.display = "block";
+				document.getElementById("blackout").style.display = "block"; 	
+				
+				var descDiv = document.getElementById('course_desc_div');
+				descDiv.style.marginTop = "10%";
+				var limitingDiv = document.createElement("DIV");
+				limitingDiv.id = "iframe_sur_div";
+				limitingDiv.style.padding = "0px";
+				limitingDiv.style.boxShadow = "0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 8px 20px 0 rgba(0, 0, 0, 0.19)";
+				limitingDiv.style.overflow = "hidden";
+				var a = document.createElement('iframe');
+				a.id = "iframe_description"
+				a.src = "http://www.davidson.edu/general-course-detail/?subj=" + katy + "&cnum=" + course_num;	
+				a.width = "100%";
+				a.height = "1410";
+				a.style.marginTop = "-180px";
+				a.style.marginBottom = "-900px";
+				a.frameborder = "1";
+				limitingDiv.appendChild(a);
+				
+				var cancelBtn = document.getElementById('put_here');
+				descDiv.insertBefore(limitingDiv, cancelBtn);
+			}
+			
+			function closeDescription(divID) {
+				var curDiv = document.getElementById(divID);
+				var descriptionElem = document.getElementById("iframe_sur_div");
+				curDiv.removeChild(descriptionElem);
+				curDiv.style.display = "none";
+				document.getElementById("blackout").style.display = "none";
+			}
+			
+			function openCloseAllAccordions(open){
+				var accContents = document.getElementsByClassName('acc-content-results');
+				var display = 'none';
+				if (open){
+					display = 'block';	
+				}
+				for (var i = 0; i < accContents.length; i++){
+					accContents[i].style.display = display;
+				}
+			}
+			function toggleOpenCloseBtn(){
+				var openCloseBtn = document.getElementById('open-close-btn');
+				if (openCloseBtn.innerHTML == "Open All"){
+					openCloseBtn.style.backgroundColor = "white";
+					openCloseBtn.style.color = "#660000";
+					openCloseBtn.innerHTML = "Close All";
+					openCloseAllAccordions(true);
+				}	
+				else{
+					openCloseBtn.style.backgroundColor = "#660000";
+					openCloseBtn.style.color = "white";
+					openCloseBtn.innerHTML = "Open All";
+					openCloseAllAccordions(false);
+				}
+			}
+		</script>
 		
-		if (this.checked){
-			$(label).css({'color':'#248f8f'});
-		}
-		else{
-			$(label).css({"color":"black"});
-		}
-	});
+		<!-- Contains an iframe with a course description -->
+		<div id="course_desc_div">
+			<p id="put_here"></p>
+			<input type="button" id="close_desc" value="Close" name="close" onclick="closeDescription('course_desc_div')"/>
+		</div>
 	
-
-/*------------------------Clear Selections-------------------------------*/
-
-	$("#clear-btn").click(function(){
-		var checkedBoxes = $("input:checked");
-		var labels = $(".label");
-		checkedBoxes.prop("checked", false);
-		$(labels).css({"color":"black"});
-	});
 	
-
-/*---------------------Check and Uncheck Depts---------------------------*/
-
-	$(".visible_dep").click(function(){
-		var checked = this.checked;
-		var curID = this.id;
-		var hiddenID = "hidden_" + curID;
-		var hiddenElem = document.getElementById(hiddenID);
-		var hiddenLabel = document.getElementById(hiddenID + "_label");
-		var curLabel = document.getElementById(curID + "_label");
-		$(hiddenElem).prop("checked", checked);
-		if (checked){
-			$(hiddenLabel).css({"color":'#248f8f'});
-			$(curLabel).css({"color":'#248f8f'});
-		}	
-		else{
-			$(hiddenLabel).css({"color":'black'});
-			$(curLabel).css({"color":'black'});
-		}
-	});
-	$(".hidden_dep").click(function(){
-		var checked = this.checked;
-		var curID = this.id;
-		var normID = curID.substring(7,curID.length);
-		var normElem = document.getElementById(normID);
-		var normLabel = document.getElementById(normID + "_label");
-		var curLabel = document.getElementById(curID + "_label");
-		$(normElem).prop("checked", checked);
-		if (checked){
-			$(normLabel).css({"color":'#248f8f'});
-			$(curLabel).css({"color":'#248f8f'});
-		}	
-		else{
-			$(normLabel).css({"color":'black'});
-			$(curLabel).css({"color":'black'});
-		}
-	});
-}); 
-
-
-/*------------------------Professor Search Function----------------------*/
-
-function filterProfs(){
-	
-	var profs = document.getElementsByClassName("prof");
-	var curInput = document.getElementById("prof_search_id").value.toLowerCase();
-	var inputLen = curInput.length;
-	
-	var i;
-	for (i = 0; i < profs.length; i++){
-		var curElem = profs[i];
-		var curSubStr = curElem.value.substring(0,inputLen).toLowerCase();
+		<!--~~~~~~~~~~~~~~~~ Blackout ~~~~~~~~~~~~~~~~~~~~~-->
+		<div id="blackout">
+		</div>
 		
-		if (curSubStr !== curInput){
-			curElem.parentElement.style.display = "none";	
-		}	
-		else{
-			curElem.parentElement.style.display = "block";	
-		}
-	}
-}
-function closeDiv(divID){
-	var curDiv = document.getElementById(divID);
-	curDiv.style.display = "none";
-	document.getElementById("blackout").style.display = "none";
-}
+		<!--~~~~~~~~~~~~~~~~~~~~~~~~~~Help ~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
 
-/*-------------------------- Find Current Date ---------------------------*/
+		<div id="help_div">
+			<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/8d/VisualEditor_-_Icon_-_Close.svg/1000px-VisualEditor_-_Icon_-_Close.svg.png" id="close_btn_help" onclick="closeDiv('help_div')"/>
+			<p class="question"><b>Q: How can I search by semester?</b></p>
+			<p class="answer">A: For the Fall semester, type in the year followed by "01" (Ex: "201601"). For the Spring semester, type in the previous year followed by "02" (Ex:"201602").</p>
+			<p class="question"><b>Q: How can I view the course descriptions?</b></p>
+			<p class="answer">A: Each entry title is underlined, which indicates that there is a course description available. Click on each of these titles to view a pop-up with additional course information.</p>
+		</div>
+		
+		
+<!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Sidenav ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
 
-function findCurrentDate(){
-	var curDate = new Date();
-	var formattedDate = "";
-	
-	var curYear = curDate.getFullYear();
-	formattedDate += curYear;
-	var curMonth = curDate.getMonth();
-	if (curMonth > 4){
-		formattedDate += "01";	
-	}
-	else{
-		formattedDate += "02";	
-	}
-	
-	document.getElementById(formattedDate).selected = true;
-}
+		<div id="filter">
+			<p id="close_icon" onclick="toggleFilter(true);">&times;</p>
+			<p id="filter_results">Filter Results</p>
+			
+			
+			
+		<!--Semester ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+		<script>
+			function submitOption(){
+				var subBtn = document.getElementById("submit_btn");		
+				var selectMenu = document.getElementById('year_dropdwn');
+				subBtn.value = selectMenu.options[selectMenu.selectedIndex].innerHTML;
+				subBtn.click();	
+			}
+		</script>
+			<div class="accordion">
+				<p class="accordion-header" onclick="toggleAcc('year-acc-content');">By Semester</p>
+				<div id="year-acc-content" class="accordion-content" style="display:block;">
+					<form action="{{url_for('process_semester')}}" method="post">
+						<select name="years" id="year_dropdwn" onchange="submitOption()">
+							<option value="Choose one" id="choose_one" class="year_li">Choose one</option>
+							{% for i in semesters %}
+							{% if i == selected_sem %}
+							<option value="{{ i }}" id="{{ i }}" class="year_li" selected>{% set fall_year = i[:4] %}{% set spring_year = ((fall_year)|int +1)|string %}{% if i[-1] == '2' %}Spring {{ spring_year }}{% elif i[-1] == '1' %}Fall {{ fall_year }}{% endif %}</option>
+							{% else %}
+							<option value="{{ i }}" id="{{ i }}" class="year_li">{% set fall_year = i[:4] %}{% set spring_year = ((fall_year)|int +1)|string %}{% if i[-1] == '2' %}Spring {{ spring_year }}{% elif i[-1] == '1' %}Fall {{ fall_year }}{% endif %}</option>
+							{% endif %}
 
-/*-------------------------- Display Course Description ---------------------------*/
-function showDescription(divID, katy, course_num){
-
-	var curDiv = document.getElementById(divID);
-	curDiv.style.display = "block";
-	document.getElementById("blackout").style.display = "block"; 	
-	
-	var descDiv = document.getElementById('course_desc_div');
-	var a = document.createElement('iframe');
-	a.id = "iframe_description"
-	a.src = "http://www.davidson.edu/general-course-detail/?subj=" + katy + "&cnum=" + course_num;	
-	a.width = "100%";
-	a.height = "200";
-	a.frameborder = "1";
-	
-	
-	var cancelBtn = document.getElementById('put_here');
-	descDiv.insertBefore(a, cancelBtn);
-}
-
-function closeDescription(divID) {
-	var curDiv = document.getElementById(divID);
-	var descriptionElem = document.getElementById("iframe_description");
-	curDiv.removeChild(descriptionElem);
-	curDiv.style.display = "none";
-	document.getElementById("blackout").style.display = "none";
-}
-
-</script>
-
-	<div id="course_desc_div" style="font-size: 90%;">
-		<p id="put_here"></p>
-		<input type="button" id="close_desc" value="Close" name="close" onclick="closeDescription('course_desc_div')"/>
-	</div>
-	<div id="blackout">
-	</div>
-	
-	
-<!--~~~~~~~~~~~~~~~~~~~~~~~~~~Help ~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
-
-	<div id="help_div">
-		<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/8d/VisualEditor_-_Icon_-_Close.svg/1000px-VisualEditor_-_Icon_-_Close.svg.png" id="close_btn_help" onclick="closeDiv('help_div')"/>
-		<p class="question"><b>Q: How can I search by semester?</b></p>
-		<p class="answer">A: For the Fall semester, type in the year followed by "01" (Ex: "201601"). For the Spring semester, type in the previous year followed by "02" (Ex:"201602").</p>
-	</div>
-	
-
-<!--Sidenav ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
-	
-	<nav id="filter" class="w3-sidenav w3-collapse w3-quarter w3-card-2 w3-animate-left" style="padding-bottom:20px;">
-		<a href="#" onclick="w3_close()" class="w3-closenav w3-hide-large">Close &times;</a>
-		<form action={{url_for("process_search")}} method="post">
-			<p id="by_keyword_sidenav"><b>Search By Keyword:</b></p>
-			<input type="search" results:5 id="search_sidenav" name="gen_search" class="search" placeholder="Search...">
-			<li class="" id="gen_search_mobile"><i class="material-icons" id="icon_search_mobile">search</i></li>
-	  		<input type="submit" id="submit_search_mobile" name="gen_search_btn" hidden></form>
-			<p id="filter_res"><b>Filter Results</b></p>
+							{% endfor %}										
+						</select>
+						<input type="submit" id="submit_btn" name="submit" value="" style="display:none;">
+					</form>
+				</div> <!-- End accordion content -->
+			</div> <!-- End accordion -->
+			
+			
+		<!--Professors ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
 		<form action={{url_for("process_form")}} method="post">
+			<div class="accordion">
+				<p class="accordion-header" onclick="toggleAcc('prof-acc-content');">By Professor</p>
+				<div id="prof-acc-content" class="accordion-content filter_card">
+						<input type="text" oninput="filterProfs()" name="prof_search" id="prof_search_id" placeholder="Search for a professor"/>
+						<div> <!-- placeholder -->
+						<div> <!-- placeholder -->
+      					<div id="prof_list">	
+	    					{% for i in profs %}
+    						<p class="prof_li"><input type="checkbox" class="checkbox choices prof prof_check" id="{{i}}" value="{{i}}" onclick="toggleCheckbox('{{i}}_label');"><label id="{{i}}_label" for="{{i}}" class="label text checkbox-label">{{i}}</label></p>
+    						{% endfor %}
+    					</div> <!-- End prof_list -->
+    				</div> <! End placeholder -->
+    				</div> <! End placeholder -->
+				</div> <!-- End accordion content -->
+			</div> <!-- End accordion -->
+			
+			
+		<!--Departments ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
 		
+			<div class="accordion">
+				<p class="accordion-header" onclick="toggleAcc('dept-acc-content');">By Department</p>
+				<div id="dept-acc-content" class="accordion-content filter_card">
+						<table id="dept_table">
+							<tr>
+							{% for i in deps %}
+								<td><input type="checkbox" class="choices visible_dep dept_li dept_check" id='{{i}}' value='{{i}}' onclick="toggleCheckbox('{{i}}_label');"><label for='{{i}}' class="dept_text label checkbox-label" id='{{i}}_label' onmouseover="document.getElementById('{{i}}_span').style.display = 'block';" onmouseout="document.getElementById('{{i}}_span').style.display = 'none';">{{i}}</label><span class="tooltip" id="{{i}}_span">{{deps_full[loop.index0]}}</span></input></td>
+								
+								{% if loop.index%3 == 0 %}
+							</tr>
+							<tr>	
+								{% endif %}
+							{% endfor %}
+							</tr>
+						</table>
+						
+				</div> <!-- End accordion content -->
+			</div> <!-- End accordion -->
+			
+			
+		<!--Day ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
 		
-	<!--Semester ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+			<div class="accordion">
+				<p class="accordion-header" onclick="toggleAcc('day-acc-content');">By Day</p>
+				<div id="day-acc-content" class="accordion-content">
+					<div> <!-- Placeholder -->
+					<div> <!-- Placeholder -->
+					<div id="day_list" class="filter_card">
+						<p class="day_li"><input type="checkbox" id="mwf" class="checkbox day_check choices" value="mwf" onclick="toggleCheckbox('mwf_label');"><label for="mwf" id="mwf_label" class="label text checkbox-label">MWF</label></p>
+      					<p class="day_li"><input type="checkbox" id="tr" class="checkbox day_check choices" value="tr" onclick="toggleCheckbox('tr_label');"><label for="tr" id="tr_label" class="label text checkbox-label">TR</label></p>
+					</div> <!-- End filter_card -->
+					</div> <!-- End placeholder -->
+					</div> <! End placeholder -->
+				</div> <!-- End accordion content -->
+			</div> <!-- End accordion -->
+			
+			
+		<!--Time ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
 		
-		<div class="w3-accordion">
-    		<a onclick="accFunc('year_acc')" href="#">
-      		By Semester <i class="fa fa-caret-down"></i>
-    		</a>
-    		<div id="year_acc" class="w3-accordion-content w3-padding">
-      			<select name="years" class="w3-select w3-border w3-padding" id="year_dropdwn">
-	      		<option value="201602" id="201602" class="year_li">Spring 2017</option>
-	      		<option value="201601" id="201601" class="year_li">Fall 2016</option>
-  				<option value="201502" id="201502" class="year_li">Spring 2016</option>
-  				<option value="201501" id="201501" class="year_li">Fall 2015</option>
-  				<option value="201402" id="201402" class="year_li">Spring 2015</option> 				
-  				<option value="201401" id="201401" class="year_li">Fall 2014</option>
-  				<option value="201302" id="201302" class="year_li">Spring 2014</option>
-  				<option value="201301" id="201301" class="year_li">Fall 2013</option>
-  				<option value="201202" id="201202" class="year_li">Spring 2013</option>
-  				<option value="201201" id="201201" class="year_li">Fall 2012</option>
-  				<option value="201102" id="201102" class="year_li">Spring 2012</option>			
-  				<option value="201101" id="201101" class="year_li">Fall 2011</option>
-  				<option value="201002" id="201002" class="year_li">Spring 2011</option>
-  				<option value="201001" id="201001" class="year_li">Fall 2010</option>
-  				<option value="200902" id="200902" class="year_li">Spring 2010</option>
-  				<option value="200901" id="200901" class="year_li">Fall 2009</option>
-				</select>
-    		</div>
-    	</div>
-    	
-    	
-	<!--Professors ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
-
-    	<div class="w3-accordion">
-    		<a onclick="accFunc('prof_acc')" href="#">
-      		By Professor<i class="fa fa-caret-down"></i>
-    		</a>
-    		<div id="prof_acc" class="w3-accordion-content w3-white w3-card-4 w3-padding">
-	    		<input type="text" class="w3-input w3-animate-input" oninput="filterProfs()" name="prof_search" id="prof_search_id" placeholder="Search for a professor"/>
-	    		<div>
-		    	<div>
-      			<ul class="w3-ul" id="prof_list">	
-	    			{% for i in profs %}
-    				<li class="prof_li"><input type="checkbox" class="checkbox choices prof prof_check" id="{{i}}" value="{{i}}" onclick="changeColorCheck('{{i}}_label', this)"><label id="{{i}}_label" for="{{i}}" class="label text">{{i}}</label></li>
-    				{% endfor %}
-    			</ul>
-    			</div>
-    			</div>
-    		</div>
-    	</div>
-    	
-    	
-	<!--Departments ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
-
-		<div class="w3-accordion">
-    		<a onclick="accFunc('dept_acc')" href="#">
-      		By Department<i class="fa fa-caret-down"></i>
-    		</a>
-    		<div id="dept_acc" class="w3-accordion-content w3-white w3-card-4 w3-padding">
-	    		<div>
-		    	<div>
-	    		<div class="w3-row-padding">
-  					<div class="w3-third dept_list" id="first_col">
-	  					{% for i in deps %}
-	  						<input type="checkbox" class="choices visible_dep dept_li dept_check" id='{{i}}' value='{{i}}'><label for='{{i}}' class="w3-tooltip dept_text label" id='{{i}}_label'>{{i}}<span id="{{i}}_span" class="w3-text w3-tag w3-small">{{deps_full[loop.index0]}}</span></label></input><br>
-		  					
-		  					{% if loop.index == 15 %}
-		  						</div>
-		  						<div class="w3-third dept_list" id="sec_col">
-		  					{% endif %}
-		  					{% if loop.index == 30 %}
-		  						</div>
-  								<div class="w3-third dept_list" id="third_col">
-		  					{% endif %}
-	  					{% endfor %}
-  					</div>
-  					</div>
-  					</div>
-
-  					<div id="hidden_dept_scroll">
-	  					{% for i in deps %}
-	  					<li class='hidden_dept_li'><input type='checkbox' class='hidden_dep choices dept_li dept_check' id="hidden_{{i}}" value="{{i}}"><label for="hidden_{{i}}" class='w3-tooltip dept_text' id="hidden_{{i}}_label">{{i}}<span class='w3-text w3-tag w3-small'>{{deps_full[loop.index0]}}</span></label></input></li>
-	  					{% endfor %}
-		    		</div>
-				</div>
-    		</div>
-    	</div>
-    	
-    	
-	<!--Day ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
-
-    	<div class="w3-accordion">
-    		<a onclick="accFunc('day_acc')" href="#">
-      		By Day<i class="fa fa-caret-down"></i>
-    		</a>
-    		<div id="day_acc" class="w3-accordion-content w3-white w3-card-4">
-	    		<div>
-		    	<div>
-	    		<div id="day_list">
-      				<p class="day_li"><input type="checkbox" id="mwf" class="checkbox day_check choices" value="mwf"><label id="mwf_label" class="label text">MWF</label></p>
-      				<p class="day_li"><input type="checkbox" id="tr" class="checkbox day_check choices" value="tr"><label id="tr_label" class="label text">TR</label></p>
-    			</div>
-    			</div>
-    			</div>
-    		</div>
-    	</div>
-    	
-    	
-	<!--Time ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
-
-    	<div class="w3-accordion">
-    		<a onclick="accFunc('time_acc')" href="#">
-      		By Time<i class="fa fa-caret-down"></i>
-    		</a>
-    		<div id="time_acc" class="w3-accordion-content w3-white w3-card-4 w3-padding">
-	    		
-	    		<!--Heading (Morning/Afternoon) ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
-	    		<div id="morn_aft">
-		    		<div class="w3-row-padding">
-			    		<div class="w3-half" id="morn_half">
-						<input type="checkbox" id="morn_classes" class="choices"><label id="morn_classes_label" class="label text">Morning</label>
-						</div>
-			    		<div class="w3-half" id="aft_half">
-						<input type="checkbox" id="aft_classes" class="choices"><label id="aft_classes_label" class="label text">Afternoon</label>
-						</div>
-					</div>
-				</div>
-				<div id="hidden_morn_aft">
-		    		<div class="w3-row-padding">
-						<input type="checkbox" id="hidden_morn_classes" class="choices"><label id="hidden_morn_classes_label" class="text">Morning</label><br>
-						<input type="checkbox" id="hidden_aft_classes" class="choices"><label id="hidden_aft_classes_label" class="text">Afternoon</label>
-					</div>
-				</div>				
+			<div class="accordion">
+				<p class="accordion-header" onclick="toggleAcc('time-acc-content');">By Time</p>
+				<div id="time-acc-content" class="accordion-content filter_card">
+				<div> <!-- Placeholder -->
+						
+				<!--Heading (Morning/Afternoon) ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+	    				<div id="morn_aft">
+							<div style="white-space:nowrap;display:inline-block;margin-left:5%;margin-right:5%;"><input type="checkbox" id="morn_classes" class="choices" onclick="toggleCheckbox('morn_classes_label');toggleMornAft('morn_check', this);"><label for="morn_classes" id="morn_classes_label" class="label text checkbox-label">Morning</label></div>
+							<div style="white-space:nowrap;display:inline-block;margin-left:5%;margin-right:5%;"><input type="checkbox" id="aft_classes" class="choices" onclick="toggleCheckbox('aft_classes_label');toggleMornAft('aft_check', this);"><label for="aft_classes" id="aft_classes_label" class="label text checkbox-label">Afternoon</label></div>
+						</div> <!-- End morn_aft -->
+										
 				<!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
 				
 				
-				<div class="w3-row-padding">
-			    	<div class="w3-half time_list" id="time_MWF_div">
-    				<ul id="time_list_MWF">
-      					<li class="time_li"><input type="checkbox" id="time_0830" class="morn_check time_check checkbox choices" value="0830"><label id="time_0830_label" class="label morn text">8:30am</label></li>
-      					<li class="time_li"><input type="checkbox" id="time_0930" class="morn_check time_check checkbox choices" value="0930"><label id="time_0930_label" class="label morn text">9:30am</label></li>
-      					<li class="time_li"><input type="checkbox" id="time_1030" class="morn_check time_check checkbox choices" value="1030"><label id="time_1030_label" class="label morn text">10:30am</label></li>
-      					<li class="time_li"><input type="checkbox" id="time_1130" class="morn_check time_check checkbox choices" value="1130"><label id="time_1130_label" class="label morn text">11:30am</label></li>
-	  					<li class="time_li"><input type="checkbox" id="time_1230" class="aft_check time_check checkbox choices" value="1230"><label id="time_1230_label" class="label aft text">12:30pm</label></li>
-						<li class="time_li"><input type="checkbox" id="time_0130" class="aft_check time_check checkbox choices" value="0130"><label id="time_0130_label" class="label aft text">1:30pm</label></li>
-						<li class="time_li"><input type="checkbox" id="time_0230" class="aft_check time_check checkbox choices" value="0230"><label id="time_0230_label" class="label aft text">2:30pm</label></li>
-						<li class="time_li"><input type="checkbox" id="time_0330" class="aft_check time_check checkbox choices" value="0330"><label id="time_0330_label" class="label aft text">3:30pm</label></li>
-    				</ul>
-    				</div>
-    				<br>
-			    	<div class="w3-half time_list" id="time_TR_div">
-    				<ul id="time_list_TR">
-	 					<li class="time_li"><input type="checkbox" id="time_0815" class="morn_check time_check checkbox choices" value="0815"><label id="time_0815_label" class="label morn text">8:15am</label></li>
-      					<li class="time_li"><input type="checkbox" id="time_0940" class="morn_check time_check checkbox choices" value="0940"><label id="time_0940_label" class="label morn text">9:40am</label></li>
-      					<li class="time_li"><input type="checkbox" id="time_1215" class="aft_check time_check checkbox choices" value="1215"><label id="time_1215_label" class="label aft text">12:15pm</label></li>
-      					<li class="time_li"><input type="checkbox" id="time_0140" class="aft_check time_check checkbox choices" value="0140"><label id="time_0140_label" class="label aft text">1:40pm</label></li>
-	  					<li class="time_li"><input type="checkbox" id="time_0315" class="aft_check time_check checkbox choices" value="0315"><label id="time_0315_label" class="label aft text">3:15pm</label></li>
-					</ul>
-					</div>
-					<!--<ul class="hidden_time_list" id="time_list_MWF">
-      					<li class="time_li"><input type="checkbox" id="hidden_0830" class="morn_check time_check checkbox choices" value="0830"><label id="hidden_0830_label" class="morn text">8:30am</label></li>
-      					<li class="time_li"><input type="checkbox" id="hidden_0930" class="morn_check time_check checkbox choices" value="0930"><label id="hidden_0930_label" class="morn text">9:30am</label></li>
-      					<li class="time_li"><input type="checkbox" id="hidden_1030" class="morn_check time_check checkbox choices" value="1030"><label id="hidden_1030_label" class="morn text">10:30am</label></li>
-      					<li class="time_li"><input type="checkbox" id="hidden_1130" class="morn_check time_check checkbox choices" value="1130"><label id="hidden_1130_label" class="morn text">11:30am</label></li>
-	  					<li class="time_li"><input type="checkbox" id="hidden_1230" class="aft_check time_check checkbox choices" value="1230"><label id="hidden_1230_label" class="aft text">12:30pm</label></li>
-						<li class="time_li"><input type="checkbox" id="hidden_0130" class="aft_check time_check checkbox choices" value="0130"><label id="hidden_0130_label" class="aft text">1:30pm</label></li>
-						<li class="time_li"><input type="checkbox" id="hidden_0230" class="aft_check time_check checkbox choices" value="0230"><label id="hidden_0230_label" class="aft text">2:30pm</label></li>
-						<li class="time_li"><input type="checkbox" id="hidden_0330" class="aft_check time_check checkbox choices" value="0330"><label id="hidden_0330_label" class="aft text">3:30pm</label></li>
-					</ul>
-    				<ul class="hidden_time_list" id="time_list_TR">
-	 					<li class="time_li"><input type="checkbox" id="hidden_0815" class="morn_check time_check checkbox choices" value="0815"><label id="hidden_0815_label" class="morn text">8:15am</label></li>
-      					<li class="time_li"><input type="checkbox" id="hidden_0940" class="morn_check time_check checkbox choices" value="0940"><label id="hidden_0940_label" class="morn text">9:40am</label></li>
-      					<li class="time_li"><input type="checkbox" id="hidden_1215" class="aft_check time_check checkbox choices" value="1215"><label id="hidden_1215_label" class="aft text">12:15pm</label></li>
-      					<li class="time_li"><input type="checkbox" id="hidden_0140" class="aft_check time_check checkbox choices" value="0140"><label id="hidden_0140_label" class="aft text">1:40pm</label></li>
-	  					<li class="time_li"><input type="checkbox" id="hidden_0315" class="aft_check time_check checkbox choices" value="0315"><label id="hidden_0315_label" class="aft text">3:15pm</label></li>
-					</ul>-->
-				</div>
-    		</div>
-    	</div>
-    	
-    	
-	<!--Distribution Requirements ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
-    	<div class="w3-accordion">
-    		<a onclick="accFunc('dist_acc')" href="#">
-      		By Distribution Requirement<i class="fa fa-caret-down"></i>
-    		</a>
-    		<div id="dist_acc" class="w3-accordion-content w3-white w3-card-4">
-	    		<div>
-		    	<div>
-	    		<div class="w3-row-padding">
-	    			<div class="w3-half dist_req_list">
-		    			<input type="checkbox" value="HTRQ" id="htrq" class="checkbox dist_req_check dist_req_li choices"><label id="htrq_label" class="label w3-tooltip dist_text">Historical Thought  <span class="w3-text w3-tag w3-small">HTRQ</span></label><br>
-						<input type="checkbox" value="LBRQ" id="lbrq" class="checkbox dist_req_check dist_req_li choices"><label id="lbrq_label" class="label w3-tooltip dist_text">Liberal Studies  <span class="w3-text w3-tag w3-small">LBRQ</span></label><br>
-						<input type="checkbox" value="LTRQ" id="ltrq" class="checkbox dist_req_check dist_req_li choices"><label id="ltrq_label" class="label w3-tooltip dist_text">Literary Studies, Creative Writing, and Rhetoric  <span class="w3-text w3-tag w3-small">  LTRQ</span></label><br>
-						<input type="checkbox" value="MQRQ" id="mqrq" class="checkbox dist_req_check dist_req_li choices"><label id="mqrq_label" class="label w3-tooltip dist_text">Mathematical and Quantitative Thought  <span class="w3-text w3-tag w3-small">  MQRQ</span></label><br>
-					</div>
-					<div class="w3-half dist_req_list">
-		    			<input type="checkbox" value="NSRQ" id="nsrq" class="checkbox dist_req_check dist_req_li choices"><label id="nsrq_label" class="label w3-tooltip dist_text">Natural Science  <span class="w3-text w3-tag w3-small">NSRQ</span></label><br>
-						<input type="checkbox" value="SSRQ" id="ssrq" class="checkbox dist_req_check dist_req_li choices"><label id="ssrq_label" class="label w3-tooltip dist_text">Social-Scientific Thought  <span class="w3-text w3-tag w3-small">SSRQ</span></label><br>
-						<input type="checkbox" value="VPRQ" id="vprq" class="checkbox dist_req_check dist_req_li choices"><label id="vprq_label" class="label w3-tooltip dist_text">Visual and Performing Arts  <span class="w3-text w3-tag w3-small">VPRQ</span></label><br>
-						<input type="checkbox" value="PRRQ" id="prrq" class="checkbox dist_req_check dist_req_li choices"><label id="prrq_label" class="label w3-tooltip dist_text">Philosophical and Religious Perspectives  <span class="w3-text w3-tag w3-small">PRRQ</span></label><br>
-					</div>
-				</div>
-				</div>
-				</div>	
-					
-					<!--<div id="hidden_dist_req_list">
-		    			<input type="checkbox" value="HTRQ" id="dist_req_check" class="checkbox dist_req_check dist_req_li choices"><label id="htrq" class="w3-tooltip dist_text">Historical Thought  <span class="w3-text w3-tag w3-small">HTRQ</span></label><br>		
-						<input type="checkbox" value="LBRQ" id="dist_req_check" class="checkbox dist_req_check dist_req_li choices"><label id="lbrq" class="w3-tooltip dist_text">Liberal Studies  <span class="w3-text w3-tag w3-small">LBRQ</span></label><br>
-						<input type="checkbox" value="LTRQ" id="dist_req_check" class="checkbox dist_req_check dist_req_li choices" onclick="changeColorCheck('ltrq', this)"><label id="ltrq" class="w3-tooltip dist_text">Literary Studies, Creative Writing, and Rhetoric  <span class="w3-text w3-tag w3-small">  LTRQ</span></label><br>
-						<input type="checkbox" value="MQRQ" id="dist_req_check" class="checkbox dist_req_check dist_req_li choices" onclick="changeColorCheck('mqrq', this)"><label id="mqrq" class="w3-tooltip dist_text">Mathematical and Quantitative Thought  <span class="w3-text w3-tag w3-small">  MQRQ</span></label><br>
-		    			<input type="checkbox" value="NSRQ" id="dist_req_check" class="checkbox dist_req_check dist_req_li choices" onclick="changeColorCheck('nsrq', this)"><label id="nsrq" class="w3-tooltip dist_text">Natural Science  <span class="w3-text w3-tag w3-small">NSRQ</span></label><br>
-						<input type="checkbox" value="SSRQ" id="dist_req_check" class="checkbox dist_req_check dist_req_li choices" onclick="changeColorCheck('ssrq', this)"><label id="ssrq" class="w3-tooltip dist_text">Social-Scientific Thought  <span class="w3-text w3-tag w3-small">SSRQ</span></label><br>
-						<input type="checkbox" value="VPRQ" id="dist_req_check" class="checkbox dist_req_check dist_req_li choices" onclick="changeColorCheck('vprq', this)"><label id="vprq" class="w3-tooltip dist_text">Visual and Performing Arts  <span class="w3-text w3-tag w3-small">VPRQ</span></label><br>
-						<input type="checkbox" value="PRRQ" id="dist_req_check" class="checkbox dist_req_check dist_req_li choices" onclick="changeColorCheck('prrq', this)"><label id="prrq" class="w3-tooltip dist_text">Philosophical and Religious Perspectives  <span class="w3-text w3-tag w3-small">PRRQ</span></label><br>
-					</div>-->
-	    	</div>
-    	</div>
-    	
-    	
-	<!--Class Size ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
-
-    	<div class="w3-accordion">
-    		<a onclick="accFunc('class_size_acc')" href="#">
-      		By Class Size<i class="fa fa-caret-down"></i>
-    		</a>
-    		<div id="class_size_acc" class="w3-accordion-content w3-white w3-card-4">
-		    	<div>
-		    	<div>
-	    		<ul id="class_size_list">
-      				<li class="class_size_li"><input type="checkbox" id="class_size_0_6" class="checkbox class_size_check choices" value="0 - 6"><label id="class_size_0_6_label" class="label text">0 - 6</label></li>
-      				<li class="class_size_li"><input type="checkbox" id="class_size_6_12" class="checkbox class_size_check choices" value="6 - 12"><label id="class_size_6_12_label" class="label text">6 - 12</label></li>
-      				<li class="class_size_li"><input type="checkbox" id="class_size_12_20" class="checkbox class_size_check choices" value="12 - 20"><label id="class_size_12_20_label" class="label text">12 - 20</label></li>
-      				<li class="class_size_li"><input type="checkbox" id="class_size_20" class="checkbox class_size_check choices" value="20 +"><label id="class_size_20_label" class="label text">20 +</label></li>
-    			</ul>
-    			</div>
-    			</div>
-	    	</div>
-    	</div>
-    	
-	<!--Form Submission and Clear/Filter Buttons ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
-
-    <input type="text" id="dep" name="dep" value="" hidden>
-    <input type="text" id="period" name="period" value="" hidden>
-    <input type="text" id="prof_form" name="prof_form" value="" hidden>
-    <input type="text" id="days" name="days" value="" hidden>
-    <input type="text" id="times" name="times" value="" hidden>
-    <input type="text" id="distri" name="distri" value="" hidden>
-    <input type="text" id="class_size" name="class_size" value="" hidden>
-    <input type="submit" onclick="createQueryStr()" class="w3-btn-block" value="Filter by Selections">
-	</form>
-	<input type="button" class="w3-btn-block" id="clear-btn" value="Clear All">
-	</nav>
-	
-	
-	
-	
-	
-	
-	
-<!--Rest of the screen ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
-	
-	<div class="w3-main w3-threequarter" style="margin-left:25%">
-		<div id="bckgrnd_img">
+			    		<div class="time-half" id="time_MWF_div">
+    					<ul id="time_list_MWF">
+      						<li class="time_li"><input type="checkbox" id="time_0830" class="morn_check time_check checkbox choices" value="0830" onclick="toggleCheckbox('time_0830_label');"><label for="time_0830" id="time_0830_label" class="label morn text checkbox-label">8:30am</label></li>
+      						<li class="time_li"><input type="checkbox" id="time_0930" class="morn_check time_check checkbox choices" value="0930" onclick="toggleCheckbox('time_0930_label');"><label for="time_0930" id="time_0930_label" class="label morn text checkbox-label">9:30am</label></li>
+      						
+      						<li class="time_li"><input type="checkbox" id="time_1030" class="morn_check time_check checkbox choices" value="1030" onclick="toggleCheckbox('time_1030_label');"><label for="time_1030" id="time_1030_label" class="label morn text checkbox-label">10:30am</label></li>
+      						
+      						<li class="time_li"><input type="checkbox" id="time_1130" class="morn_check time_check checkbox choices" value="1130" onclick="toggleCheckbox('time_1130_label');"><label for="time_1130" id="time_1130_label" class="label morn text checkbox-label">11:30am</label></li>
+      						
+	  						<li class="time_li"><input type="checkbox" id="time_1230" class="aft_check time_check checkbox choices" value="1230" onclick="toggleCheckbox('time_1230_label');"><label for="time_1230" id="time_1230_label" class="label aft text checkbox-label">12:30pm</label></li>
+	  						
+							<li class="time_li"><input type="checkbox" id="time_0130" class="aft_check time_check checkbox choices" value="0130" onclick="toggleCheckbox('time_0130_label');"><label for="time_0130" id="time_0130_label" class="label aft text checkbox-label">1:30pm</label></li>
+							
+							<li class="time_li"><input type="checkbox" id="time_0230" class="aft_check time_check checkbox choices" value="0230" onclick="toggleCheckbox('time_0230_label');"><label for="time_0230" id="time_0230_label" class="label aft text checkbox-label">2:30pm</label></li>
+							
+							<li class="time_li"><input type="checkbox" id="time_0330" class="aft_check time_check checkbox choices" value="0330" onclick="toggleCheckbox('time_0330_label');"><label for="time_0330" id="time_0330_label" class="label aft text checkbox-label">3:30pm</label></li>
+    					</ul>
+    					</div> <!-- End time MWF -->
+	    					
+			    		<div class="time-half time_list" id="time_TR_div">
+    					<ul id="time_list_TR">
+	 						<li class="time_li"><input type="checkbox" id="time_0815" class="morn_check time_check checkbox choices" value="0815" onclick="toggleCheckbox('time_0815_label');"><label for="time_0815" id="time_0815_label" class="label morn text checkbox-label">8:15am</label></li>
+      						<li class="time_li"><input type="checkbox" id="time_0940" class="morn_check time_check checkbox choices" value="0940" onclick="toggleCheckbox('time_0940_label');"><label for="time_0940" id="time_0940_label" class="label morn text checkbox-label">9:40am</label></li>
+      						<li class="time_li"><input type="checkbox" id="time_1215" class="aft_check time_check checkbox choices" value="1215" onclick="toggleCheckbox('time_1215_label');"><label for="time_1215" id="time_1215_label" class="label aft text checkbox-label">12:15pm</label></li>
+      						<li class="time_li"><input type="checkbox" id="time_0140" class="aft_check time_check checkbox choices" value="0140" onclick="toggleCheckbox('time_0140_label');"><label for="time_0140" id="time_0140_label" class="label aft text checkbox-label">1:40pm</label></li>
+	  						<li class="time_li"><input type="checkbox" id="time_0315" class="aft_check time_check checkbox choices" value="0315" onclick="toggleCheckbox('time_0315_label');"><label for="time_0315" id="time_0315_label" class="label aft text checkbox-label">3:15pm</label></li>
+						</ul>
+						</div> <!-- End time TR -->
+					</div> <!-- End placeholder -->
+				</div> <!-- End accordion content -->
+			</div> <!-- End accordion -->
 			
-		<span class="w3-opennav w3-hide-large" onclick="w3_open()">&#9776;</span> <!--Opening sidenav-->
+			
+		<!--Distribution Requirements ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
 		
-		<h4 id="davidson_logo">DAVIDSON COLLEGE</h4>   <!--Logo-->
+			<div class="accordion">
+				<p class="accordion-header" onclick="toggleAcc('distr-acc-content');">By Distribution Requirement</p>
+				<div id="distr-acc-content" class="accordion-content">
+					<div> <!-- placeholder -->
+					<div> <!-- placeholder -->
+					<div class="filter_card" style="text-align:left;">
+						
+		    			<div class="distr_choice"><input type="checkbox" value="HTRQ" id="htrq" class="checkbox dist_req_check dist_req_li choices" onclick="toggleCheckbox('htrq_label');"><label for="htrq" id="htrq_label" class="label dist_text checkbox-label" onmouseover="document.getElementById('HTRQ_tooltip').style.display = 'inline';" onmouseout="document.getElementById('HTRQ_tooltip').style.display = 'none';">Historical Thought  <span class="tooltip" id="HTRQ_tooltip">HTRQ</span></label></div>
+			    			
+						<div class="distr_choice"><input type="checkbox" value="LBRQ" id="lbrq" class="checkbox dist_req_check dist_req_li choices" onclick="toggleCheckbox('lbrq_label');"><label for="lbrq" id="lbrq_label" class="label dist_text checkbox-label" onmouseover="document.getElementById('LBRQ_tooltip').style.display = 'inline';" onmouseout="document.getElementById('LBRQ_tooltip').style.display = 'none';">Liberal Studies  <span class="tooltip" id="LBRQ_tooltip">LBRQ</span></label></div>
+			
+						<div class="distr_choice"><input type="checkbox" value="LTRQ" id="ltrq" class="checkbox dist_req_check dist_req_li choices" onclick="toggleCheckbox('ltrq_label');"><label for="ltrq" id="ltrq_label" class="label dist_text checkbox-label" onmouseover="document.getElementById('LTRQ_tooltip').style.display = 'inline';" onmouseout="document.getElementById('LTRQ_tooltip').style.display = 'none';">Literary Studies, Creative Writing, and Rhetoric  <span class="tooltip" id="LTRQ_tooltip">  LTRQ</span></label></div>
+							
+						<div class="distr_choice"><input type="checkbox" value="MQRQ" id="mqrq" class="checkbox dist_req_check dist_req_li choices" onclick="toggleCheckbox('mqrq_label');"><label for="mqrq" id="mqrq_label" class="label dist_text checkbox-label" onmouseover="document.getElementById('MQRQ_tooltip').style.display = 'inline';" onmouseout="document.getElementById('MQRQ_tooltip').style.display = 'none';">Mathematical and Quantitative Thought  <span class="tooltip" id="MQRQ_tooltip">  MQRQ</span></label></div>
+							
+		    			<div class="distr_choice"><input type="checkbox" value="NSRQ" id="nsrq" class="checkbox dist_req_check dist_req_li choices" onclick="toggleCheckbox('nsrq_label');"><label for="nsrq" id="nsrq_label" class="label dist_text checkbox-label" onmouseover="document.getElementById('NSRQ_tooltip').style.display = 'inline';" onmouseout="document.getElementById('NSRQ_tooltip').style.display = 'none';">Natural Science  <span class="tooltip" id="NSRQ_tooltip">NSRQ</span></label></div>
+			    			
+						<div class="distr_choice"><input type="checkbox" value="SSRQ" id="ssrq" class="checkbox dist_req_check dist_req_li choices" onclick="toggleCheckbox('ssrq_label');"><label for="ssrq" id="ssrq_label" class="label dist_text checkbox-label" onmouseover="document.getElementById('SSRQ_tooltip').style.display = 'inline';" onmouseout="document.getElementById('SSRQ_tooltip').style.display = 'none';">Social-Scientific Thought  <span class="tooltip" id="SSRQ_tooltip">SSRQ</span></label></div>
+							
+						<div class="distr_choice"><input type="checkbox" value="VPRQ" id="vprq" class="checkbox dist_req_check dist_req_li choices" onclick="toggleCheckbox('vprq_label');"><label for="vprq" id="vprq_label" class="label dist_text checkbox-label" onmouseover="document.getElementById('VPRQ_tooltip').style.display = 'inline';" onmouseout="document.getElementById('VPRQ_tooltip').style.display = 'none';">Visual and Performing Arts  <span class="tooltip" id="VPRQ_tooltip">VPRQ</span></label></div>
+							
+						<div class="distr_choice"><input type="checkbox" value="PRRQ" id="prrq" class="checkbox dist_req_check dist_req_li choices" onclick="toggleCheckbox('prrq_label');"><label for="prrq" id="prrq_label" class="label dist_text checkbox-label" onmouseover="document.getElementById('PRRQ_tooltip').style.display = 'inline';" onmouseout="document.getElementById('PRRQ_tooltip').style.display = 'none';">Philosophical and Religious Perspectives  <span class="tooltip" id="PRRQ_tooltip">PRRQ</span></label></div>
+							
+						<div class="distr_choice"><input type="checkbox" value="CULT" id="cult" class="checkbox dist_req_check dist_req_li choices" onclick="toggleCheckbox('cult_label');"><label for="cult" id="cult_label" class="label dist_text checkbox-label" onmouseover="document.getElementById('CULT_tooltip').style.display = 'inline';" onmouseout="document.getElementById('CULT_tooltip').style.display = 'none';">Cultural Diversity  <span class="tooltip" id="CULT_tooltip">CULT</span></label></div>
+						
+					</div> <!-- End filter_card -->
+					</div> <!-- End placeholder -->
+					</div> <!-- End placeholder -->
+				</div> <!-- End accordion content -->
+			</div> <!-- End accordion -->
+			
+			
+		<!--Class Size ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
 		
-		
-	<!--Search Box ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+			<div class="accordion">
+				<p class="accordion-header" onclick="toggleAcc('class-size-acc-content');">By Class Size</p>
+				<div id="class-size-acc-content" class="accordion-content filter_card">
+					<div class="class-size-half">
+						<span>From: </span>
+						<select id="from-class-size-select" style="width:40px;">
+							{% for i in sizes_small %}
+							<option value="from_{{i}}">{{i}}</option>
+							{% endfor %}
+						</select>
+					</div> <!-- End class size half -->
+					
+					<div class="class-size-half">
+						<span>To: </span>
+						<select id="to-class-size-select" style="width:50px;">
+							{% for i in sizes_large %}
+							<option value="from_{{i}}">{{i}}</option>
+							{% endfor %}
+						</select>
+					</div> <!-- End class size half -->
+					
+				</div> <!-- End accordion content -->
+			</div> <!-- End accordion -->
+			
+		<!--Form Submission and Clear/Filter Buttons ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
 
-		<div id="opq_search_box">
-			<p id="by_keyword">Search By Keyword:</p>
-			<form action={{url_for("process_search")}} method="post"> 
-  			<input class="search" id="search_norm_home" name="gen_search" placeholder="Search..." autofocus/>
-  			<li class="w3-btn" id="gen_search_btn_home"><i class="material-icons" id="icon_search_home">search</i></li>
-	  		<input type="submit" id="hidden_search_home" name="gen_search_btn" hidden></form>
-	  		
-			<form action={{url_for("process_search")}} method="post"> <p id="by_keyword_long">Search By Keyword: </p> 
-  			<input id="search_norm" name="gen_search" placeholder="Search..." autofocus/>
-  			<li class="w3-btn" id="gen_search_btn"><i class="material-icons" id="icon_search">search</i></li>
-  			<p id="help" onclick="document.getElementById('help_div').style.display = 'block';document.getElementById('blackout').style.display = 'block';">Help</p>
-	  		<input type="submit" id="hidden_search" name="gen_search_btn" style="display:none;"></form>
-		</div>
+		<input type="text" id="dep" name="dep" value="" hidden>
+		<input type="text" id="period" name="period" value="" hidden>
+		<input type="text" id="prof_form" name="prof_form" value="" hidden>
+		<input type="text" id="days" name="days" value="" hidden>
+		<input type="text" id="times" name="times" value="" hidden>
+		<input type="text" id="distri" name="distri" value="" hidden>
+		<input type="text" id="class_size" name="class_size" value="" hidden>
+		
+		<input type="submit" onclick="createQueryStr()" class="filter_button" value="Filter by Selections">
+		</form>
+		<input type="button" class="filter_button" id="clear-btn" value="Clear All" onclick="clearAll();">
+		</div> <!-- End filter -->
+		
+		<p id="menu-icon" onclick="toggleFilter(false);">&#9776;</p>
+		
+	
+		
+		
+<!--~~~~~~~~~~~~~~~~~~~~~ Main ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+ 
+		<div id="main">
+			
+			<p id="davidson_logo">DAVIDSON COLLEGE</p>   <!--Logo-->
+			
+			
+			<!-- Search box ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+			
+			<div id="opq_search_box">
+				
+				<p id="by_keyword_home">Search By Keyword:</p>
+				<form action={{url_for("process_search")}} method="post">
+				<table id="search_bar" style="margin-top:5px;">
+					<tr>
+						<td id="search_home_td"><input class="search" id="search_home" name="gen_search" placeholder="Search..." autofocus/></td>
+						<td id="search_btn_home_td"><img src="https://cdn4.iconfinder.com/data/icons/ionicons/512/icon-ios7-search-strong-128.png" id="search_btn_home" onclick="document.getElementById('hidden_search_home').click();"></td>
+						<td style="display:none;padding-left:10px;" id="help_td"><p id="help" onclick="document.getElementById('help_div').style.display = 'block';document.getElementById('blackout').style.display = 'block';">Help</p></td>
+					</tr>
+				</table>
+				<input type="submit" id="hidden_search_home" name="gen_search_btn" style="display:none;"></form>
+			</div> <!-- End opq-search-box -->
 		
 		
 	<!--Description ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
 		<div id="descript_page">
-			<h5>Welcome to the Syllabi Search Page!</h5> 
+			<p style="font-size:18px;font-family:'verdana';">Welcome to FindACourse!</p> 
 			<p>In order to find a class, either filter using the navigation to your left or search using the central search bar. If you are an administrator, login on the left navigation. If you are a professor looking to upload a syllabus, contact an administrator for access. Thank you very much for using this page! Good day. </p>
-		</div>
+		</div> <!-- End descript page -->
 		
-		
-	<!--Result Div ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
 	
-		{% if chosen_year %}
-		<p id="displayed_yr"><i>{{chosen_year}}</i>
+	
+	<!-- Result Div ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+	
+		{% if chosen_year and not message %}
+			<p id="displayed_yr"><i>{{chosen_year}}</i>
 		{% endif %}
+		
 		{% if result_count %}
 			&nbsp;&nbsp;&nbsp;Total Results: {{result_count}}
 		{% endif %}
 		</p>
-		<div id="results" class="w3-card-4 w3-animate-opacity">
-			<ul id="result_list">
-				{% for i in search_results %}
-              <li id="acc_id_{{loop.index0}}">
-                <div class="w3-accordion" style="margin:0px;padding:0px;">
-                  <span onclick="accFunc('acc_content_id_{{loop.index0}}')">
-	                  <table class="header_table_result">
-		                  <tr>
-		                  <td class="courseLink"><b>{{i.subject}} {{i.course_num}} {% if i.seq_num != '0' %}{{i.seq_num}}{% endif %}[{{i.major_code}}]</b>: <u class="courseLink" onclick="showDescription('course_desc_div', '{{i.subject}}', '{{i.course_num}}')">{{i.course_title}}</u></td>
-		                  <td class="prof_result">{{i.instructor1}}</td>
-		                  <td class="CRN_result"><span style="margin-right:10%;">CRN: {{i.CRN}}</span></td>
-		                  <td class="x_result"><span onclick="document.getElementById('acc_id_{{loop.index0}}').style.display='none'" class="w3-closebtn w3-margin-right w3-medium">x</span></td>
-		                  </tr>
-			          </table>
-			      </span>
-                  <div id="acc_content_id_{{loop.index0}}" class="w3-accordion-content w3-container" style="margin-top:10px;background-color:#d9d9d9; padding:5px;">
-	                  <table id="results_table">
-		                  <tr>
-                    		<td class="results_th">Time:</td>
-                    		<td class="results_th">Days:</td>
-                    		<td class="results_th">Place:</td>
-                    		<td class="results_th">Distr. Req.'s:</td>
-                    		<td class="results_th">Notes</td>
-                    		<td class="results_th">Class Size:</td> 
-                    		<td class="results_th">Visit:</td>
-                    		<td class="results_th">Syllabus</td>
-                    	</tr>
-                    	<tr>
-                    		<td class="results_td">{{i.class_time}}</td>
-                    		<td class="results_td">{{i.meet_days}}</td>
-                    		<td class="results_td">{{i.bldg_code + " " + i.room_code }}</td>
-                    		<td class="results_td">{{i.course_attrib}}</td>
-                    		<td class="results_td">{{i.course_notes}}</td>
-                    		<td class="results_td">{{i.max_enroll}}</td>
-                    		<td class="results_td">{{i.visitable}}</td>
-                    		<td class="results_td"><u><a href = {{url_for('download',file_path=i.syllabus_link)}} target = "blank" style="cursor:pointer;">{{i.syllabus_link}}</a></u></td>
-	                    </tr>                    </table>
-	              
-                    
-                    <div id="hidden_results_mobile">
-	                    <p><span class="results_th">Time: </span><span class="results_td">{{i.class_time}}</span></p>
-                    	<p><span class="results_th">Days:</span><span class="results_td">{{i.meet_days}}</span></p>
-                    	<p><span class="results_th">Place:</span><span class="results_td">{{i.bldg_code+" "+i.room_code}}</span></p>
-                    	<p><span class="results_th">Dist. Req.'s:</span><span class="results_td">{{i.course_attrib}}</span></p>
-                    	<p><span class="results_th">Notes:</span><span class="results_td">{{i.course_notes}}</span></p>
-                    	<p><span class="results_th">Class Size:</span><span class="results_td">{{i.max_enroll}}</span></p>
-                    	<p><span class="results_th">Visit:</span><span class="results_td">{{i.visitable}}</span></p>
-                    	<p><span class="results_th">Syllabus</span><span class="results_td"><u><a href = {{url_for('download',file_path=i.syllabus_link)}} target = "blank"style="cursor:pointer;">Download</a></u></span></p>
-	                </div>
-                  </div>
-              </li>
-              {% endfor %}
-              </ul> 
-	   		</div>
-		</div>
+		<span id="open-close-btn" onclick="toggleOpenCloseBtn();">Open All</span>
+			
+		{% if message %}
+			<p id="error_msg">{{message}}</p>
+		{% endif %}
+		<div id="results">
+			{% for i in search_results %}
+			{% set rowloop = loop %}
+			<div class="acc-results" id="acc_{{loop.index0}}">
+				
+				<span class="acc-header-results" onclick="toggleAcc('acc_content_{{loop.index0}}');">
+				<table class="header_results_table">
+					<tr>
+						<td class="courseLink"><b>{{i.subject}} {{i.course_num}} {% if i.seq_num != '0' %}{{i.seq_num}}{% endif %}[{{i.major_code}}]</b>: <u onclick="showDescription('course_desc_div', '{{i.subject}}', '{{i.course_num}}')">{{i.course_title}}</u></td>
+						<td>{{ i.acad_period }}</td>
+						<td class="prof_result">{{i.instructor1}}</td>
+						<td class="CRN_result"><span style="margin-right:10%;">CRN: {{i.CRN}}</span></td>
+						<td class="x_result"><span onclick="document.getElementById('acc_{{loop.index0}}').style.display='none'" style="font-size:23px;" class="close_icon">&times;</span></td>
+				  </tr>
+				</table>
+				</span> <!-- End header -->				
+				<div id="acc_content_{{loop.index0}}" class="acc-content-results" style="margin-top:10px;background-color:#d9d9d9; padding:5px;">
+			  	<table class="results_table">
+				  <tr>
+					<td class="results_th">Time:</td>
+					<td class="results_th">Days:</td>
+					<td class="results_th">Place:</td>
+					<td class="results_th">Distr. Req.'s:</td>
+					{% if i.course_notes == "" %}
+					
+					{% else %}
+						<td class="results_th">Notes</td>
+					{% endif %}
+					<td class="results_th">Class Size:</td> 
+					<td class="results_th">Visit:</td>
+					<td class="results_th">Syllabus</td>
+				</tr>
+				<tr>
+					<td class="results_td">{{i.class_time}}</td>
+					<td class="results_td">{{i.meet_days}}</td>
+					<td class="results_td">{{i.bldg_code + " " + i.room_code }}</td>
+					<td class="results_td">{{i.course_attrib}}</td>
+					{% if i.course_notes == "" %}
+						
+					{% else %}
+						<td class="results_td" onload="countRow()">
+							
+							{% set notes = i.course_notes.split(',') %}
+							{% for n in notes %}
+								<div class="NotesContainer"><span>{{n}}</span>
+								<span class="NotesTooltip">{{sched_notes[n]}}</span></div>
+							{% endfor %}	
+						</td>
+					{% endif %}
+					<td class="results_td">{{i.max_enroll}}</td>
+					<td class="results_td">{{i.visitable}}</td>
+					<td class="results_td"><u><a href = {{url_for('download',file_path=i.syllabus_link)}} target = "blank" style="cursor:pointer;">{{i.syllabus_link}}</a></u></td>
+				</tr>                    
+			  </table>
+			  </div> <!-- End acc content -->
+			</div> <!-- End accordion -->
+			{% endfor %}
+		</div> <!-- End "results" -->
+		</div> <!-- End main -->
+		
 		{% if search_results %}
-	          		<script>
-		          		var searchBox = document.getElementById("opq_search_box");
-						searchBox.style.marginTop = "20px";	
-						searchBox.style.width = "90%";
-						searchBox.style.marginLeft = "5%";
-						searchBox.style.height = "55px";
-						searchBox.style.paddingTop = "0px";
-						document.getElementById("results").style.display = "block";
-						document.getElementById("descript_page").style.display = "none";
-						document.getElementById("search_norm").style.height = "35px";
-						document.getElementById("search_norm").style.padding = "0px";
-						document.getElementById("search_norm").style.paddingLeft = "10px";
-						document.getElementById("search_norm").style.display = "inline-block";
-						document.getElementById("by_keyword_long").style.display = "inline-block";
-						document.getElementById("gen_search_btn").style.display = "inline-block";
-						document.getElementById("gen_search_btn_home").style.display = "none";
-						document.getElementById("by_keyword").style.display = "none";
-						document.getElementById("help").style.display = "inline-block";
-						document.getElementById("search_norm_home").style.display = "none";
-						document.getElementById("search_norm").style.width = "55%";
-	
-						w3-close();
-		          	</script>
-		      {% elif message %}
-		      		<script>
-		          		var searchBox = document.getElementById("opq_search_box");
-						searchBox.style.marginTop = "20px";	
-						searchBox.style.width = "90%";
-						searchBox.style.marginLeft = "5%";
-						searchBox.style.height = "55px";
-						searchBox.style.paddingTop = "0px";
-						document.getElementById("descript_page").style.display = "none";
-						document.getElementById("search_norm").style.height = "35px";
-						document.getElementById("search_norm").style.padding = "0px";
-						document.getElementById("search_norm").style.paddingLeft = "10px";
-						document.getElementById("search_norm").style.display = "inline-block";
-						document.getElementById("by_keyword_long").style.display = "inline-block";
-						document.getElementById("gen_search_btn").style.display = "inline-block";
-						document.getElementById("gen_search_btn_home").style.display = "none";
-						document.getElementById("by_keyword").style.display = "none";
-						document.getElementById("search_norm_home").style.display = "none";
-						document.getElementById("search_norm").style.width = "55%";
-	
-						w3-close();
-		          	</script>
-		      		<p id="error_msg">{{message}}</p>
-		      {% endif %}
-		      
-		 <script>
+			<script>
+				setTimeout(function(){
+					var searchBox = document.getElementById("opq_search_box");
+					var results = document.getElementById("results");
+					searchBox.style.marginTop = "5px";	
+					searchBox.style.width = "90%";
+					searchBox.style.margin = "0 auto";
+					searchBox.style.height = "55px";
+					searchBox.style.paddingTop = "0px";
+					results.style.opacity = "1.0";
+					results.style.zIndex = "0";
+					results.style.position = "static";
+					document.getElementById("by_keyword_home").style.position = "absolute";
+					document.getElementById("search_bar").style.marginLeft = "180px";
+					document.getElementById("search_bar").style.width = "calc(100% - 180px)";
+					document.getElementById("search_home_td").style.width = "70%";
+					document.getElementById("search_home").style.width = "100%";
+					document.getElementById("search_btn_home_td").style.width = "5%";
+					document.getElementById("help_td").style.display = 'inline';
+					document.getElementById("descript_page").style.display = "none";
+				}, 10);
+			</script>
+	  {% elif message %}
+			<script>
+				setTimeout(function(){
+					var searchBox = document.getElementById("opq_search_box");
+					var results = document.getElementById("results");
+					searchBox.style.marginTop = "5px";	
+					searchBox.style.width = "90%";
+					searchBox.style.margin = "0 auto";
+					searchBox.style.height = "55px";
+					searchBox.style.paddingTop = "0px";
+					results.style.opacity = "0.0";
+					results.style.zIndex = "-1";
+					results.style.position = "absolute";
+					document.getElementById("by_keyword_home").style.position = "absolute";
+					document.getElementById("search_bar").style.marginLeft = "180px";
+					document.getElementById("search_bar").style.width = "calc(100% - 180px)";
+					document.getElementById("search_home_td").style.width = "70%";
+					document.getElementById("search_home").style.width = "100%";
+					document.getElementById("search_btn_home_td").style.width = "5%";
+					document.getElementById("help_td").style.display = 'inline';
+					document.getElementById("descript_page").style.display = "none";
+				}, 10);
+			</script>	
+		  {% endif %}
+		  
+		  <script>
 			 var openAccs = [];
 			 var mornTimes = 0;
 			 var aftTimes = 0;
 		 </script>
 		{% for i in kept_values %}
-			<script>
-				var allInputs = document.getElementsByTagName("input");
-				
-    			for(var x = 0; x < allInputs.length; x++){
-	    			var curElem = allInputs[x];
-	    			if(curElem.value == "{{i}}"){
-	        			curElem.checked = true;
-	        			if (hasClass(curElem, "morn_check")){
-		        			mornTimes++;
-		        		}
-		        		if (hasClass(curElem, "aft_check")){
-		        			aftTimes++;
-		        		}
-		        		
-	        			var inputLabel = curElem.id + "_label";
-	        			document.getElementById(inputLabel).style.color = '#248f8f';
-	        			var accId = curElem.parentElement.parentElement.parentElement.parentElement.parentElement.id;
-	        			
-	        			if (openAccs.indexOf(accId) === -1){
-		        			openAccs.push(accId);
-		        			accFunc(accId);
-		        		}	
-	        		}	
-            	}
-            	if (mornTimes === 6){
-	            	var mornId = "morn_classes"
-	            	var mornLabel = mornId + "_label"
-	            	document.getElementById(mornId).checked = true;
-	            	document.getElementById(mornLabel).style.color = '#248f8f';	
-	            }
-	            if (aftTimes === 7){
-	            	var aftId = "aft_classes"
-	            	var aftLabel = aftId + "_label"
-	            	document.getElementById(aftId).checked = true;
-	            	document.getElementById(aftLabel).style.color = '#248f8f';	
-	            }
+		<script>
+			var allInputs = document.getElementsByTagName("input");
+			
+			for(var x = 0; x < allInputs.length; x++){
+				var curElem = allInputs[x];
+				if(curElem.value == "{{i}}"){
+					curElem.checked = true;
+					if (hasClass(curElem, "morn_check")){
+						mornTimes++;
+					}
+					if (hasClass(curElem, "aft_check")){
+						aftTimes++;
+					}
 					
-			</script>
-		{% endfor %}
+					var inputLabel = curElem.id + "_label";
+					document.getElementById(inputLabel).style.color = '#248f8f';
+					var accId = curElem.parentElement.parentElement.parentElement.parentElement.parentElement.id;
+					
+					if (openAccs.indexOf(accId) === -1){
+						openAccs.push(accId);
+						document.getElementById(accId).style.display = 'block';
+					}	
+				}	
+			}
+			if (mornTimes === 6){
+				var mornId = "morn_classes"
+				var mornLabel = mornId + "_label"
+				document.getElementById(mornId).checked = true;
+				document.getElementById(mornLabel).style.color = '#248f8f';	
+			}
+			if (aftTimes === 7){
+				var aftId = "aft_classes"
+				var aftLabel = aftId + "_label"
+				document.getElementById(aftId).checked = true;
+				document.getElementById(aftLabel).style.color = '#248f8f';	
+			}
+				
+		</script>
+	{% endfor %}
+	
+	{% if semester %}
+	
+		<script>
+			var yearInputs = document.getElementsByClassName("year_li");
+			for(var x = 0; x < yearInputs.length; x++){
+					var curElem = yearInputs[x];
+					if(curElem.value == "{{semester}}"){
+						curElem.selected = true;
+						var accId = curElem.parentElement.parentElement.id;
+						document.getElementById(accId).style.display = 'block';  
+					}
+			}
+		</script>
+	
+	{% endif %}
+	
+	{% if class_size_kept %}
 		
-		{% if semester %}
+		<script>
+			var fromSelect = document.getElementById('from-class-size-select');
+			var fromOptions = fromSelect.options;
+			var toSelect = document.getElementById('to-class-size-select');
+			var toOptions = toSelect.options;
+			
+			var split = "{{class_size_kept}}".split("-");
+			var from = split[0];
+			var to = split[1];
+			var fromSolution;
+			var foundSolFrom = false;
+			for (var i = 0; i < fromOptions.length; i++){
+				if (fromOptions[i].value == ("from_" + String(from))){
+					fromSolution = fromOptions[i];
+					foundSolFrom = true;
+					break;	
+				}
+			}
+			var toSolution = "";
+			var foundSolTo = false;
+			for (var i = 0; i < toOptions.length; i++){
+				if (toOptions[i].value == ("to_" + String(to))){
+					toSolution = toOptions[i];
+					foundSolTo = true;
+					break;	
+				}	
+			}
+			
+			if (foundSolTo && foundSolFrom){
+				fromSolution.selected = true;
+				toSolution.selected = true;	
+				document.getElementById("class-size-acc-content").style.display = 'block';
+			}
+		</script>
 		
-			<script>
-				var yearInputs = document.getElementsByClassName("year_li");
-				var open = false;
-				for(var x = 0; x < yearInputs.length; x++){
-	    				var curElem = yearInputs[x];
-	    			    if(curElem.value == "{{semester}}"){
-		    			    curElem.selected = true;
-		    			    if (!open){
-			    			    var accId = curElem.parentElement.parentElement.id;
-			    			 	accFunc(accId);  
-			    			}
-		    			}
-		    	}
-			</script>
-		
-		{% endif %}
-
-	</div>
-  
-</body>
+	{% endif %}
+		  
+	</body>
 </html>
