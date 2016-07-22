@@ -40,38 +40,41 @@
 		<div id="filter">
 			<p id="close_icon" onclick="toggleFilter(true);">&times;</p>
 			<p id="filter_results">Filter Results</p>
-			<form action={{url_for("process_form")}} method="post">
-			
+				
 			
 		<!--Semester ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
 		
+			<script>
+			function submitOption(){
+				var subBtn = document.getElementById("submit_btn");		
+				var selectMenu = document.getElementById('year_dropdwn');
+				subBtn.value = selectMenu.options[selectMenu.selectedIndex].innerHTML;
+				subBtn.click();	
+			}
+			</script>
 			<div class="accordion">
 				<p class="accordion-header" onclick="toggleAcc('year-acc-content');">By Semester</p>
 				<div id="year-acc-content" class="accordion-content" style="display:block;">
-					<select name="years" id="year_dropdwn">
-						<option value="201602" id="201602" class="year_li">Spring 2017</option>
-						<option value="201601" id="201601" class="year_li">Fall 2016</option>
-						<option value="201502" id="201502" class="year_li">Spring 2016</option>
-						<option value="201501" id="201501" class="year_li">Fall 2015</option>
-						<option value="201402" id="201402" class="year_li">Spring 2015</option> 				
-						<option value="201401" id="201401" class="year_li">Fall 2014</option>
-						<option value="201302" id="201302" class="year_li">Spring 2014</option>
-						<option value="201301" id="201301" class="year_li">Fall 2013</option>
-						<option value="201202" id="201202" class="year_li">Spring 2013</option>
-						<option value="201201" id="201201" class="year_li">Fall 2012</option>
-						<option value="201102" id="201102" class="year_li">Spring 2012</option>			
-						<option value="201101" id="201101" class="year_li">Fall 2011</option>
-						<option value="201002" id="201002" class="year_li">Spring 2011</option>
-						<option value="201001" id="201001" class="year_li">Fall 2010</option>
-						<option value="200902" id="200902" class="year_li">Spring 2010</option>
-						<option value="200901" id="200901" class="year_li">Fall 2009</option>
-					</select>
+					<form action="{{url_for('process_semester')}}" method="post">
+						<select name="years" id="year_dropdwn" onchange="submitOption()">
+							<option value="Choose one" id="choose_one" class="year_li">Choose one</option>
+							{% for i in semesters %}
+							{% if i == selected_sem %}
+							<option value="{{i}}" id="{{ i }}" class="year_li" selected>{% set fall_year = i[:4] %}{% set spring_year = ((fall_year)|int +1)|string %}{% if i[-1] == '2' %}Spring {{ spring_year }}{% elif i[-1] == '1' %}Fall {{ fall_year }}{% endif %}</option>
+							{% else %}
+							<option value="{{i}}" id="{{ i }}" class="year_li">{% set fall_year = i[:4] %}{% set spring_year = ((fall_year)|int +1)|string %}{% if i[-1] == '2' %}Spring {{ spring_year }}{% elif i[-1] == '1' %}Fall {{ fall_year }}{% endif %}</option>
+							{% endif %}
+
+							{% endfor %}										
+						</select>
+						<input type="submit" id="submit_btn" name="submit" value="" style="display:none;">
+					</form>
 				</div> <!-- End accordion content -->
 			</div> <!-- End accordion -->
 			
 			
 		<!--Professors ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
-		
+			<form action={{url_for("process_form")}} method="post">
 			<div class="accordion">
 				<p class="accordion-header" onclick="toggleAcc('prof-acc-content');">By Professor</p>
 				<div id="prof-acc-content" style="font-size:14px;" class="accordion-content filter_card">
@@ -219,37 +222,28 @@
 				<div id="class-size-acc-content" class="accordion-content filter_card">
 					<div class="class-size-half">
 						<span>From: </span>
-						<select id="from-class-size-select" style="width:40px;">
-							<script>
-								for (var i = 1; i < 35; i++){
-									var option = document.createElement("option");	
-									option.appendChild(document.createTextNode(String(i)));
-									option.value = "from_" + String(i);
-									document.getElementById('from-class-size-select').appendChild(option);
-								}
-							</script>
+						<select id="from-class-size-select" style="width:50px;">
+							{% for i in sizes_small %}
+							<option value="from_{{i}}">{{i}}</option>
+							{% endfor %}
 						</select>
 					</div> <!-- End class size half -->
 					
 					<div class="class-size-half">
 						<span>To: </span>
 						<select id="to-class-size-select" style="width:50px;">
-						<script>
-							for (var i = 2; i < 36; i++){
-								var option = document.createElement("option");	
-								option.appendChild(document.createTextNode(String(i)));
-								option.value = "to_" + String(i);
-								if (i == 35){
-									option.selected = true;	
-								}
-								document.getElementById('to-class-size-select').appendChild(option);
-							}
-						</script>
+							{% for i in sizes_large %}
+							{% if i == sizes_large|length %}
+							<option value="to_{{i}}" selected>{{i}}</option>
+							{% endif %}
+							<option value="to_{{i}}">{{i}}</option>
+							{% endfor %}
 						</select>
 					</div> <!-- End class size half -->
 					
 				</div> <!-- End accordion content -->
 			</div> <!-- End accordion -->
+
 			
 		<!--Form Submission and Clear/Filter Buttons ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
 
@@ -365,7 +359,13 @@
 					{% if i.course_notes == "" %}
 						
 					{% else %}
-						<td class="results_td">{{i.course_notes}}</td>
+						<td class="results_td" onload="countRow()">
+							{% set notes = i.course_notes.split(',') %}
+							{% for n in notes %}
+								<div class="NotesContainer" style="z-index:4;"><span>{{n}}</span>
+								<span class="NotesTooltip">{{sched_notes[n]}}</span></div>
+							{% endfor %}
+						</td>
 					{% endif %}
 					<td class="results_td">{{i.max_enroll}}</td>
 					<td class="results_td">{{i.visitable}}</td>
@@ -437,7 +437,7 @@
 	{% if semester %}
 	
 		<script>
-			keepSemester();
+			keepSemester('{{semester}}');
 		</script>
 	
 	{% endif %}
@@ -445,7 +445,7 @@
 	{% if class_size_kept %}
 		
 		<script>
-			keepClassSize();
+			keepClassSize('{{class_size_kept}}');
 		</script>
 		
 	{% endif %}
