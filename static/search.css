@@ -4,24 +4,6 @@ body{
 	font-family:"Verdana";
 }
 
-/* Div that contains the iframe with the course description */
-#course_desc_div{
-	display:none;
-	background-color: #e6e6e6;
-	border:1px solid #e6e6e6;
-	border-radius:4px;
-	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 8px 20px 0 rgba(0, 0, 0, 0.19);
-	padding:10px;
-	position:fixed;
-	top:5%;
-	left:43%;
-	width:40%;
-	z-index:2;
-	line-height:30px;	
-	font-size: 40%;
-	font-size:90%;	
-}
-
 /* To dim everything behind a popup message */
 #blackout{
 	position:fixed;
@@ -443,7 +425,7 @@ select{
 	top:5%;
 	left:43%;
 	width:40%;
-	z-index:2;
+	z-index:5;
 	line-height:30px;	
 	font-size: 40%;
 	transition: left 0.5s;
@@ -451,7 +433,8 @@ select{
 	min-width:350px;
 }
 iframe{
-	border:1px solid #cccccc;	
+	border:1px solid #cccccc;
+	z-index:8;	
 }
 iframe::-webkit-scrollbar{
 	display:none;	
@@ -480,6 +463,27 @@ iframe::-webkit-scrollbar{
 	margin-left:5%;
 	margin-right:5%;	
 }
+.NotesTooltip {
+	background-color:black;
+	color:white;
+	padding:3px;
+	position:absolute;
+	z-index:7;
+	opacity:0.7;
+	display:none;
+	margin-left:5px;
+	font-size:10px;	
+}
+.NotesContainer {
+	position: relative;
+}
+.NotesContainer:hover {
+	z-index:5;
+}
+.NotesContainer:hover .NotesTooltip {
+	display: block;
+}
+
 
 @media only screen and (max-width:1200px){
 	#filter{

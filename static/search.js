@@ -319,22 +319,22 @@ function showNoResults(){
 	results.style.position = "absolute";
 	}, 10);
 }
-function keepSemester(){
+function keepSemester(semester){
 	var yearInputs = document.getElementsByClassName("year_li");
 	for(var x = 0; x < yearInputs.length; x++){
 		var curElem = yearInputs[x];
-		if(curElem.value == "{{semester}}"){
+		if(curElem.value == semester){
 			curElem.selected = true;  
 		}
 	}	
 }
-function keepClassSize(){
+function keepClassSize(class_size_kept){
 	var fromSelect = document.getElementById('from-class-size-select');
 	var fromOptions = fromSelect.options;
 	var toSelect = document.getElementById('to-class-size-select');
 	var toOptions = toSelect.options;
 	
-	var split = "{{class_size_kept}}".split("-");
+	var split = class_size_kept.split("-");	
 	var from = split[0];
 	var to = split[1];
 	
