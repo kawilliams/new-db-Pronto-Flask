@@ -282,3 +282,56 @@ function deleteRecipient(spanID){
 		EMAIL_RECIPIENTS_EDIT.splice(i, 1);
 	}
 }
+
+function animateChoice(bubble){
+	
+	if (bubble.style.color == "white"){
+		alreadyAnimated = true;	
+	}
+	bubble.style.backgroundColor = "#003566";
+	bubble.style.color = "white";
+	bubble.style.border = "1px solid #4d4d4d";
+	bubble.style.boxShadow = "3px 3px 10px #4d4d4d";
+}
+
+var alreadyAnimated = false;
+
+function unAnimateChoice(bubble){
+	
+	if (!alreadyAnimated){
+		bubble.style.backgroundColor = "#cce6ff";
+		bubble.style.color = "black";
+		bubble.style.border = "1px solid gray";
+		bubble.style.boxShadow = "0px 0px 0px gray";
+	}
+	alreadyAnimated = false;
+}
+
+function filterDeps(){
+	
+	var deps = document.getElementsByClassName('dep_li');
+	var input = document.getElementById('dep_search_bar').value;
+	var inputLen = input.length;
+	
+	for (var i = 0; i < deps.length; i++){
+		if ((deps[i].value.substring(0,inputLen)).toLowerCase() != input.toLowerCase()){
+			deps[i].style.display = 'none';
+		}
+		else{
+			deps[i].style.display = 'inline';	
+		}	
+	}	
+}
+
+function closeQuickInfo(quickInfo){
+	quickInfo.parentElement.style.display = 'none';
+	document.getElementById('main_body').style.height = '89%';
+	document.getElementById('main_body').style.marginTop = '20px';
+	document.getElementById('dept_search').style.height = '640px';
+	document.getElementById('dept_search').style.top = '100px';
+	document.getElementById('prof_search_container').style.height = '640px';
+	document.getElementById('prof_search_container').style.top = '100px';
+	document.getElementById('syl_status_box').style.marginTop = '15px';
+	document.getElementById('syl_status_box').style.height = '640px';
+	document.getElementById('prof_search').style.height = '570px';
+}
