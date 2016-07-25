@@ -273,7 +273,32 @@ function toggleOpenCloseBtn(){
 		openCloseAllAccordions(false);
 	}
 }
-
+function visNoAllAccordions(visitable){
+	var visContents = document.getElementsByClassName('visit-row');
+	var nopeContents = document.getElementsByClassName('no-visit-row');
+	display = 'block';
+	if (visitable) {
+		display = 'none';	
+	}
+	for (var j = 0; j < nopeContents.length; j++){					
+		nopeContents[j].parentNode.style.display = display;	
+	}
+}
+function toggleVisNoBtn() {
+	var visNoBtn = document.getElementById('vis-no-btn');			
+	if (visNoBtn.innerHTML == "Allow Visitors"){
+		visNoBtn.style.backgroundColor = "white";
+		visNoBtn.style.color = "#660000";
+		visNoBtn.innerHTML = "No Visitors";
+		visNoAllAccordions(true);
+	}	
+	else{
+		visNoBtn.style.backgroundColor = "#660000";
+		visNoBtn.style.color = "white";
+		visNoBtn.innerHTML = "Allow Visitors";
+		visNoAllAccordions(false);
+	}
+}
 function showTooltip(tooltipID, displayType){
 	document.getElementById(tooltipID).style.display = displayType;
 }
