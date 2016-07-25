@@ -16,7 +16,7 @@ body{
 	top:5%;
 	left:43%;
 	width:40%;
-	z-index:2;
+	z-index:4;
 	line-height:30px;	
 	font-size: 40%;
 	font-size:90%;	
@@ -60,7 +60,7 @@ body{
 	top:20%;
 	left:48%;
 	width:30%;
-	z-index:2;
+	z-index:4;
 	transition:0.5s;	
 }
 #close_btn_help{
@@ -418,14 +418,18 @@ select{
 	color:#800000;	
 }
 .courseLink{
-	width:50%;	
+	width:45%;	
 }	
+.semester_result{
+	width:10%;
+	text-align:left;
+}
 .prof_result{
 	width:25%;
 	text-align:right;	
 }
 .CRN_result{
-	width:20%;
+	width:15%;
 	text-align:right;
 }
 .x_result{
