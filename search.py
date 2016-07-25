@@ -373,6 +373,7 @@ def filter_class_size(searchterms, acd_prd):
 		
 	Returns - all courses whose max class size is in the given range
 	"""
+	print searchterms
 	if searchterms[0] == "":
 		searchterms[0] = 0
 	if searchterms[1] == "":
