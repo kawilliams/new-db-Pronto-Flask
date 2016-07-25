@@ -454,7 +454,7 @@ def process_semester():
 			
 		year = (str(semester))[0:4]
 		acad_period = (str(semester))[4:]
-		if acad_period != "Choose one":
+		if year != "Choo":
 			if acad_period == "01":
 				acad_period = "Fall"
 			else:
@@ -464,10 +464,9 @@ def process_semester():
 			formatted_yr = acad_period + " " + str(year)
 			
 			return render_template("search.html", semesters=ALL_SEMESTERS, 
-				               profs=ALL_PROFESSORS, deps=ALL_DEPS, 
+				               profs=ALL_PROFESSORS, deps=ALL_DEPS, deps_full=full_dep,
 			                       sizes_small=RANGE_SIZES_SMALL,
 			                       sizes_large=RANGE_SIZES_LARGE,
-				               deps_full=full_dep, 
 			                       sched_notes=sched_notes,
 			                       selected_sem=semester)
 		else:
@@ -557,10 +556,9 @@ def process_form():
 			msg = "Sorry, no courses found. Try again."
 
 		return render_template("search.html",search_results=results,
-	        message = msg,profs=ALL_PROFESSORS, deps=ALL_DEPS,
+	        message = msg,profs=ALL_PROFESSORS, deps=ALL_DEPS, deps_full=full_dep,
 	        semesters=ALL_SEMESTERS, sizes_small=RANGE_SIZES_SMALL,
-		sizes_large=RANGE_SIZES_LARGE,
-	        deps_full=full_dep, sched_notes=sched_notes,
+			sizes_large=RANGE_SIZES_LARGE, sched_notes=sched_notes,
 	        kept_values=full_query,
 	        kept_values_len=len(full_query),
 	        semester=acd_prd, selected_sem=semester,
@@ -594,13 +592,14 @@ def process_search():
 			formatted_yr = "Spring "+str(int(query_term[:4])+1)
 		else:
 			formatted_yr = 'All semesters'
-			
+		
+		full_dep = find_full_deps(ALL_DEPS)		
 		final_query_len = len(results)
 		sched_notes = read_notes_file()
 		return render_template("search.html",search_results=results,
 		                       message = msg,profs=ALL_PROFESSORS,
 		                       semesters=ALL_SEMESTERS,
-		                       deps=ALL_DEPS, deps_full=ALL_DEPS_FULL,
+		                       deps=ALL_DEPS, deps_full=full_dep,
 		                       chosen_year=formatted_yr,
 		                       result_count=final_query_len,
 		                       sched_notes=sched_notes)
