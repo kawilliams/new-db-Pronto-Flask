@@ -16,10 +16,18 @@ body{
 	top:5%;
 	left:43%;
 	width:40%;
-	z-index:4;
+	z-index:2;
 	line-height:30px;	
 	font-size: 40%;
-	font-size:90%;	
+	transition: left 0.5s;
+	max-width:500px;
+	min-width:350px;
+}
+iframe{
+	border:1px solid #cccccc;	
+}
+iframe::-webkit-scrollbar{
+	display:none;	
 }
 
 /* To dim everything behind a popup message */
@@ -36,44 +44,35 @@ body{
 	opacity:0.5;	
 }
 
-/* Help text/button */
-#help{
-	color:#990000;
+select{
+	width:90%;
 	padding:5px;
-	margin-left:10px;
-	width:35px;
+	font-size:16px;	
 }
-#help:hover{
-	color:#800000;
-	cursor:pointer;
-	background-color:rgba(220, 200, 200, 0.8)	
+
+input[type=checkbox]{
+	margin-right:10px;
+	width:15px;
+	height:15px;	
 }
-/* Div that contains the helpful information after clicking #help */
-#help_div{
+
+/* For all text that has a tooltip */
+.help:hover{
+	cursor:help;
+}
+.tooltip{
+	background-color:black;
+	color:white;
+	padding:3px;
+	position:absolute;
+	z-index:2;
+	opacity:0.7;
 	display:none;
-	background-color:white;
-	border:1px solid #e6e6e6;
-	border-radius:4px;
-	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 8px 20px 0 rgba(0, 0, 0, 0.19);
-	padding:15px;
-	position:fixed;
-	top:20%;
-	left:48%;
-	width:30%;
-	z-index:4;
-	transition:0.5s;	
+	margin-left:5px;
+	font-size:14px;	
 }
-#close_btn_help{
-	float:right;
-	margin:5px;	
-	width:25px;
-	height:25px;
-	cursor:pointer;
-}
-.question{
-	padding:5px;
-	border-bottom:2px solid #cccccc;
-}
+
+/*~~~~~~~~~~~~~~~~~~~~~~~ Filter Results ~~~~~~~~~~~~~~~~~~~~~~*/
 
 /* filter div */
 #filter{
@@ -129,9 +128,6 @@ body{
 	padding:10px;	
 }
 
-select{
-	width:90%;	
-}
 /* Professor search text input bar */
 #prof_search_id{
 	width:90%;
@@ -165,11 +161,7 @@ select{
 	margin:0px;
 }
 
-input[type=checkbox]{
-	margin-right:10px;
-	width:15px;
-	height:15px;	
-}
+/* Table containing the three columns of departments */
 #dept_table{
 	width:calc(100% - 20px);
 	margin-left:10px;	
@@ -178,26 +170,18 @@ input[type=checkbox]{
 	width:33%;
 	font-size:14px;		
 }
-.help:hover{
-	cursor:help;
-}
-.tooltip{
-	background-color:black;
-	color:white;
-	padding:3px;
-	position:absolute;
-	z-index:2;
-	opacity:0.7;
-	display:none;
-	margin-left:5px;
-	font-size:14px;	
-}
+
+/* for MWF and TR*/
 .day_li{
 	display:inline-block;
 	margin:0px;	
 	margin-left:20px;
 	margin-right:10px;			
 }
+
+/* In order to have two columns that adjust when the div 
+becomes too small, put choices into two divs with 
+display:inline-block. Change when screen becomes small enough */
 .time-half, .class-size-half{
 	display:inline-block;
 	margin-left:2%;
@@ -222,6 +206,7 @@ li{
 .class_size_li{
 	margin-left:30%;	
 }
+/* Filter By Selections */
 .filter_button{
 	width:95%;
 	padding:8px;
@@ -236,12 +221,16 @@ li{
 .filter_button:hover{
 	box-shadow:0 0 15px gray;	
 }
+
+/* "Reset" button */
 #clear-btn{
 	background-color:#cccccc;
 	border:1px solid #cccccc;	
 	margin-top:0px;
 	margin-bottom:30px;
 }
+
+/* Close icon */
 #close_icon{
 	font-size:30px;
 	text-align:right;
@@ -250,6 +239,7 @@ li{
 	margin-right:5px;
 	cursor:pointer;	
 }
+/* Menu icon -- when the filter div is closed */
 #menu-icon{
 	font-size:23px;
 	margin:0px;
@@ -263,6 +253,10 @@ li{
 	border-bottom-right-radius:3px;
 	cursor:pointer;
 }
+
+
+/************************** Main Screen ************************/
+
 #main{
 	width:75%;	
 	margin-left:25%;
@@ -270,6 +264,18 @@ li{
 	overflow:hidden;
 	height:100%;
 }
+
+#davidson_logo {
+	font-family: "copperplate gothic lite";
+	font-size: 50px;
+	text-align: center;	
+	text-shadow: 2px 2px 4px #FF0000;
+	font-weight:none;
+	margin-top:10px;
+	margin-bottom:10px;
+}
+
+/* Description */
 #descript_page{
 	background-color:rgba(250, 250, 250, 0.5);
 	padding:10px;
@@ -283,6 +289,8 @@ li{
 	font-family:"cambria";
 	min-width:350px;
 }
+
+/* Div containing search bar and help */
 #opq_search_box{
 	background-color:rgba(230, 210, 210, 0.8);
 	margin:0 auto;
@@ -297,10 +305,13 @@ li{
 	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 8px 20px 0 rgba(0, 0, 0, 0.19);
 	transition:0.5s;
 }
+/* Search by Keyword: */
 #by_keyword_home{
 	text-align:center;
 	transition:0.5s;	
 }
+
+/*contains both the search input and submit button */
 #search_bar{
 	margin:0 auto;
 	margin-top:6px;	
@@ -310,6 +321,8 @@ li{
 	padding:0px;
 	margin:0px;	
 }
+
+/* Search input */
 #search_home{
 	border:solid 1px #ccc;
 	border-radius:2px;
@@ -335,15 +348,49 @@ li{
 #search_btn_home:hover{
 	background-color:#b3daff;	
 }
-#davidson_logo {
-	font-family: "copperplate gothic lite";
-	font-size: 50px;
-	text-align: center;	
-	text-shadow: 2px 2px 4px #FF0000;
-	font-weight:none;
-	margin-top:10px;
-	margin-bottom:10px;
+
+/* Help*/
+/* Help text/button */
+#help{
+	color:#990000;
+	padding:5px;
+	margin-left:10px;
+	width:35px;
 }
+#help:hover{
+	color:#800000;
+	cursor:pointer;
+	background-color:rgba(220, 200, 200, 0.8)	
+}
+/* Div that contains the helpful information after clicking #help */
+#help_div{
+	display:none;
+	background-color:white;
+	border:1px solid #e6e6e6;
+	border-radius:4px;
+	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 8px 20px 0 rgba(0, 0, 0, 0.19);
+	padding:15px;
+	position:fixed;
+	top:20%;
+	left:48%;
+	width:30%;
+	z-index:2;
+	transition:0.5s;	
+}
+#close_btn_help{
+	float:right;
+	margin:5px;	
+	width:25px;
+	height:25px;
+	cursor:pointer;
+}
+.question{
+	padding:5px;
+	border-bottom:2px solid #cccccc;
+}
+/* End help */
+
+/* Displays chosen semester */
 #displayed_yr{
 	margin-left:5%;
 	color:#e6e6e6;	
@@ -351,6 +398,8 @@ li{
 	margin-bottom:0px;
 	float:left;
 }
+
+/* Sorry -- no results message */
 #error_msg{
 	font-size:17px;
 	color:white;
@@ -358,6 +407,8 @@ li{
 	margin-top:50px;
 	z-index:2;
 }
+
+/* Results! */
 #results{
 	background-color:white;
 	margin-top:5px;
@@ -370,6 +421,7 @@ li{
 	transition:1s;
 	min-width:500px;
 	margin:0 auto;
+	padding-bottom:40px;
 	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 8px 20px 0 rgba(0, 0, 0, 0.19);
 	
 	/* Purely for transitional purposes */
@@ -381,10 +433,8 @@ li{
 #results::-webkit-scrollbar{
 	display:none;
 }
-select{
-	padding:5px;
-	font-size:16px;	
-}
+
+/* Accordion format for results div */
 .acc-results{
 	border:1px solid #cccccc;
 	border-radius:4px;
@@ -418,49 +468,22 @@ select{
 	color:#800000;	
 }
 .courseLink{
-	width:45%;	
+	width:50%;	
 }	
-.semester_result{
-	width:10%;
-	text-align:left;
-}
 .prof_result{
 	width:25%;
 	text-align:right;	
 }
 .CRN_result{
-	width:15%;
+	width:20%;
 	text-align:right;
 }
 .x_result{
 	width:5%;
 	text-align:right;
 }	
-#course_desc_div{
-	display:none;
-	background-color: #e6e6e6;
-	border:1px solid #e6e6e6;
-	border-radius:4px;
-	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 8px 20px 0 rgba(0, 0, 0, 0.19);
-	padding:10px;
-	position:fixed;
-	top:5%;
-	left:43%;
-	width:40%;
-	z-index:5;
-	line-height:30px;	
-	font-size: 40%;
-	transition: left 0.5s;
-	max-width:500px;
-	min-width:350px;
-}
-iframe{
-	border:1px solid #cccccc;	
-	z-index:5;
-}
-iframe::-webkit-scrollbar{
-	display:none;	
-}
+
+/* Open All/ Close All accordions */
 #open-close-btn{
 	margin-bottom:8px;
 	margin-top:10px;
@@ -472,6 +495,7 @@ iframe::-webkit-scrollbar{
 	cursor:pointer;
 	display:none;
 }
+/* Allow Visitors/No visits */
 #vis-no-btn{
 	margin-bottom:8px;
 	margin-top:10px;
@@ -483,6 +507,7 @@ iframe::-webkit-scrollbar{
 	cursor:pointer;
 	display:none;
 }
+/* Number of results */
 #result_count{
 	color:white;
 	margin:0px;
@@ -490,12 +515,15 @@ iframe::-webkit-scrollbar{
 	margin-top:20px;
 	margin-left:5%;	
 }
+/* to keep Morning + checkbox and Afternoon + checkbox 
+from breaking because of white space */
 #morn_class_div, #aft_class_div{
 	white-space:nowrap;
 	display:inline-block;
 	margin-left:5%;
 	margin-right:5%;	
 }
+/* For the Notes tooltips */
 .NotesTooltip {
 	background-color:black;
 	color:white;
@@ -509,16 +537,17 @@ iframe::-webkit-scrollbar{
 }
 .NotesContainer {
 	position: relative;
-	z-index: 4;
+	z-index: 10;
 }
 .NotesContainer:hover {
-	z-index:4;
+	z-index:20;
 }
 .NotesContainer:hover .NotesTooltip {
 	display: block;
 }
 
-
+/* When on a smaller screen (not quite a mobile screen, 
+but say half a computer screen) */
 @media only screen and (max-width:1200px){
 	#filter{
 		margin-left:-1000px;
