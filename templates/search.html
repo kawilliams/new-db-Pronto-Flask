@@ -1,18 +1,17 @@
-<!DOCTYPE>
-	<html>
-		<header>
+
 			<script>window.jQuery || document.write('<script src="{{
   url_for('static', filename='jquery-3.1.0.min.js') }}">\x3C/script>')</script>
 			<meta charset="utf-8">
 			<meta name="viewport" content="width=device-width, initial-scale=1">
+			<title>FindACourse</title>
 			<link rel="stylesheet" type="text/css" href="{{url_for('static', filename='search.css')}}">
 			<script type="text/javascript" src="{{ url_for('static', filename='search.js') }}"></script>
 			<script type="text/javascript" src="{{url_for('static', filename='jquery-3.1.0.min.js') }}"></script>
-			<title>FindACourse</title>
+
 		</header>
-		<body onload="findCurrentDate()">
+		<body>
 			
-		
+				
 		<!-- Contains an iframe with a course description -->
 		<div id="course_desc_div">
 			<p id="put_here"></p>
@@ -40,18 +39,18 @@
 		<div id="filter">
 			<p id="close_icon" onclick="toggleFilter(true);">&times;</p>
 			<p id="filter_results">Filter Results</p>
-				
+			
+			
 			
 		<!--Semester ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
-		
-			<script>
+		<script>
 			function submitOption(){
 				var subBtn = document.getElementById("submit_btn");		
 				var selectMenu = document.getElementById('year_dropdwn');
 				subBtn.value = selectMenu.options[selectMenu.selectedIndex].innerHTML;
 				subBtn.click();	
 			}
-			</script>
+		</script>
 			<div class="accordion">
 				<p class="accordion-header" onclick="toggleAcc('year-acc-content');">By Semester</p>
 				<div id="year-acc-content" class="accordion-content" style="display:block;">
@@ -60,9 +59,9 @@
 							<option value="Choose one" id="choose_one" class="year_li">Choose one</option>
 							{% for i in semesters %}
 							{% if i == selected_sem %}
-							<option value="{{i}}" id="{{ i }}" class="year_li" selected>{% set fall_year = i[:4] %}{% set spring_year = ((fall_year)|int +1)|string %}{% if i[-1] == '2' %}Spring {{ spring_year }}{% elif i[-1] == '1' %}Fall {{ fall_year }}{% endif %}</option>
+							<option value="{{ i }}" id="{{ i }}" class="year_li" selected>{% set fall_year = i[:4] %}{% set spring_year = ((fall_year)|int +1)|string %}{% if i[-1] == '2' %}Spring {{ spring_year }}{% elif i[-1] == '1' %}Fall {{ fall_year }}{% endif %}</option>
 							{% else %}
-							<option value="{{i}}" id="{{ i }}" class="year_li">{% set fall_year = i[:4] %}{% set spring_year = ((fall_year)|int +1)|string %}{% if i[-1] == '2' %}Spring {{ spring_year }}{% elif i[-1] == '1' %}Fall {{ fall_year }}{% endif %}</option>
+							<option value="{{ i }}" id="{{ i }}" class="year_li">{% set fall_year = i[:4] %}{% set spring_year = ((fall_year)|int +1)|string %}{% if i[-1] == '2' %}Spring {{ spring_year }}{% elif i[-1] == '1' %}Fall {{ fall_year }}{% endif %}</option>
 							{% endif %}
 
 							{% endfor %}										
@@ -74,7 +73,7 @@
 			
 			
 		<!--Professors ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
-			<form action={{url_for("process_form")}} method="post">
+		<form action={{url_for("process_form")}} method="post">
 			<div class="accordion">
 				<p class="accordion-header" onclick="toggleAcc('prof-acc-content');">By Professor</p>
 				<div id="prof-acc-content" style="font-size:14px;" class="accordion-content filter_card">
@@ -141,8 +140,7 @@
 				<!--Heading (Morning/Afternoon) ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
 	    				<div id="morn_aft">
 							<div id="morn_class_div"><input type="checkbox" id="morn_classes" class="choices" onclick="toggleCheckbox('morn_classes_label');toggleMornAft('morn_check', this);"><label for="morn_classes" id="morn_classes_label" class="checkbox-label">Morning</label></div>
-							
-							<div id="aft_class_div"><input type="checkbox" id="aft_classes" class="choices" onclick="toggleCheckbox('aft_classes_label');toggleMornAft('aft_check', this);"><label for="aft_classes" id="aft_classes_label" class="checkbox-label">Afternoon</label></div>
+							<div id="aft_class_div"><input type="checkbox" id="aft_classes" class="choices" onclick="toggleCheckbox('aft_classes_label');toggleMornAft('aft_check', this);"><label for="aft_classes" id="aft_classes_label" class="heckbox-label">Afternoon</label></div>
 						</div> <!-- End morn_aft -->
 										
 				<!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
@@ -190,23 +188,23 @@
 					<div> <!-- placeholder -->
 					<div class="filter_card" style="text-align:left;">
 						
-		    			<div class="distr_choice"><input type="checkbox" value="HTRQ" id="htrq" class="dist_req_check choices" onclick="toggleCheckbox('htrq_label');"><label for="htrq" id="htrq_label" class="help checkbox-label" onmouseover="showTooltip('HTRQ_tooltip', 'inline');" onmouseout="hideTooltip('HTRQ_tooltip');">Historical Thought  <span class="tooltip" id="HTRQ_tooltip">HTRQ</span></label></div>
+		    			<div class="distr_choice"><input type="checkbox" value="HTRQ" id="htrq" class="dist_req_check choices" onclick="toggleCheckbox('htrq_label');"><label for="htrq" id="htrq_label" class="help checkbox-label" onmouseover="showTooltip('HTRQ_tooltip', 'inline');" onmouseout="hidTooltip('HTRQ_tooltip');">Historical Thought  <span class="tooltip" id="HTRQ_tooltip">HTRQ</span></label></div>
 			    			
-						<div class="distr_choice"><input type="checkbox" value="LBRQ" id="lbrq" class="dist_req_check choices" onclick="toggleCheckbox('lbrq_label');"><label for="lbrq" id="lbrq_label" class="help checkbox-label" onmouseover="showTooltip('LBRQ_tooltip', 'inline');" onmouseout="hideTooltip('LBRQ_tooltip');">Liberal Studies  <span class="tooltip" id="LBRQ_tooltip">LBRQ</span></label></div>
+						<div class="distr_choice"><input type="checkbox" value="LBRQ" id="lbrq" class="dist_req_check choices" onclick="toggleCheckbox('lbrq_label');"><label for="lbrq" id="lbrq_label" class="help checkbox-label" onmouseover="showTooltip('LBRQ_tooltip', 'inline');" onmouseout="hidTooltip('LBRQ_tooltip');">Liberal Studies  <span class="tooltip" id="LBRQ_tooltip">LBRQ</span></label></div>
 			
-						<div class="distr_choice"><input type="checkbox" value="LTRQ" id="ltrq" class="dist_req_check choices" onclick="toggleCheckbox('ltrq_label');"><label for="ltrq" id="ltrq_label" class="help checkbox-label" onmouseover="showTooltip('LTRQ_tooltip','inline');" onmouseout="hideTooltip('LTRQ_tooltip');">Literary Studies, Creative Writing, and Rhetoric  <span class="tooltip" id="LTRQ_tooltip">  LTRQ</span></label></div>
+						<div class="distr_choice"><input type="checkbox" value="LTRQ" id="ltrq" class="dist_req_check choices" onclick="toggleCheckbox('ltrq_label');"><label for="ltrq" id="ltrq_label" class="help checkbox-label" onmouseover="showTooltip('LTRQ_tooltip', 'inline');" onmouseout="hidTooltip('LTRQ_tooltip');">Literary Studies, Creative Writing, and Rhetoric  <span class="tooltip" id="LTRQ_tooltip">LTRQ</span></label></div>
+													
+						<div class="distr_choice"><input type="checkbox" value="MQRQ" id="mqrq" class="dist_req_check choices" onclick="toggleCheckbox('mqrq_label');"><label for="mqrq" id="mqrq_label" class="help checkbox-label" onmouseover="showTooltip('MQRQ_tooltip', 'inline');" onmouseout="hidTooltip('MQRQ_tooltip');">Mathematic and Quantitative Thought  <span class="tooltip" id="MQRQ_tooltip">MQRQ</span></label></div>
 							
-						<div class="distr_choice"><input type="checkbox" value="MQRQ" id="mqrq" class="dist_req_check choices" onclick="toggleCheckbox('mqrq_label');"><label for="mqrq" id="mqrq_label" class="help checkbox-label" onmouseover="showTooltip('MQRQ_tooltip','inline');" onmouseout="hideTooltip('MQRQ_tooltip');">Mathematical and Quantitative Thought  <span class="tooltip" id="MQRQ_tooltip">  MQRQ</span></label></div>
-							
-		    			<div class="distr_choice"><input type="checkbox" value="NSRQ" id="nsrq" class="dist_req_check choices" onclick="toggleCheckbox('nsrq_label');"><label for="nsrq" id="nsrq_label" class="help checkbox-label" onmouseover="showTooltip('NSRQ_tooltip','inline');" onmouseout="hideTooltip('NSRQ_tooltip');">Natural Science  <span class="tooltip" id="NSRQ_tooltip">NSRQ</span></label></div>
+		    			<div class="distr_choice"><input type="checkbox" value="NSRQ" id="nsrq" class="dist_req_check choices" onclick="toggleCheckbox('nsrq_label');"><label for="nsrq" id="nsrq_label" class="help checkbox-label" onmouseover="showTooltip('NSRQ_tooltip', 'inline');" onmouseout="hidTooltip('NSRQ_tooltip');">Natural Science  <span class="tooltip" id="NSRQ_tooltip">NSRQ</span></label></div>
 			    			
-						<div class="distr_choice"><input type="checkbox" value="SSRQ" id="ssrq" class="dist_req_check choices" onclick="toggleCheckbox('ssrq_label');"><label for="ssrq" id="ssrq_label" class="help checkbox-label" onmouseover="showTooltip('SSRQ_tooltip','inline');" onmouseout="hideTooltip('SSRQ_tooltip');">Social-Scientific Thought  <span class="tooltip" id="SSRQ_tooltip">SSRQ</span></label></div>
+						<div class="distr_choice"><input type="checkbox" value="SSRQ" id="ssrq" class="dist_req_check choices" onclick="toggleCheckbox('ssrq_label');"><label for="ssrq" id="ssrq_label" class="help checkbox-label" onmouseover="showTooltip('SSRQ_tooltip', 'inline');" onmouseout="hidTooltip('SSRQ_tooltip');">Social-Scientific Thought  <span class="tooltip" id="SSRQ_tooltip">SSRQ</span></label></div>
 							
-						<div class="distr_choice"><input type="checkbox" value="VPRQ" id="vprq" class="dist_req_check choices" onclick="toggleCheckbox('vprq_label');"><label for="vprq" id="vprq_label" class="help checkbox-label" onmouseover="showTooltip('VPRQ_tooltip','inline');" onmouseout="hideTooltip('VPRQ_tooltip');">Visual and Performing Arts  <span class="tooltip" id="VPRQ_tooltip">VPRQ</span></label></div>
+						<div class="distr_choice"><input type="checkbox" value="VPRQ" id="vprq" class="dist_req_check choices" onclick="toggleCheckbox('vprq_label');"><label for="vprq" id="vprq_label" class="help checkbox-label" onmouseover="showTooltip('VPRQ_tooltip', 'inline');" onmouseout="hidTooltip('VPRQ_tooltip');">Visual and Perfoming Arts  <span class="tooltip" id="VPRQ_tooltip">VPRQ</span></label></div>
 							
-						<div class="distr_choice"><input type="checkbox" value="PRRQ" id="prrq" class="dist_req_check dist_req_li choices" onclick="toggleCheckbox('prrq_label');"><label for="prrq" id="prrq_label" class="help checkbox-label" onmouseover="showTooltip('PRRQ_tooltip','inline');" onmouseout="hideTooltip('PRRQ_tooltip');">Philosophical and Religious Perspectives  <span class="tooltip" id="PRRQ_tooltip">PRRQ</span></label></div>
+						<div class="distr_choice"><input type="checkbox" value="PRRQ" id="prrq" class="dist_req_check choices" onclick="toggleCheckbox('prrq_label');"><label for="prrq" id="prrq_label" class="help checkbox-label" onmouseover="showTooltip('PRRQ_tooltip', 'inline');" onmouseout="hidTooltip('PRRQ_tooltip');">Philosophical and Religious Perspectives  <span class="tooltip" id="PRRQ_tooltip">PRRQ</span></label></div>
 							
-						<div class="distr_choice"><input type="checkbox" value="CULT" id="cult" class="dist_req_check dist_req_li choices" onclick="toggleCheckbox('cult_label');"><label for="cult" id="cult_label" class="help checkbox-label" onmouseover="showTooltip('CULT_tooltip','inline');" onmouseout="hideTooltip('CULT_tooltip');">Cultural Diversity  <span class="tooltip" id="CULT_tooltip">CULT</span></label></div>
+						<div class="distr_choice"><input type="checkbox" value="CULT" id="cult" class="dist_req_check choices" onclick="toggleCheckbox('cult_label');"><label for="cult" id="cult_label" class="help checkbox-label" onmouseover="showTooltip('CULT_tooltip', 'inline');" onmouseout="hidTooltip('CULT_tooltip');">Cultural Diversity  <span class="tooltip" id="CULT_tooltip">CULT</span></label></div>
 						
 					</div> <!-- End filter_card -->
 					</div> <!-- End placeholder -->
@@ -222,7 +220,7 @@
 				<div id="class-size-acc-content" class="accordion-content filter_card">
 					<div class="class-size-half">
 						<span>From: </span>
-						<select id="from-class-size-select" style="width:50px;">
+						<select id="from-class-size-select" style="width:40px;">
 							{% for i in sizes_small %}
 							<option value="from_{{i}}">{{i}}</option>
 							{% endfor %}
@@ -233,8 +231,8 @@
 						<span>To: </span>
 						<select id="to-class-size-select" style="width:50px;">
 							{% for i in sizes_large %}
-							{% if i == sizes_large|length %}
-							<option value="to_{{i}}" selected>{{i}}</option>
+							{% if i == size_large|length %}
+							<option value="to_{{i}} selected>{{i}}</option>
 							{% endif %}
 							<option value="to_{{i}}">{{i}}</option>
 							{% endfor %}
@@ -243,7 +241,6 @@
 					
 				</div> <!-- End accordion content -->
 			</div> <!-- End accordion -->
-
 			
 		<!--Form Submission and Clear/Filter Buttons ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
 
@@ -301,41 +298,47 @@
 	
 		{% if chosen_year and not message %}
 			<p id="displayed_yr"><i>{{chosen_year}}</i>
-		
 			{% if result_count %}
-				<span>&nbsp;&nbsp;&nbsp;Total Results: {{result_count}}</span>
-			{% endif %}
-			</p>
-
+				<span>&nbsp;&nbsp;&nbsp;&nbsp;Total Results: {{result_count}}</span>
+				{% endif %} 
+				</p>
 		{% elif result_count %}
-			<span id="result_count">&nbsp;&nbsp;&nbsp;Total Results: {{result_count}}</span>
+				<span id="result_count:>&nbsp;&nbsp;&nbsp;Total Results: {{result_count}}</span>
 		{% endif %}
 		
-		{% if not message %}
-		<span id="open-close-btn" onclick="toggleOpenCloseBtn();">Open All</span>
+		{% if not messge %}
+			<span id="open-close-btn" onclick="toggleOpenCloseBtn();">Open All</span>
+			<span id="vis-no-btn" onclick="toggleVisNoBtn();">Allow Visitors</span>
 		{% endif %}
+	 	{% if message %}
+	 	<p id="error_msg">{{message}}</p>
+	 	{% endif %}
+
 			
 		{% if message %}
 			<p id="error_msg">{{message}}</p>
 		{% endif %}
-		
 		<div id="results">
 			{% for i in search_results %}
+			{% set rowloop = loop %}
 			<div class="acc-results" id="acc_{{loop.index0}}">
 				
 				<span class="acc-header-results" onclick="toggleAcc('acc_content_{{loop.index0}}');">
 				<table class="header_results_table">
 					<tr>
-						<td class="courseLink"><b>{{i.subject}} {{i.course_num}} {% if i.seq_num != '0' %}{{i.seq_num}}{% endif %}[{{i.major_code}}]</b>: <u class="iframe_link" onclick="showDescription('course_desc_div','{{i.subject}}','{{i.course_num}}');">{{i.course_title}}</u></td>
+						<td class="courseLink"><b>{{i.subject}} {{i.course_num}} {% if i.seq_num != '0' %}{{i.seq_num}}{% endif %}[{{i.major_code}}]</b>: <u class="iframe_link" onclick="showDescription('course_desc_div', '{{i.subject}}', '{{i.course_num}}');">{{i.course_title}}</u></td>
+						<td>{{ i.acad_period }}</td>
 						<td class="prof_result">{{i.instructor1}}</td>
 						<td class="CRN_result"><span style="margin-right:10%;">CRN: {{i.CRN}}</span></td>
 						<td class="x_result"><span onclick="document.getElementById('acc_{{loop.index0}}').style.display='none'" style="font-size:23px;" class="close_icon">&times;</span></td>
 				  </tr>
 				</table>
-				</span> <!-- End header -->
-				
-				
-				<div id="acc_content_{{loop.index0}}" class="acc-content-results" style="margin-top:10px;background-color:#d9d9d9; padding:5px;">
+				</span> <!-- End header -->		
+				{% if i.visitable == "Can visit" %} <!-- visitable courses row identification-->				
+				<div id="acc_content_{{loop.index0}}" class="acc-content-results visit-row" style="margin-top:10px;background-color:#d9d9d9; padding:5px;">
+				{% else %}
+					<div id="acc_content_{{loop.index0}}" class="acc-content-results no-visit-row" style="margin-top:10px;background-color:#d9d9d9; padding:5px;">					
+				{% endif %} <!-- end visitable courses row identification -->
 			  	<table class="results_table">
 				  <tr>
 					<td class="results_th">Time:</td>
@@ -360,11 +363,12 @@
 						
 					{% else %}
 						<td class="results_td" onload="countRow()">
+							
 							{% set notes = i.course_notes.split(',') %}
 							{% for n in notes %}
 								<div class="NotesContainer"><span>{{n}}</span>
 								<span class="NotesTooltip">{{sched_notes[n]}}</span></div>
-							{% endfor %}
+							{% endfor %}	
 						</td>
 					{% endif %}
 					<td class="results_td">{{i.max_enroll}}</td>
@@ -380,19 +384,19 @@
 		
 		{% if search_results %}
 			<script>
-				showResults();				
+				showResults();
 			</script>
-	  {% elif message %}
+		{% elif message %}
 			<script>
 				showNoResults();
-			</script>	
-		  {% endif %}
-		  
-		  <script>
-			 var openAccs = [];
-			 var mornTimes = 0;
-			 var aftTimes = 0;
-		 </script>
+			</script>
+		{% endif%}
+		
+		<script>
+			var openAccs = [];
+			var mornTimes = 0;
+			var aftTimes = 0;
+		</script>
 		{% for i in kept_values %}
 		<script>
 			var allInputs = document.getElementsByTagName("input");
@@ -432,32 +436,20 @@
 			}
 				
 		</script>
-	{% endfor %}
-	
-	{% if semester %}
-	
+		{% endfor %}
+		
+		{% if semester %}
+		
 		<script>
 			keepSemester('{{semester}}');
 		</script>
-	
-	{% endif %}
-	
-	{% if class_size_kept %}
-		
+		{% endif %}
+		{% if class_size_kept %}
 		<script>
 			keepClassSize('{{class_size_kept}}');
 		</script>
 		
-	{% endif %}
+		{% endif %}	
 		  
 	</body>
 </html>
-		
-		
-		
-		
-		
-		
-		
-		
-		
