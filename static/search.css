@@ -467,6 +467,17 @@ iframe::-webkit-scrollbar{
 	cursor:pointer;
 	display:none;
 }
+#vis-no-btn{
+	margin-bottom:8px;
+	margin-top:10px;
+	float:right;	
+	margin-right:8%;
+	background-color:#660000;
+	color:white;
+	padding:7px;
+	cursor:pointer;
+	display:none;
+}
 #result_count{
 	color:white;
 	margin:0px;

@@ -276,6 +276,8 @@ function toggleOpenCloseBtn(){
 function visNoAllAccordions(visitable){
 	var visContents = document.getElementsByClassName('visit-row');
 	var nopeContents = document.getElementsByClassName('no-visit-row');
+	console.log(visContents.length);
+	console.log(nopeContents.length);
 	display = 'block';
 	if (visitable) {
 		display = 'none';	
@@ -321,6 +323,7 @@ function mainPageSetup(searchBox){
 	document.getElementById("help_td").style.display = 'block';
 	document.getElementById("descript_page").style.display = "none";
 	document.getElementById("open-close-btn").style.display = "inline";
+	document.getElementById("vis-no-btn").style.display = "inline";
 }
 function showResults(){
 	setTimeout(function(){
