@@ -276,8 +276,6 @@ function toggleOpenCloseBtn(){
 function visNoAllAccordions(visitable){
 	var visContents = document.getElementsByClassName('visit-row');
 	var nopeContents = document.getElementsByClassName('no-visit-row');
-	console.log(visContents.length);
-	console.log(nopeContents.length);
 	display = 'block';
 	if (visitable) {
 		display = 'none';	
@@ -293,14 +291,56 @@ function toggleVisNoBtn() {
 		visNoBtn.style.color = "#660000";
 		visNoBtn.innerHTML = "No Visitors";
 		visNoAllAccordions(true);
+		decreaseCountNoVisitors(true);
 	}	
 	else{
 		visNoBtn.style.backgroundColor = "#660000";
 		visNoBtn.style.color = "white";
 		visNoBtn.innerHTML = "Allow Visitors";
 		visNoAllAccordions(false);
+		decreaseCountNoVisitors(false);
 	}
 }
+function countResults(chosen_year, search_results) {
+	var resultSpan = document.getElementById("displayed_yr");
+	var listResults = search_results.replace('[','').replace(']','').split(',');
+	resultSpan.innerHTML = "<i>"+chosen_year+"</i>&nbsp;&nbsp;&nbsp;"+"Total Results: " + String(listResults.length);
+}
+function hideDiv(loopIndex) {
+	document.getElementById('acc_'+String(loopIndex)).style.display='none';
+	var resultSpan = document.getElementById("displayed_yr");
+	var lengthInner = resultSpan.innerHTML.length;
+	var decrease = parseInt(resultSpan.innerHTML.substring(lengthInner-2, lengthInner)) - 1;
+	if (decrease <= 8) {
+		var decrease = parseInt(resultSpan.innerHTML.substring(lengthInner-1, lengthInner)) - 1;
+		resultSpan.innerHTML = resultSpan.innerHTML.substring(0,lengthInner-1) + String(decrease);
+	}
+	else {
+		resultSpan.innerHTML = resultSpan.innerHTML.substring(0,lengthInner-2) + String(decrease);
+	}
+}
+function decreaseCountNoVisitors(visitable) {
+	var resultSpan = document.getElementById("displayed_yr");
+	var lengthInner = resultSpan.innerHTML.length;
+	var nopeContents = document.getElementsByClassName('no-visit-row');				
+	
+	if (visitable) {
+		var decrease = parseInt(resultSpan.innerHTML.substring(lengthInner-2, lengthInner)) - nopeContents.length;
+		if (decrease < 0) {
+			decrease = 0;
+		}
+		resultSpan.innerHTML = resultSpan.innerHTML.substring(0,lengthInner-2) + ' ' + String(decrease);
+	}
+	else {
+		var decrease = parseInt(resultSpan.innerHTML.substring(lengthInner-2, lengthInner)) + nopeContents.length;
+		if (decrease < 0) {
+			decrease = 0;
+		}
+		resultSpan.innerHTML = resultSpan.innerHTML.substring(0,lengthInner-2) + ' ' + String(decrease);
+	}
+	
+}
+/*document.getElementById('acc_{{loop.index0}}').style.display='none';*/
 function showTooltip(tooltipID, displayType){
 	document.getElementById(tooltipID).style.display = displayType;
 }

@@ -447,7 +447,7 @@ select{
 	top:5%;
 	left:43%;
 	width:40%;
-	z-index:2;
+	z-index:5;
 	line-height:30px;	
 	font-size: 40%;
 	transition: left 0.5s;
@@ -456,6 +456,7 @@ select{
 }
 iframe{
 	border:1px solid #cccccc;	
+	z-index:5;
 }
 iframe::-webkit-scrollbar{
 	display:none;	
@@ -508,10 +509,10 @@ iframe::-webkit-scrollbar{
 }
 .NotesContainer {
 	position: relative;
-	z-index: 10;
+	z-index: 4;
 }
 .NotesContainer:hover {
-	z-index:20;
+	z-index:4;
 }
 .NotesContainer:hover .NotesTooltip {
 	display: block;
