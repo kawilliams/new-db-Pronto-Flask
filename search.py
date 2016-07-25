@@ -373,6 +373,7 @@ def filter_class_size(searchterms, acd_prd):
 		
 	Returns - all courses whose max class size is in the given range
 	"""
+	print searchterms
 	if searchterms[0] == "":
 		searchterms[0] = 0
 	if searchterms[1] == "":
@@ -545,8 +546,7 @@ def process_form():
 		formatted_yr = semester + " " + str(year)
 		
 			
-		final_query = intersection_of([q1,q2,q3,q4,q5,q6,q7])		
-		final_query_len = len(final_query)
+		final_query = intersection_of([q1,q2,q3,q4,q5,q6,q7])	
 
 		results=sorted(final_query, key=attrgetter('all_data'))
 	
@@ -562,7 +562,7 @@ def process_form():
 	        kept_values=full_query,
 	        kept_values_len=len(full_query),
 	        semester=acd_prd, selected_sem=semester,
-	        chosen_year=formatted_yr, result_count=final_query_len)
+	        chosen_year=formatted_yr)
 		
 	else:
 		return redirect(url_for("home"))
@@ -593,15 +593,13 @@ def process_search():
 		else:
 			formatted_yr = 'All semesters'
 		
-		full_dep = find_full_deps(ALL_DEPS)		
-		final_query_len = len(results)
+		full_dep = find_full_deps(ALL_DEPS)
 		sched_notes = read_notes_file()
 		return render_template("search.html",search_results=results,
 		                       message = msg,profs=ALL_PROFESSORS,
 		                       semesters=ALL_SEMESTERS,
 		                       deps=ALL_DEPS, deps_full=full_dep,
 		                       chosen_year=formatted_yr,
-		                       result_count=final_query_len,
 		                       sched_notes=sched_notes)
 
 	else:
