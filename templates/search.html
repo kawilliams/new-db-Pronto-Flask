@@ -462,6 +462,16 @@
 					padding:7px;
 					cursor:pointer;
 				}
+				#vis-no-btn{
+					margin-bottom:8px;
+					margin-top:10px;
+					float:right;	
+					margin-right:8%;
+					background-color:#660000;
+					color:white;
+					padding:7px;
+					cursor:pointer;
+				}
 				
 				@media only screen and (max-width:1200px){
 					#filter{
@@ -478,7 +488,7 @@
 				
 			</style>
 		</header>
-		<body onload="findCurrentDate()">
+		<body>
 			
 		<script>
 			/* Generic function that closes any pop-up message */
@@ -743,6 +753,35 @@
 					openCloseAllAccordions(false);
 				}
 			}
+			function visNoAllAccordions(visitable){
+				var visContents = document.getElementsByClassName('visit-row');
+				var nopeContents = document.getElementsByClassName('no-visit-row');
+				console.log(visContents.length);
+				console.log(nopeContents.length);
+				display = 'block';
+				if (visitable) {
+					display = 'none';	
+				}
+				for (var j = 0; j < nopeContents.length; j++){					
+					nopeContents[j].parentNode.style.display = display;	
+				}
+			}
+			function toggleVisNoBtn() {
+				var visNoBtn = document.getElementById('vis-no-btn');			
+				if (visNoBtn.innerHTML == "Allow Visitors"){
+					visNoBtn.style.backgroundColor = "white";
+					visNoBtn.style.color = "#660000";
+					visNoBtn.innerHTML = "No Visitors";
+					visNoAllAccordions(true);
+				}	
+				else{
+					visNoBtn.style.backgroundColor = "#660000";
+					visNoBtn.style.color = "white";
+					visNoBtn.innerHTML = "Allow Visitors";
+					visNoAllAccordions(false);
+				}
+			}
+
 		</script>
 		
 		<!-- Contains an iframe with a course description -->
@@ -1035,6 +1074,7 @@
 		{% endif %}
 		</p>
 		<span id="open-close-btn" onclick="toggleOpenCloseBtn();">Open All</span>
+		<span id="vis-no-btn" onclick="toggleVisNoBtn();">Allow Visitors</span>
 			
 		{% if message %}
 			<p id="error_msg">{{message}}</p>
@@ -1054,10 +1094,14 @@
 						<td class="x_result"><span onclick="document.getElementById('acc_{{loop.index0}}').style.display='none'" style="font-size:23px;" class="close_icon">&times;</span></td>
 				  </tr>
 				</table>
-				</span> <!-- End header -->				
-				<div id="acc_content_{{loop.index0}}" class="acc-content-results" style="margin-top:10px;background-color:#d9d9d9; padding:5px;">
+				</span> <!-- End header -->		
+				{% if i.visitable == "Can visit" %} <!-- visitable courses row identification-->				
+				<div id="acc_content_{{loop.index0}}" class="acc-content-results visit-row" style="margin-top:10px;background-color:#d9d9d9; padding:5px;">
+				{% else %}
+					<div id="acc_content_{{loop.index0}}" class="acc-content-results no-visit-row" style="margin-top:10px;background-color:#d9d9d9; padding:5px;">					
+				{% endif %} <!-- end visitable courses row identification -->
 			  	<table class="results_table">
-				  <tr>
+				  <tr >
 					<td class="results_th">Time:</td>
 					<td class="results_th">Days:</td>
 					<td class="results_th">Place:</td>
