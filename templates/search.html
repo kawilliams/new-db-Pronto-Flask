@@ -295,7 +295,7 @@
 	
 	
 	<!-- Result Div ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
-	
+		
 		{% if chosen_year and not message %}
 			<p id="displayed_yr"><i>{{chosen_year}}</i>
 			{% if result_count %}
@@ -303,10 +303,10 @@
 				{% endif %} 
 				</p>
 		{% elif result_count %}
-				<span id="result_count:>&nbsp;&nbsp;&nbsp;Total Results: {{result_count}}</span>
+				<span id="result_count">&nbsp;&nbsp;&nbsp;Total Results: {{result_count}}</span>
 		{% endif %}
 		
-		{% if not messge %}
+		{% if not message %}
 			<span id="open-close-btn" onclick="toggleOpenCloseBtn();">Open All</span>
 			<span id="vis-no-btn" onclick="toggleVisNoBtn();">Allow Visitors</span>
 		{% endif %}
