@@ -327,7 +327,7 @@
 				<table class="header_results_table">
 					<tr>
 						<td class="courseLink"><b>{{i.subject}} {{i.course_num}} {% if i.seq_num != '0' %}{{i.seq_num}}{% endif %}[{{i.major_code}}]</b>: <u class="iframe_link" onclick="showDescription('course_desc_div', '{{i.subject}}', '{{i.course_num}}');">{{i.course_title}}</u></td>
-						<td>{{ i.acad_period }}</td>
+							<td class="semester_result">{% if "01" in i.acad_period[4:] %}Fall {{ i.acad_period[:4] }}{% else %}Spring {{ ((i.acad_period[:04]|int)+1)|string }}{% endif %}</td>
 						<td class="prof_result">{{i.instructor1}}</td>
 						<td class="CRN_result"><span style="margin-right:10%;">CRN: {{i.CRN}}</span></td>
 						<td class="x_result"><span onclick="document.getElementById('acc_{{loop.index0}}').style.display='none'" style="font-size:23px;" class="close_icon">&times;</span></td>
@@ -373,7 +373,13 @@
 					{% endif %}
 					<td class="results_td">{{i.max_enroll}}</td>
 					<td class="results_td">{{i.visitable}}</td>
-					<td class="results_td"><u><a href = {{url_for('download',file_path=i.syllabus_link)}} target = "blank" style="cursor:pointer;">{{i.syllabus_link}}</a></u></td>
+					<td class="results_td">
+						{% if i.syllabus_link == "" %}
+						No Syllabus
+						{% else %}
+						<u><a href = {{url_for('download',file_path=i.syllabus_link)}} target = "blank" style="cursor:pointer;">Click to Download</a></u>
+						{% endif %}
+						</td>
 				</tr>                    
 			  </table>
 			  </div> <!-- End acc content -->
