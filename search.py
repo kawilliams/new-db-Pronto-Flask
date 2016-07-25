@@ -14,7 +14,7 @@ syllabi. It is used to run the filter sidebar interface on the
 search.html page. 
 """
 
-app = Flask(__name__)
+app = Flask(__name__, template_folder='templates')
 app.debug=True
 
 
