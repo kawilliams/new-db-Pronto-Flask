@@ -6,10 +6,10 @@
 			<title>FindACourse</title>
 			<link rel="stylesheet" type="text/css" href="{{url_for('static', filename='search.css')}}">
 			<script type="text/javascript" src="{{ url_for('static', filename='search.js') }}"></script>
-			<script type="text/javascript" src="{{url_for('static', filename='jquery-3.1.0.min.js') }}"></script>
+			<!--<script type="text/javascript" src="{{url_for('static', filename='jquery-3.1.0.min.js') }}"></script>-->
 
 		</header>
-		<body>
+		<body onload="{% if chosen_year and search_results%}countResults('{{chosen_year}}', '{{search_results}}'); {% endif%}">
 			
 				
 		<!-- Contains an iframe with a course description -->
@@ -188,23 +188,23 @@
 					<div> <!-- placeholder -->
 					<div class="filter_card" style="text-align:left;">
 						
-		    			<div class="distr_choice"><input type="checkbox" value="HTRQ" id="htrq" class="dist_req_check choices" onclick="toggleCheckbox('htrq_label');"><label for="htrq" id="htrq_label" class="help checkbox-label" onmouseover="showTooltip('HTRQ_tooltip', 'inline');" onmouseout="hidTooltip('HTRQ_tooltip');">Historical Thought  <span class="tooltip" id="HTRQ_tooltip">HTRQ</span></label></div>
+		    			<div class="distr_choice"><input type="checkbox" value="HTRQ" id="htrq" class="dist_req_check choices" onclick="toggleCheckbox('htrq_label');"><label for="htrq" id="htrq_label" class="help checkbox-label" onmouseover="showTooltip('HTRQ_tooltip', 'inline');" onmouseout="hideTooltip('HTRQ_tooltip');">Historical Thought  <span class="tooltip" id="HTRQ_tooltip">HTRQ</span></label></div>
 			    			
-						<div class="distr_choice"><input type="checkbox" value="LBRQ" id="lbrq" class="dist_req_check choices" onclick="toggleCheckbox('lbrq_label');"><label for="lbrq" id="lbrq_label" class="help checkbox-label" onmouseover="showTooltip('LBRQ_tooltip', 'inline');" onmouseout="hidTooltip('LBRQ_tooltip');">Liberal Studies  <span class="tooltip" id="LBRQ_tooltip">LBRQ</span></label></div>
+						<div class="distr_choice"><input type="checkbox" value="LBRQ" id="lbrq" class="dist_req_check choices" onclick="toggleCheckbox('lbrq_label');"><label for="lbrq" id="lbrq_label" class="help checkbox-label" onmouseover="showTooltip('LBRQ_tooltip', 'inline');" onmouseout="hideTooltip('LBRQ_tooltip');">Liberal Studies  <span class="tooltip" id="LBRQ_tooltip">LBRQ</span></label></div>
 			
-						<div class="distr_choice"><input type="checkbox" value="LTRQ" id="ltrq" class="dist_req_check choices" onclick="toggleCheckbox('ltrq_label');"><label for="ltrq" id="ltrq_label" class="help checkbox-label" onmouseover="showTooltip('LTRQ_tooltip', 'inline');" onmouseout="hidTooltip('LTRQ_tooltip');">Literary Studies, Creative Writing, and Rhetoric  <span class="tooltip" id="LTRQ_tooltip">LTRQ</span></label></div>
+						<div class="distr_choice"><input type="checkbox" value="LTRQ" id="ltrq" class="dist_req_check choices" onclick="toggleCheckbox('ltrq_label');"><label for="ltrq" id="ltrq_label" class="help checkbox-label" onmouseover="showTooltip('LTRQ_tooltip', 'inline');" onmouseout="hideTooltip('LTRQ_tooltip');">Literary Studies, Creative Writing, and Rhetoric  <span class="tooltip" id="LTRQ_tooltip">LTRQ</span></label></div>
 													
-						<div class="distr_choice"><input type="checkbox" value="MQRQ" id="mqrq" class="dist_req_check choices" onclick="toggleCheckbox('mqrq_label');"><label for="mqrq" id="mqrq_label" class="help checkbox-label" onmouseover="showTooltip('MQRQ_tooltip', 'inline');" onmouseout="hidTooltip('MQRQ_tooltip');">Mathematic and Quantitative Thought  <span class="tooltip" id="MQRQ_tooltip">MQRQ</span></label></div>
+						<div class="distr_choice"><input type="checkbox" value="MQRQ" id="mqrq" class="dist_req_check choices" onclick="toggleCheckbox('mqrq_label');"><label for="mqrq" id="mqrq_label" class="help checkbox-label" onmouseover="showTooltip('MQRQ_tooltip', 'inline');" onmouseout="hideTooltip('MQRQ_tooltip');">Mathematic and Quantitative Thought  <span class="tooltip" id="MQRQ_tooltip">MQRQ</span></label></div>
 							
-		    			<div class="distr_choice"><input type="checkbox" value="NSRQ" id="nsrq" class="dist_req_check choices" onclick="toggleCheckbox('nsrq_label');"><label for="nsrq" id="nsrq_label" class="help checkbox-label" onmouseover="showTooltip('NSRQ_tooltip', 'inline');" onmouseout="hidTooltip('NSRQ_tooltip');">Natural Science  <span class="tooltip" id="NSRQ_tooltip">NSRQ</span></label></div>
+		    			<div class="distr_choice"><input type="checkbox" value="NSRQ" id="nsrq" class="dist_req_check choices" onclick="toggleCheckbox('nsrq_label');"><label for="nsrq" id="nsrq_label" class="help checkbox-label" onmouseover="showTooltip('NSRQ_tooltip', 'inline');" onmouseout="hideTooltip('NSRQ_tooltip');">Natural Science  <span class="tooltip" id="NSRQ_tooltip">NSRQ</span></label></div>
 			    			
-						<div class="distr_choice"><input type="checkbox" value="SSRQ" id="ssrq" class="dist_req_check choices" onclick="toggleCheckbox('ssrq_label');"><label for="ssrq" id="ssrq_label" class="help checkbox-label" onmouseover="showTooltip('SSRQ_tooltip', 'inline');" onmouseout="hidTooltip('SSRQ_tooltip');">Social-Scientific Thought  <span class="tooltip" id="SSRQ_tooltip">SSRQ</span></label></div>
+						<div class="distr_choice"><input type="checkbox" value="SSRQ" id="ssrq" class="dist_req_check choices" onclick="toggleCheckbox('ssrq_label');"><label for="ssrq" id="ssrq_label" class="help checkbox-label" onmouseover="showTooltip('SSRQ_tooltip', 'inline');" onmouseout="hideTooltip('SSRQ_tooltip');">Social-Scientific Thought  <span class="tooltip" id="SSRQ_tooltip">SSRQ</span></label></div>
 							
-						<div class="distr_choice"><input type="checkbox" value="VPRQ" id="vprq" class="dist_req_check choices" onclick="toggleCheckbox('vprq_label');"><label for="vprq" id="vprq_label" class="help checkbox-label" onmouseover="showTooltip('VPRQ_tooltip', 'inline');" onmouseout="hidTooltip('VPRQ_tooltip');">Visual and Perfoming Arts  <span class="tooltip" id="VPRQ_tooltip">VPRQ</span></label></div>
+						<div class="distr_choice"><input type="checkbox" value="VPRQ" id="vprq" class="dist_req_check choices" onclick="toggleCheckbox('vprq_label');"><label for="vprq" id="vprq_label" class="help checkbox-label" onmouseover="showTooltip('VPRQ_tooltip', 'inline');" onmouseout="hideTooltip('VPRQ_tooltip');">Visual and Perfoming Arts  <span class="tooltip" id="VPRQ_tooltip">VPRQ</span></label></div>
 							
-						<div class="distr_choice"><input type="checkbox" value="PRRQ" id="prrq" class="dist_req_check choices" onclick="toggleCheckbox('prrq_label');"><label for="prrq" id="prrq_label" class="help checkbox-label" onmouseover="showTooltip('PRRQ_tooltip', 'inline');" onmouseout="hidTooltip('PRRQ_tooltip');">Philosophical and Religious Perspectives  <span class="tooltip" id="PRRQ_tooltip">PRRQ</span></label></div>
+						<div class="distr_choice"><input type="checkbox" value="PRRQ" id="prrq" class="dist_req_check choices" onclick="toggleCheckbox('prrq_label');"><label for="prrq" id="prrq_label" class="help checkbox-label" onmouseover="showTooltip('PRRQ_tooltip', 'inline');" onmouseout="hideTooltip('PRRQ_tooltip');">Philosophical and Religious Perspectives  <span class="tooltip" id="PRRQ_tooltip">PRRQ</span></label></div>
 							
-						<div class="distr_choice"><input type="checkbox" value="CULT" id="cult" class="dist_req_check choices" onclick="toggleCheckbox('cult_label');"><label for="cult" id="cult_label" class="help checkbox-label" onmouseover="showTooltip('CULT_tooltip', 'inline');" onmouseout="hidTooltip('CULT_tooltip');">Cultural Diversity  <span class="tooltip" id="CULT_tooltip">CULT</span></label></div>
+						<div class="distr_choice"><input type="checkbox" value="CULT" id="cult" class="dist_req_check choices" onclick="toggleCheckbox('cult_label');"><label for="cult" id="cult_label" class="help checkbox-label" onmouseover="showTooltip('CULT_tooltip', 'inline');" onmouseout="hideTooltip('CULT_tooltip');">Cultural Diversity  <span class="tooltip" id="CULT_tooltip">CULT</span></label></div>
 						
 					</div> <!-- End filter_card -->
 					</div> <!-- End placeholder -->
@@ -231,8 +231,8 @@
 						<span>To: </span>
 						<select id="to-class-size-select" style="width:50px;">
 							{% for i in sizes_large %}
-							{% if i == size_large|length %}
-							<option value="to_{{i}} selected>{{i}}</option>
+							{% if i == sizes_large|length %}
+							<option value="to_{{i}}" selected>{{i}}</option>
 							{% endif %}
 							<option value="to_{{i}}">{{i}}</option>
 							{% endfor %}
@@ -295,15 +295,15 @@
 	
 	
 	<!-- Result Div ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
-		
+			
 		{% if chosen_year and not message %}
-			<p id="displayed_yr"><i>{{chosen_year}}</i>
-			{% if result_count %}
-				<span>&nbsp;&nbsp;&nbsp;&nbsp;Total Results: {{result_count}}</span>
+			<p id="displayed_yr"><i></i>
+			{% if search_results %}
+				<span id="result_count"></span>
 				{% endif %} 
 				</p>
-		{% elif result_count %}
-				<span id="result_count">&nbsp;&nbsp;&nbsp;Total Results: {{result_count}}</span>
+		{% elif search_results %}
+				<span id="result_count"></span>
 		{% endif %}
 		
 		{% if not message %}
@@ -330,7 +330,7 @@
 							<td class="semester_result">{% if "01" in i.acad_period[4:] %}Fall {{ i.acad_period[:4] }}{% else %}Spring {{ ((i.acad_period[:04]|int)+1)|string }}{% endif %}</td>
 						<td class="prof_result">{{i.instructor1}}</td>
 						<td class="CRN_result"><span style="margin-right:10%;">CRN: {{i.CRN}}</span></td>
-						<td class="x_result"><span onclick="document.getElementById('acc_{{loop.index0}}').style.display='none'" style="font-size:23px;" class="close_icon">&times;</span></td>
+						<td class="x_result"><span onclick="hideDiv({{loop.index0}});" style="font-size:23px;" class="close_icon">&times;</span></td>
 				  </tr>
 				</table>
 				</span> <!-- End header -->		
@@ -364,7 +364,7 @@
 					{% else %}
 						<td class="results_td" onload="countRow()">
 							
-							{% set notes = i.course_notes.split(',') %}
+							{% set notes = i.course_notes.replace(' ', '').split(',') %}
 							{% for n in notes %}
 								<div class="NotesContainer"><span>{{n}}</span>
 								<span class="NotesTooltip">{{sched_notes[n]}}</span></div>
@@ -419,7 +419,7 @@
 					}
 					
 					var inputLabel = curElem.id + "_label";
-					document.getElementById(inputLabel).style.color = '#248f8f';
+					/*document.getElementById(inputLabel).style.color = '#248f8f';*/
 					var accId = curElem.parentElement.parentElement.parentElement.parentElement.parentElement.id;
 					
 					if (openAccs.indexOf(accId) === -1){
