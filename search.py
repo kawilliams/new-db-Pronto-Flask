@@ -196,6 +196,7 @@ def range_list(current_semester):
 
 	range_size_small = range(smallest, largest+1)
 	range_size_large = range(smallest+1, largest+1)
+	print smallest, largest
 	return range_size_small, range_size_large
 
 
@@ -211,7 +212,6 @@ def sem_list():
 	sems = sorted(list(sems))
 
 	return sems
-
 
 current_semester = determine_semester()
 ALL_DEPS = dep_list(current_semester)
@@ -373,12 +373,10 @@ def filter_class_size(searchterms, acd_prd):
 		
 	Returns - all courses whose max class size is in the given range
 	"""
-		
-	if searchterms == "":
-		searchterms = []
+	if searchterms[0] == "":
 		searchterms[0] = 0
-		searchterms[1] = 0
-		
+	if searchterms[1] == "":
+			searchterms[1] = 0	
 	small = int(searchterms[0])
 	large = int(searchterms[1])
 
@@ -417,6 +415,7 @@ def read_notes_file():
 		fReader = csv.reader(f, quotechar = '"', delimiter = ',')	    
 		for line in fReader:
 			sched_notes[line[CODE]] = line[EXPLANATION]   	
+	
 	return sched_notes
 
 
@@ -468,9 +467,9 @@ def process_semester():
 				               profs=ALL_PROFESSORS, deps=ALL_DEPS, 
 			                       sizes_small=RANGE_SIZES_SMALL,
 			                       sizes_large=RANGE_SIZES_LARGE,
-				               deps_full=full_dep,
+				               deps_full=full_dep, 
 			                       sched_notes=sched_notes,
-			                       selected_sem=semester, semester=semester)
+			                       selected_sem=semester)
 		else:
 			return redirect(url_for("home"))			
 
@@ -523,12 +522,9 @@ def process_form():
 		if dist != [u'']:
 			full_query += set(dist)
 		
-		class_size = request.form['class_size']
-		class_size_split = class_size.split("-")
-		if class_size_split != [u'']:
-			full_query += class_size_split
-		else:
-			class_size_split = ""
+		class_size = request.form['class_size'].split("-")
+		if class_size != [u'']:
+			full_query += class_size
 		
 		q1 = filter_acadPeriod(acd_prd)
 		q2 = filter_subject(dep, acd_prd)
@@ -536,7 +532,7 @@ def process_form():
 		q4 = filter_days(day, acd_prd)
 		q5 = filter_time(time, acd_prd)
 		q6 = filter_distr(dist, acd_prd)
-		q7 = filter_class_size(class_size_split, acd_prd)
+		q7 = filter_class_size(class_size, acd_prd)
 
 
 		year = (str(acd_prd))[0:4]
@@ -566,7 +562,7 @@ def process_form():
 		sizes_large=RANGE_SIZES_LARGE,
 	        deps_full=full_dep, sched_notes=sched_notes,
 	        kept_values=full_query,
-	        kept_values_len=len(full_query),class_size_kept=class_size,
+	        kept_values_len=len(full_query),
 	        semester=acd_prd, selected_sem=semester,
 	        chosen_year=formatted_yr, result_count=final_query_len)
 		
