@@ -9,7 +9,10 @@
 	<body>
 		
 		
-<!***********************  Group Email for Professors Missing Syllabi  **************************-->
+<!-- Group Email for Professors Missing Syllabi -->
+
+<!-- Currently, we probably do not need Send From or 
+Send To, so we should consider removing those -->
 
 		<div id="email_syl_div">
 			<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/8d/VisualEditor_-_Icon_-_Close.svg/1000px-VisualEditor_-_Icon_-_Close.svg.png" id="close_btn_email" onclick="closeEmail('email_syl_div')"/> <!--close button-->
@@ -36,7 +39,7 @@
 		</div>
 		
 
-<!--***********************  Group Email for Professors Missing Learning Outcomes  ******************-->	
+<!-- Group Email for Professors Missing Learning Outcomes -->	
 
 		<div id="email_lo_div">
 			<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/8d/VisualEditor_-_Icon_-_Close.svg/1000px-VisualEditor_-_Icon_-_Close.svg.png" id="close_btn_email" onclick="closeEmail('email_lo_div')"/>
@@ -59,7 +62,7 @@
 		
 		
 		
-<!--**********************  Individual Email for Specific Professor Missing a Syllabus  ********************-->
+<!-- Individual Email for Specific Professor Missing a Syllabus -->
 		
 		<div id="ind_email">
 			<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/8d/VisualEditor_-_Icon_-_Close.svg/1000px-VisualEditor_-_Icon_-_Close.svg.png" id="close_btn_email" onclick="closeEmail('ind_email')"/>
@@ -78,7 +81,7 @@
 		
 		
 		
-<!--**********************  Individual Email for Specific Professor Missing Learning Outcomes  *****************-->
+<!-- Individual Email for Specific Professor Missing Learning Outcomes -->
 
 		<div id="ind_email_lo">
 			<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/8d/VisualEditor_-_Icon_-_Close.svg/1000px-VisualEditor_-_Icon_-_Close.svg.png" id="close_btn_email" onclick="closeEmail('ind_email_lo')"/>
@@ -101,17 +104,18 @@
 
 
 
-<!--********************* Div that blacks out screen behind an email box ******************************-->
+<!-- Div that blacks out screen behind an email box -->
 
 		<div id="blackout">
 		</div>
 		
 	
-<!--********************************* Option Nav on Right ***********************************************-->
+<!-- Option Nav on Right -->
 
 		<p id="options" onclick="showOptionMenu()">Options</p>
 			<div id="option_menu">
 				<img class="close_icon" id="close_btn_option" src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/72/VisualEditor_-_Icon_-_Close_-_white.svg/768px-VisualEditor_-_Icon_-_Close_-_white.svg.png" onclick="hideOptionMenu()"/><br>
+					
 				<p id="option_p_head">Options</p>
 				<div id="login_info">
 					<p>You are logged in as: username</p><br>
@@ -119,30 +123,28 @@
 				</div>
 				<p class="nav_option nav_link" onclick="showEmailWindow('email_syl_div')">Send emails to all professors missing syllabi</p>			
 				<p class="nav_option nav_link" onclick="showEmailWindow('email_lo_div')">Send emails to all professors missing learning outcomes</p>
+				<!-- Later, we might want to add this functionality -->
 				<!--<p class="nav_option nav_link">Show Word Cloud</p>
 				<p class="nav_option nav_link">Show Status of Syllabi By Department</p>
 				<p class="nav_option nav_link" onclick="autoClick('archive')">Archive ALL Syllabi for Current Semester</p>-->
 			</div>
 
-
-
-<!--************************************  Main Body  *****************************************************-->
-	
+<!--****  Quick info: the stats in the dark gray horizontal bar  *****-->	
 	<div id="quick_info">
 		<span style="color:white;position:relative;left:8px;top:8px;font-size:20px;cursor:pointer;" onclick="closeQuickInfo(this);">&times;</span>
 				<table style="width:80%;margin:0 auto;position:relative;bottom:10px;">
 					<tr>
-						<td>No. Syllabi Outstanding:<br><p class="answers"><span class="first">{{ miss_syl }}</span><!--<span class="second">See All</span>--></p></td>
-						<td>No. Professors Missing Syllabi:<br><p class="answers"><span class="first">{{ miss_prof }}</span><!--<span class="second">See All</span>--></p></td>
-						<!-- <td>% Syllabi Outstanding:<br><p class="answers"><span class="first">{{ syll_percent }}%</span><!--<span class="second">See All</span>--><!--</p></td>
-						<td>No. Departments Missing Syllabi:<br><p class="answers"><span class="first">0</span><!--<span class="second">See All</span>--><!--</p></td>-->
+						<td>No. Syllabi Outstanding:<br><p class="answers"><span class="first">{{ miss_syl }}</span></p></td>
+						<td>No. Professors Missing Syllabi:<br><p class="answers"><span class="first">{{ miss_prof }}</span></p></td>
 					</tr>
 				</table>		
 			</div>
 
-		
-		
-			<!--*********************  The stats in the dark gray horizontal bar  ***********************-->
+
+
+
+<!--*********** Main Body  ******************-->
+
 		<div id="main_body">			
 	
 			<h2 id="welcome">WELCOME, {{user}}. &nbsp;&nbsp; &nbsp;&nbsp; ACADEMIC PERIOD: {{ semester }}</h2>
@@ -151,7 +153,7 @@
 			
 
 			
-			<!--*****************************  Department Scroll  ****************************************-->
+<!--  Department List  -->
 			
 				<div id="dept_search">
 					<input type="text" id="dep_search_bar" oninput="filterDeps()" placeholder="Search for a department..."/>
@@ -160,8 +162,7 @@
 							<span><input type="submit" id="{{d}}" class="dep_li has_syllabus_dep" name="submit" value="{{ d }}" onmouseover="animateChoice(this)" onmouseout="unAnimateChoice(this)"/></span>
 						{% else %}
 							<span><input type="submit" id="{{d}}" class="dep_li no_syllabus_dep" name="submit" value="{{ d }}" onmouseover="animateChoice(this)" onmouseout="unAnimateChoice(this)"/></span>
-						{% endif %}
-						
+						{% endif %}	
 					{% endfor %}
 					
 					<input name="selected_dep" value="{{ selected_dep }}" style="display:none;"/>
@@ -177,7 +178,7 @@
 
 				
 				
-			<!--*****************************  Professor Scroll  ****************************************-->
+<!--  Professor List  -->
 
 			<div id="prof_search_container">
 				<div id="prof_search">
@@ -191,17 +192,18 @@
 					{% if profsSorted|length > 10 %}
 						<script>document.getElementById('prof_search').style.overflowY = 'scroll';</script>
 					{% endif %}
-				</div>
+				</div> <!-- End prof_search -->
 				<p id="show_profs" class="button" onclick="showProfsBtn()">Show Only Professors with Missing Syllabi in Chosen Department</p>
 				
 				<input type="text" id="prof_btn_submit_ID" name="prof_btn_submit" value="False" hidden/>
 				{% if profBtnOn == "True" %}
 					<script>document.getElementById("show_profs").click();</script>
 				{% endif %}			
-			</div>
-			</div>
+			</div> <!-- End prof_search_container -->
 			
-			<!--*****************************  Chart of Course Results  ****************************************-->
+			
+			
+<!--  Chart of Course Results  -->
 				{% if profs_courses != "" %}
 
 				<div id="syl_status_box">
@@ -242,14 +244,15 @@
 				{% endif %}
 				<br>
 	
-			<!--******************************  Keeps track of active fields  ***************************-->
+	
+<!--  Keeps track of active fields -->
 			
 				<input type="text" name = "active_dep" value="{{active_dep}}" hidden> 
 				<input type="text" value="{{ active_prof }}"  name = "active_prof" hidden>			
 				
 				
 				
-			<!--*****************************  Keeps your selection blue  ****************************************-->
+<!--  Keeps your selection blue  -->
 			
 				{% if active_dep %}
 					<script>
@@ -267,7 +270,7 @@
 				
 				</form>
 				
-		</div>
+		</div> <!-- End of main -->
 		
 		{% for i in recipients %}
 			<script>
@@ -276,8 +279,10 @@
 			</script>
 		{% endfor %}		
 				
+				
 	<!--*****************************  Davidson Logo  ****************************************-->
 	
 	<img src="http://marketing-toolbox.davidson.edu/wp-content/uploads/2015/07/white-letters-white-bar-transparent-diamond-logo.png" id="davidson_logo"/>
+	
 	</body>
 </html>
