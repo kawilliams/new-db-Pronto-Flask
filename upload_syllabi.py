@@ -148,7 +148,7 @@ def build_CRN_string(unique):
 
 
 @app.route('/upload/', methods=["GET","POST"])    
-def make_updates(): # 
+def make_updates(): 
     
     if request.method == "POST":
         
@@ -221,11 +221,12 @@ def make_updates(): #
             setattr(unique[i], 'privacy', new_privacy)
             setattr(unique[i], 'visitable', new_visitable)
             setattr(unique[i], 'learning_outcomes', new_lo_txt) 
+            setattr(unique[i], 'lo_status', 'Not viewed')
 	    
             update_secondary(unique[i], 'privacy', new_privacy)
             update_secondary(unique[i], 'visitable', new_visitable)
-            update_secondary(unique[i], 'learning_outcomes', new_lo_txt) 	    
-	    
+            update_secondary(unique[i], 'learning_outcomes', new_lo_txt)
+            update_secondary(unique[i], 'lo_status', 'Not viewed') 	
 
 
         db.session.commit()
