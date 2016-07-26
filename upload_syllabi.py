@@ -87,8 +87,6 @@ def get_courses():
         elif len(username) > 3:       
 	    
 	    prof = Professor.query.filter_by(email=username).all()
-	    if prof == []:
-		flash('Username does not exist. Please check your spelling and try again')
 	    print "90 Prof:", prof
             semester = request.form['semester']
            
@@ -103,10 +101,8 @@ def get_courses():
 		    return render_template('Prof_Login.html', username='', 
                                   most_recent=["201601","201602"])  
                 unique = determine_unique(primary)
-		unique2 = determine_unique(secondary)
                 return render_template('my_courses.html', courses=unique, 
-                                       db_name=prof.dbname, semester=semester,
-		                       inst2_courses=unique2)
+                                       db_name=prof.dbname, semester=semester)
             
 	               
     return render_template('Prof_Login.html', username="", 
@@ -152,7 +148,7 @@ def build_CRN_string(unique):
 
 
 @app.route('/upload/', methods=["GET","POST"])    
-def make_updates(): # 
+def make_updates(): 
     
     if request.method == "POST":
         
@@ -225,11 +221,12 @@ def make_updates(): #
             setattr(unique[i], 'privacy', new_privacy)
             setattr(unique[i], 'visitable', new_visitable)
             setattr(unique[i], 'learning_outcomes', new_lo_txt) 
+            setattr(unique[i], 'lo_status', 'Not viewed')
 	    
             update_secondary(unique[i], 'privacy', new_privacy)
             update_secondary(unique[i], 'visitable', new_visitable)
-            update_secondary(unique[i], 'learning_outcomes', new_lo_txt) 	    
-	    
+            update_secondary(unique[i], 'learning_outcomes', new_lo_txt)
+            update_secondary(unique[i], 'lo_status', 'Not viewed') 	
 
 
         db.session.commit()
@@ -255,8 +252,9 @@ def update_secondary(c, attribute, characteristic):
 
     crn_to_find = "%"+str(c.CRN)
     reg_courses = Course.query.filter_by(acad_period=c.acad_period).\
+        filter_by(instructor1=c.instructor1).\
         filter(Course.course_title.like(crn_to_find)).all()
-	#filter_by(instructor1=c.instructor1).\
+
     
     for r in reg_courses:
 	print "259", r.course_title
