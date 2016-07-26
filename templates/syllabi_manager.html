@@ -118,20 +118,23 @@ Send To, so we should consider removing those -->
 					
 				<p id="option_p_head">Options</p>
 				<div id="login_info">
-					<p>You are logged in as: username</p><br>
+					<p>You are logged in as: {{user}}</p><br>
 					<a href="search.html" id="logout">Logout</a>
 				</div>
 				<p class="nav_option nav_link" onclick="showEmailWindow('email_syl_div')">Send emails to all professors missing syllabi</p>			
 				<p class="nav_option nav_link" onclick="showEmailWindow('email_lo_div')">Send emails to all professors missing learning outcomes</p>
+				<p class="nav_option nav_link" onclick="showQuickInfo()">Show Statistics</p>
 				<!-- Later, we might want to add this functionality -->
 				<!--<p class="nav_option nav_link">Show Word Cloud</p>
 				<p class="nav_option nav_link">Show Status of Syllabi By Department</p>
 				<p class="nav_option nav_link" onclick="autoClick('archive')">Archive ALL Syllabi for Current Semester</p>-->
 			</div>
 
+
+
 <!--****  Quick info: the stats in the dark gray horizontal bar  *****-->	
 	<div id="quick_info">
-		<span style="color:white;position:relative;left:8px;top:8px;font-size:20px;cursor:pointer;" onclick="closeQuickInfo(this);">&times;</span>
+		<span style="color:black;position:relative;left:8px;top:8px;font-size:20px;cursor:pointer;" onclick="closeQuickInfo(this);" id="close_quick_info">&times;</span>
 				<table style="width:80%;margin:0 auto;position:relative;bottom:10px;">
 					<tr>
 						<td>No. Syllabi Outstanding:<br><p class="answers"><span class="first">{{ miss_syl }}</span></p></td>
@@ -139,8 +142,6 @@ Send To, so we should consider removing those -->
 					</tr>
 				</table>		
 			</div>
-
-
 
 
 <!--*********** Main Body  ******************-->
@@ -157,6 +158,7 @@ Send To, so we should consider removing those -->
 			
 				<div id="dept_search">
 					<input type="text" id="dep_search_bar" oninput="filterDeps()" placeholder="Search for a department..."/>
+					<div id="dep_list">
 					{% for d in depsSorted %}
 						{% if deps[d] == "True" %}
 							<span><input type="submit" id="{{d}}" class="dep_li has_syllabus_dep" name="submit" value="{{ d }}" onmouseover="animateChoice(this)" onmouseout="unAnimateChoice(this)"/></span>
@@ -164,6 +166,7 @@ Send To, so we should consider removing those -->
 							<span><input type="submit" id="{{d}}" class="dep_li no_syllabus_dep" name="submit" value="{{ d }}" onmouseover="animateChoice(this)" onmouseout="unAnimateChoice(this)"/></span>
 						{% endif %}	
 					{% endfor %}
+					</div>
 					
 					<input name="selected_dep" value="{{ selected_dep }}" style="display:none;"/>
 					
@@ -265,6 +268,16 @@ Send To, so we should consider removing those -->
 						var actProf = document.getElementById("{{active_prof}}");
 						animateChoice(actProf);
 
+					</script>
+				{% endif %}
+
+				<input type="text" id="quick_info_status" name="quick_info_status" value="{{quick_info}}" style="display:none;"/>
+				<input type="text" id="username_info" name="username" value="{{user}}" style="display:none;"/>
+				
+				{% if quick_info == "closed" %}
+					<script>
+						var quick_info = document.getElementById('close_quick_info');
+						closeQuickInfo(quick_info);
 					</script>
 				{% endif %}
 				
