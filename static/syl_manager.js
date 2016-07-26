@@ -395,9 +395,28 @@ function closeQuickInfo(quickInfo){
 	document.getElementById('main_body').style.marginTop = '20px';
 	document.getElementById('dept_search').style.height = '640px';
 	document.getElementById('dept_search').style.top = '100px';
+	document.getElementById('dep_list').style.height = '510px';
 	document.getElementById('prof_search_container').style.height = '640px';
+	document.getElementById('prof_search').style.height = '550px';
 	document.getElementById('prof_search_container').style.top = '100px';
-	document.getElementById('syl_status_box').style.marginTop = '15px';
+		
+	document.getElementById('quick_info_status').value = "closed";
+	
+	document.getElementById('syl_status_box').style.marginTop = '-660px';
 	document.getElementById('syl_status_box').style.height = '640px';
-	document.getElementById('prof_search').style.height = '570px';
+}
+
+function showQuickInfo(){
+	document.getElementById('quick_info').style.display = 'block';
+	document.getElementById('main_body').style.height = '80%';
+	document.getElementById('main_body').style.marginTop = '110px';
+	document.getElementById('dept_search').style.height = '550px';
+	document.getElementById('dep_list').style.height = '420px';
+	document.getElementById('prof_search_container').style.height = '550px';
+	document.getElementById('prof_search').style.height = '450px';
+		
+	document.getElementById('quick_info_status').value = "open";
+	
+	document.getElementById('syl_status_box').style.marginTop = '-570px';
+	document.getElementById('syl_status_box').style.height = '560px';
 }

@@ -233,13 +233,13 @@ body{
 /*---------------------------------Stats---------------------------------------*/
 
 #quick_info{
-	background-color:#404040;
+	background-color:#e6e6e6;
 	width:calc(100% - 60px);	
 	margin-left:10px;
 	margin-bottom:0px;
 	height:80px;
 	opacity:0.8;
-	outline:1px solid white;
+	outline:1px solid black;
 	position:absolute;
 	top:20px;
 	left:20px;
@@ -252,7 +252,7 @@ body{
 	width:25%;
 	text-align:center;
 	padding:10px;
-	color:white;	
+	color:black;	
 }
 /*Styling the numbers below the headers*/
 .answers{
