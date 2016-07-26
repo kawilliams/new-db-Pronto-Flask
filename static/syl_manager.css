@@ -72,6 +72,11 @@ body{
 	padding-bottom:10px;
 	border-bottom:2px solid #e6e6e6;	
 }
+#login_info{
+	background-color:#cccccc;
+	padding:10px;
+	text-align:center;
+}
 .nav_option{
 	background-color:#e6e6e6;
 	padding:15px;
@@ -299,7 +304,6 @@ p{
 #prof_search_container{
 	border:1px solid black;
 	height:550px;
-	/*display:inline-block;*/
 	width:15%;
 	padding:10px;
 	border-radius:5px;
@@ -364,9 +368,11 @@ p{
 	background-color:white;
 	height:560px;
 	width:55%;	
+	/*visibility:hidden;*/
 	padding:0px;
 	padding-top:5px;
 	padding-bottom:5px;
+	/*display:inline-block;*/
 	float:right;
 	min-width:650px;
 	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 8px 20px 0 rgba(0, 0, 0, 0.19);
@@ -400,6 +406,7 @@ p{
 input[type=checkbox]{
 	cursor:pointer;	
 }
+
 .close_icon{
 	width:30px;
 	height:30px;
