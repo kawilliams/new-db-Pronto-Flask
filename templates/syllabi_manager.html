@@ -4,9 +4,56 @@
 		<link rel="stylesheet" type="text/css" href={{url_for('static',filename='syl_manager.css')}}>
 		<script type="text/javascript" src={{url_for('static', filename='syl_manager.js')}}></script>
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
+		<script>
+		function fillColor() {
+			var loStatusBtn = document.getElementsByClassName('lo-status-btn');
+			if (loStatusBtn.length > 0) {
+				for (i=0; i<loStatusBtn.length; i++){
+					var btn = document.getElementById('lo-status-btn_'+String(i))
+					
+					if (btn.value == "Not submitted") {
+						btn.style.background = 'red';
+					}
+					if (btn.value == "Not viewed") {
+						btn.style.background = 'orange';
+					}
+					if (btn.value == "Viewed, needs edits") {
+						btn.style.background = 'yellow';
+						btn.style.color = "black";
+					}
+					if (btn.value == "Approved") {
+						btn.style.background = '#4CAF50';
+					}
+				}
+			}
+		}
+		function showLoStatusWindow(divID){
+			var curDiv = document.getElementById(divID);
+			curDiv.style.display = "block";
+			hideOptionMenu();
+			document.getElementById("blackout").style.display = "block";
+		}
+		function showLoStatusBox(lo, status, CRN) {
+			if (lo == 'Cut learning outcomes from syllabus and paste them here') {
+				document.getElementById('current_lo').innerHTML = "Learning outcomes not submitted.";
+				document.getElementById('CRN').value = CRN;
+			}
+			else {
+				document.getElementById('current_lo').innerHTML = lo;
+				document.getElementById('CRN').value = CRN;
+			}
+			showLoStatusWindow('course_status');
+		}
+		function closeStatusBox(divID){
+			var curDiv = document.getElementById(divID);
+			curDiv.style.display = "none";
+			document.getElementById("blackout").style.display = "none";
+			restoreRecipientList();
+		}
+		</script>
 	</header>	
-		
-	<body>
+	
+	<body onload="fillColor()">
 		
 		
 <!***********************  Group Email for Professors Missing Syllabi  **************************-->
@@ -57,7 +104,22 @@
 			<input type="button" id="send_email_syl" value="Send" name="send"/>
 		</div>
 		
-		
+<!--***************************  Learning Outcomes Status Box for Specific Course **************************-->
+		<div id="course_status">
+			<form action="{{ url_for('update_status')}}" method="post" enctype="multipart/form-data">
+				<input type="text" name="activeprof" value="{{ active_prof }}">
+				<input type="text" name="activedep" value="{{ active_dep }}">
+				<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/8d/VisualEditor_-_Icon_-_Close.svg/1000px-VisualEditor_-_Icon_-_Close.svg.png" id="close_btn_email" onclick="closeStatusBox('course_status')"/>
+				<p id="current_lo"></p>
+				<input type="text" name="CRN" id="CRN" value=""></p>
+			
+				<input type="radio" name="status" value="not_submitted">Not submitted</input><br />
+				<input type="radio" name="status" value="not_viewed">Not viewed</input><br />
+				<input type="radio" name="status" value="needs_edits">Viewed, needs edits</input><br />
+				<input type="radio" name="status" value="approved">Approved</input><br />
+				<input type="submit" value="Submit Status Change">
+			</form>
+		</div>		
 		
 <!--**********************  Individual Email for Specific Professor Missing a Syllabus  ********************-->
 		
@@ -128,14 +190,9 @@
 
 <!--************************************  Main Body  *****************************************************-->
 	
-		<div id="header_welcome">	
-			<h2 id="welcome">WELCOME, PROFESSOR. &nbsp;&nbsp; &nbsp;&nbsp; ACADEMIC PERIOD: {{ semester }}</h2>
-		</div>
-		
-			<!--*********************  The stats in the dark gray horizontal bar  ***********************-->
-		<div id="main_body">
-			<div id="quick_info">
-				<table>
+	<div id="quick_info">
+		<span style="color:white;position:relative;left:8px;top:8px;font-size:20px;cursor:pointer;" onclick="closeQuickInfo(this);">&times;</span>
+				<table style="width:80%;margin:0 auto;position:relative;bottom:10px;">
 					<tr>
 						<td>No. Syllabi Outstanding:<br><p class="answers"><span class="first">{{ miss_syl }}</span><!--<span class="second">See All</span>--></p></td>
 						<td>No. Professors Missing Syllabi:<br><p class="answers"><span class="first">{{ miss_prof }}</span><!--<span class="second">See All</span>--></p></td>
@@ -144,37 +201,67 @@
 					</tr>
 				</table>		
 			</div>
-			
+
+		
+		
+			<!--*********************  The stats in the dark gray horizontal bar  ***********************-->
+		<div id="main_body">			
+	
+			<h2 id="welcome">WELCOME, {{user}}. &nbsp;&nbsp; &nbsp;&nbsp; ACADEMIC PERIOD: {{ semester }}</h2>
 			
 			<form name="show_hide_form" action="{{ url_for('manage_form') }}" method="post" enctype="multipart/form-data">
 			
 
 			
 			<!--*****************************  Department Scroll  ****************************************-->
+			
 				<div id="dept_search">
+					<input type="text" id="dep_search_bar" oninput="filterDeps()" placeholder="Search for a department..."/>
 					{% for d in depsSorted %}
 						{% if deps[d] == "True" %}
-							<input type="submit" id="{{d}}" class="dep_li has_syllabus_dep" name="submit" value="{{ d }}"><br>
+							<span><input type="submit" id="{{d}}" class="dep_li has_syllabus_dep" name="submit" value="{{ d }}" onmouseover="animateChoice(this)" onmouseout="unAnimateChoice(this)"/></span>
 						{% else %}
-							<input type="submit" id="{{d}}" class="dep_li no_syllabus_dep" name="submit" value="{{ d }}"><br>
+							<span><input type="submit" id="{{d}}" class="dep_li no_syllabus_dep" name="submit" value="{{ d }}" onmouseover="animateChoice(this)" onmouseout="unAnimateChoice(this)"/></span>
 						{% endif %}
+						
 					{% endfor %}
-					<input name="selected_dep" value="{{ selected_dep }}" style="display:none;">
-				</div>
+					
+					<input name="selected_dep" value="{{ selected_dep }}" style="display:none;"/>
+					
+					<p id="show_deps" class="button" onclick="showDepsBtn()">Show Only Departments with Missing Syllabi</p>
+					
+					<input type="text" id="dep_btn_submit_ID" name="dep_btn_submit" value="False" hidden/>
+					{% if depBtnOn == "True" %}
+						<script>document.getElementById("show_deps").click();</script>
+					{% endif %}
+				</div> <!-- End dept_search -->
+				
+
 				
 				
 			<!--*****************************  Professor Scroll  ****************************************-->
+
+			<div id="prof_search_container">
 				<div id="prof_search">
 					{% for p in profsSorted %}
 						{% if profs[p] == "True" %}
-							<input type="submit" id="{{p}}" class="prof_li has_syllabus_prof" name="submit" value="{{ p }}">
+							<input type="submit" id="{{p}}" onmouseover="animateChoice(this);" onmouseout="unAnimateChoice(this);" class="prof_li has_syllabus_prof" name="submit" value="{{ p }}">
 						{% else %}
-							<input type="submit" id="{{p}}" class="prof_li no_syllabus_prof" name="submit" value="{{ p }}">
+							<input type="submit" id="{{p}}" onmouseover="animateChoice(this);" onmouseout="unAnimateChoice(this);" class="prof_li no_syllabus_prof" name="submit" value="{{ p }}">
 						{% endif %}
 					{% endfor %}
-				</div>			
-
-			
+					{% if profsSorted|length > 10 %}
+						<script>document.getElementById('prof_search').style.overflowY = 'scroll';</script>
+					{% endif %}
+				</div>
+				<p id="show_profs" class="button" onclick="showProfsBtn()">Show Only Professors with Missing Syllabi in Chosen Department</p>
+				
+				<input type="text" id="prof_btn_submit_ID" name="prof_btn_submit" value="False" hidden/>
+				{% if profBtnOn == "True" %}
+					<script>document.getElementById("show_profs").click();</script>
+				{% endif %}			
+			</div>
+			</div>
 			
 			<!--*****************************  Chart of Course Results  ****************************************-->
 				{% if profs_courses != "" %}
@@ -208,7 +295,7 @@
 							{% else %}
 								<td><p class="not_avail" onmouseover="showTooltip('send_ind_email_{{loop.index0}}')" onmouseout="hideTooltip('send_ind_email_{{loop.index0}}')">Not Submitted <span id="send_ind_email_{{loop.index0}}" onclick="showIndEmail('{{active_prof}}')" class="tooltip"> Send an email</span></p></td>				
 							{% endif %}
-							<td>{{ c. lo_status }}</td>
+							<td><input class="lo-status-btn" id="lo-status-btn_{{loop.index0}}" type="button" value="{{ c.lo_status }}" onclick="showLoStatusBox('{{c.learning_outcomes}}', '{{c.lo_status}}', '{{c.CRN}}')"/></td>
 						</tr>
 						{% endfor %}
 					</table>
@@ -216,33 +303,7 @@
 				</div>
 				{% endif %}
 				<br>
-					
-					
-			<!--*****************************  Buttons that Filter by only deps/profs missing syllabi  ****************************************-->
-			
-				<div id="only_missing">
-					<table>
-						<tr>
-							<td><p id="show_deps" class="button" onclick="showDepsBtn()">Show Only Departments with Missing Syllabi</p></td>
-							
-							<input type="text" id="dep_btn_submit_ID" name="dep_btn_submit" value="False" hidden/>
-							{% if depBtnOn == "True" %}
-								<script>document.getElementById("show_deps").click();</script>
-							{% endif %}
-							<td><p id="show_profs" class="button" onclick="showProfsBtn()">Show Only Professors with Missing Syllabi in Chosen Department</p></td>
-							
-							<input type="text" id="prof_btn_submit_ID" name="prof_btn_submit" value="False" hidden/>
-							{% if profBtnOn == "True" %}
-								<script>document.getElementById("show_profs").click();</script>
-							{% endif %}
-						</tr>
 	
-					</table>
-				</div>
-				
-				
-				
-				
 			<!--******************************  Keeps track of active fields  ***************************-->
 			
 				<input type="text" name = "active_dep" value="{{active_dep}}" hidden> 
@@ -255,13 +316,13 @@
 				{% if active_dep %}
 					<script>
 						var actDep = document.getElementById("{{active_dep}}");
-						actDep.style.backgroundColor = "#cce6ff";
+						animateChoice(actDep);
 					</script>
 				{% endif %}
 				{% if active_prof %}
 					<script>
 						var actProf = document.getElementById("{{active_prof}}");
-						actProf.style.backgroundColor = "#cce6ff";
+						animateChoice(actProf);
 
 					</script>
 				{% endif %}
