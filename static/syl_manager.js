@@ -2,42 +2,48 @@
 var EMAIL_RECIPIENTS_EDIT = [];
 var EMAIL_RECIPIENTS = [];
 
+/* Displays the syllabus results div */
 function shareSylInfo(){
-				document.getElementById("syl_status_box").style.visibility = "visible";	
-			}
-function shareProf(name){
-				console.log("SHARE A FREAKING PROFESSOR")
-				console.log("KATY");
-				//document.getElementById("prof_search").style.visibility = "visible";
-				//document.getElementById("only_missing_prof").style.visibility = "visible";	
-			}
+	document.getElementById("syl_status_box").style.visibility = "visible";	
+}
+
+/* Hides the syllabus results div */
 function hideStatBox(){
 	document.getElementById("syl_status_box").style.visibility = "hidden";	
 }
 
-function submitClick(btnName){
-	document.show_hide_form.btnName.click();	
-}
-
+/* Displays the option menu */
 function showOptionMenu(){
 	var curElem = document.getElementById("option_menu");
-	/*curElem.style.display = "block";*/
 	curElem.style.width = '20%';
 	document.getElementById("options").style.display = "none";	
 }
+
+/* Hides the option menu */
 function hideOptionMenu(){
 	var curElem = document.getElementById("option_menu");
-	/*curElem.style.display = "none";*/
 	curElem.style.width = "0%";
 	document.getElementById("options").style.display = "inline";	
 
 }
+
+/* Displays the email popup window 
+
+divID - a string representing the id of the window
+that you wish to show 
+*/
 function showEmailWindow(divID){
 	var curDiv = document.getElementById(divID);
 	curDiv.style.display = "block";
 	hideOptionMenu();
 	document.getElementById("blackout").style.display = "block";
 }
+
+/* Closes the email popup window 
+
+divID - a string representing the id of the window
+that you wish to hide  
+*/
 function closeEmail(divID){
 	var cancelBool = confirm("Closing this window will discard all changes. Do you wish to continue?");
 	if (cancelBool){
@@ -45,9 +51,17 @@ function closeEmail(divID){
 		curDiv.style.display = "none";
 		document.getElementById("blackout").style.display = "none";
 	}
-	restoreRecipientList();
+	/*restoreRecipientList();*/
 }
 
+
+
+/* These functions aren't necessary unless we actually load all 
+of the profs missing syllabi every time we load the page. This function
+makes sure that even if the user deletes an HTML element when composing an
+email, the next time the window pops up, there is a new, restored prof 
+recipient list. However, it isn't needed because loading the profs is too slow.*/
+/*
 function restoreRecipientList(){
 	for (var i = 0; i < EMAIL_RECIPIENTS.length; i++){
 		var curElem = EMAIL_RECIPIENTS[i];
@@ -57,11 +71,14 @@ function restoreRecipientList(){
 		}	
 	}
 	EMAIL_RECIPIENTS_EDIT = EMAIL_RECIPIENTS;
-}
+}*/
+
+
 
 /*MODEL*/
 /*<span class="email_recipient" id="{{i}}_span"><span class="email_rec_span" style="display:inline-block;" id="{{i}}">{{i}}</span><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/8d/VisualEditor_-_Icon_-_Close.svg/1000px-VisualEditor_-_Icon_-_Close.svg.png" style="cursor:pointer;" class="close_recipient" onclick="deleteRecipient('{{i}}_span')"/></span>*/
 
+/*
 function formatRecipient(recipient){
 	var curElem = document.createElement("SPAN");
 	curElem.className = "email_recipient";
@@ -87,7 +104,9 @@ function formatRecipient(recipient){
 	
 	document.getElementById('hidden_rec_lst_syl').appendChild(curElem);
 }
+*/
 
+/*
 function formatRecipQuery(){	
 	var qryStr = "";
 	var len = EMAIL_RECIPIENTS_EDIT.length;
@@ -99,25 +118,32 @@ function formatRecipQuery(){
 		}
 	}	
 	return qryStr;
-}
+}*/
+
+
+
+/* Sends an email */
+
 function sendEmail(){
 	
 	var submitBtnRec = document.getElementById('send_email');
 	var submitBtnMsg = document.getElementById('send_email_msg');
 	var message = document.getElementById('default_email').innerHTML;
-	var recipient_qry = formatRecipQuery();
+	/*var recipient_qry = formatRecipQuery();*/
 	
 	submitBtnMsg.value = message;
 	submitBtnRec.value = recipient_qry;
 	submitBtnRec.click();
-	restoreRecipientList();	
+	/*restoreRecipientList();*/	
 	window.alert("success!");
 }
 
-function autoClick(btnID){
-	document.getElementById(btnID).click();	
-}
+/* Shows/Hides given members of a field that have syllabi -- for "Show Only Departments 
+With Missing Syllabi" and "Show Only Professors with Missing Syllabi in Chosen Department"
 
+show - a boolean that indicates whether the elements are being shown or hidden 
+field - a string that indicates the field: dept or prof 
+*/
 function toggleSylOwners(show, field){
 	var depsWSyl = document.getElementsByClassName("has_syllabus_" + field);
 	if (show){
@@ -132,6 +158,7 @@ function toggleSylOwners(show, field){
 	}
 }
 
+/* Toggles the "Show Only Departments..." button */
 function showDepsBtn(){
 	var onDep = document.getElementById("dep_btn_submit_ID").value;
 	var btn = document.getElementById("show_deps");
@@ -141,8 +168,6 @@ function showDepsBtn(){
 		btn.style.color = "white";
 		btn.style.border = "1px solid #990000";
 		toggleSylOwners(false, "dep");
-		/*window.alert("Setting value to True");
-		window.alert("Whole input: " + document.getElementById("dep_btn_submit_ID"));*/
 		document.getElementById("dep_btn_submit_ID").value = "True";
 	}
 	else{
@@ -151,13 +176,11 @@ function showDepsBtn(){
 		btn.style.backgroundColor = "#cccccc";
 		btn.style.color = "black";
 		toggleSylOwners(true, "dep");
-		/*window.alert("Setting value back to False");*/
 		document.getElementById("dep_btn_submit_ID").value = "False";
 	}
-	/*window.alert("Current Value: " + document.getElementById("dep_btn_submit_ID").value);
-	window.alert("Whole input: " + document.getElementById("dep_btn_submit_ID"));*/
 }
 
+/* Toggles the "Show Only Professors..." button */
 function showProfsBtn(){
 	var onProf = document.getElementById("prof_btn_submit_ID").value;
 	var btn = document.getElementById("show_profs");
@@ -178,6 +201,11 @@ function showProfsBtn(){
 		document.getElementById("prof_btn_submit_ID").value = "False";
 	}
 }
+
+/* Displays a given tooltip 
+
+tooltipID - string representing the id of the tooltip
+*/
 function showTooltip(tooltipID){
 	var tooltip = document.getElementById(tooltipID);
 	tooltip.style.display = "inline-block";
@@ -186,6 +214,10 @@ function showTooltip(tooltipID){
 	notAvail.style.cursor = "pointer";
 	tooltip.style.color = "black";
 }
+/* Hides a given tooltip 
+
+tooltipID - string representing the id of the tooltip
+*/
 function hideTooltip(tooltipID){
 	var tooltip = document.getElementById(tooltipID);
 	tooltip.style.display = "none";	
@@ -194,11 +226,17 @@ function hideTooltip(tooltipID){
 	notAvail.style.cursor = "pointer";
 }
 
+/* Displays an individual email 
+
+profName - a string representing the professor to whom
+the user is sending the email 
+*/
 function showIndEmail(profName){
 	showEmailWindow("ind_email");
 	document.getElementById("send_to_input_box_ind").innerHTML = profName;
 }
 
+/* Finds the current date */
 function findCurrentDate(){
 	var curDate = new Date();
 	var formattedDate = "";
@@ -213,9 +251,11 @@ function findCurrentDate(){
 		formattedDate += "02";	
 	}
 }
+
+
 /*MODEL*/
 /*<span class="email_recipient"><span style="display:inline-block;">Alexander-Lee, Ashley </span><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/8d/VisualEditor_-_Icon_-_Close.svg/1000px-VisualEditor_-_Icon_-_Close.svg.png" class="close_recipient" onclick="closeRecipient()"/></span>*/
-function formatRecipients(){
+/*function formatRecipients(){
 	document.getElementById('hidden_rec_lst_syl').style.display = 'block';
 	var curDiv = document.getElementById("hidden_rec_lst_syl");
 	var recipientElems = document.getElementsByClassName("no_syllabus_prof");
@@ -237,9 +277,9 @@ function formatRecipients(){
 		curSpan.appendChild(curSpan2);
 		curDiv.appendChild(curSpan);
 	}
-}
+}*/
 
-function showRecipients(){
+/*function showRecipients(){
 	var clicked = document.getElementById('hidden_rec_lst_syl').style.display === 'block';
 	if (clicked){
 		document.getElementById('hidden_rec_lst_syl').style.display = 'none';
@@ -249,8 +289,9 @@ function showRecipients(){
 		document.getElementById('hidden_rec_lst_syl').style.display = 'block';
 		document.getElementById('search_recip').style.display = 'block';
 	}
-}
+}*/
 
+/*
 function filterRecip(){
 	var profs = document.getElementsByClassName("email_rec_span");
 	var curInput = document.getElementById("search_recip").value.toLowerCase();
@@ -268,7 +309,9 @@ function filterRecip(){
 			curElem.parentElement.style.display = "inline-block";	
 		}
 	}
-}
+}*/
+
+/*
 function deleteRecipient(spanID){
 	var parent = document.getElementById("hidden_rec_lst_syl");
 	var child = document.getElementById(spanID);
@@ -281,8 +324,15 @@ function deleteRecipient(spanID){
 	if (i != -1){
 		EMAIL_RECIPIENTS_EDIT.splice(i, 1);
 	}
-}
+}*/
 
+
+
+/* Highlights the current choice or the current element the mouse
+is hovering over 
+
+bubble - an HTML element -- will belong either to .dep_li or .prof_li
+*/
 function animateChoice(bubble){
 	
 	if (bubble.style.color == "white"){
@@ -296,6 +346,12 @@ function animateChoice(bubble){
 
 var alreadyAnimated = false;
 
+/* Un-highlights the current element the mouse is hovering over.
+alreadyAnimated is a boolean that tells the function whether the element
+has been selected, in which case it should not un-highlight 
+
+bubble - an HTML element -- will belong either to .dep_li or .prof_li
+*/
 function unAnimateChoice(bubble){
 	
 	if (!alreadyAnimated){
@@ -307,6 +363,7 @@ function unAnimateChoice(bubble){
 	alreadyAnimated = false;
 }
 
+/* Search for department... function */
 function filterDeps(){
 	
 	var deps = document.getElementsByClassName('dep_li');
@@ -323,6 +380,15 @@ function filterDeps(){
 	}	
 }
 
+/* Closes quick info and resizes everything else. Needs some tweaking
+
+Problems:
+      - quick info doesn't stay closed when clicked bc of page reload
+      - results div isn't positioned correctly 
+      - the professor list is a bit too long?
+
+quickInfo - an HTML element, the quick info div
+*/
 function closeQuickInfo(quickInfo){
 	quickInfo.parentElement.style.display = 'none';
 	document.getElementById('main_body').style.height = '89%';

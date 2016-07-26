@@ -2,7 +2,12 @@ body{
 	background-color:#aa0210;
 	min-width:1100px;
 }
-			
+	
+*{
+	font-family:"verdana";
+	font-size:12.5px;	
+}
+		
 #main_body{
 	background-color:#999999;
 	margin:20px;
@@ -17,20 +22,6 @@ body{
 	transition: margin-top 0.5s;
 	transition: height 0.5s;
 }
-#header_welcome{
-	background-color:#999999;
-	margin:20px;
-	margin-bottom:0px;
-	margin-top:0px;
-	min-width:1080px;
-	color:white;
-}
-
-*{
-	font-family:"verdana";
-	font-size:12.5px;	
-}
-
 #welcome{
 	text-align:center;
 	padding-top:25px;
@@ -39,6 +30,7 @@ body{
 	font-size:22px;
 	color:white;	
 }
+
 #options{
 	background-color:black;
 	opacity:0.8;
@@ -79,11 +71,6 @@ body{
 	padding:5px;
 	padding-bottom:10px;
 	border-bottom:2px solid #e6e6e6;	
-}
-#login_info{
-	background-color:#cccccc;
-	padding:10px;
-	text-align:center;
 }
 .nav_option{
 	background-color:#e6e6e6;
@@ -270,20 +257,6 @@ body{
 	margin:3px;	
 	transition:1s;
 }
-/*.answers .second{
-	display:none;	
-}*/
-/*.answers:hover{
-	cursor:pointer;
-	color:#3333ff;	
-}*/
-/*
-.answers:hover .first{
-	display:none;	
-}*/
-/*.answers:hover .second{
-	display:inline;	
-}*/
 
 p{
 	text-align:center;	
@@ -387,15 +360,13 @@ p{
 #syl_status_box{
 	margin-left:5px;
 	margin-right:40px;
-	margin-top:-650px;
+	margin-top:-570px;
 	background-color:white;
 	height:560px;
 	width:55%;	
-	/*visibility:hidden;*/
 	padding:0px;
 	padding-top:5px;
 	padding-bottom:5px;
-	/*display:inline-block;*/
 	float:right;
 	min-width:650px;
 	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 8px 20px 0 rgba(0, 0, 0, 0.19);
@@ -422,30 +393,16 @@ p{
 #syl_status_box tr:nth-child(even){
 	background-color:#bfbfbf;
 }
-/*#syl_status_box tr:nth-child(even):hover{
-	background-color:#cccccc;
-}*/
 #syl_status_box tr:nth-child(odd){
 	background-color:#d9d9d9;	
 }
-/*#syl_status_box tr:nth-child(odd):hover{
-	background-color:#e6e6e6;	
-}*/
-/*.true{
-	color:#00cc66;		
-}
-.false{
-	color:#cc0000;	
-}*/
 
 input[type=checkbox]{
 	cursor:pointer;	
 }
-
 .close_icon{
 	width:30px;
 	height:30px;
-	/*display:inline-block;*/
 }
 #close_stat{
 	float:right;
@@ -462,7 +419,6 @@ input[type=checkbox]{
 	margin-top:0px;
 	margin-bottom:8px;
 	color:#800000;	
-	/*display:inline-block;*/
 	float:left;
 	margin-left:10px;
 }
