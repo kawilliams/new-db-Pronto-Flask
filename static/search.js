@@ -1,20 +1,16 @@
-
-/* Generic function that closes any pop-up message 
-
-divID - string representing the id of the popup message that 
-needs to be closed 
-*/
+/* Generic function that closes any pop-up message */
 function closeDiv(divID){
 	var curDiv = document.getElementById(divID);
 	curDiv.style.display = "none";
 	document.getElementById("blackout").style.display = "none";
 }
-
-/* Opens and Closes the Accordion 
-
-accContentID - a string representing the id of the accordion
-content that the user wishes to hide/display 
-*/
+/* Used to close the iframe description window */
+function closeDescription(divID) {
+	var descriptionElem = document.getElementById("iframe_sur_div");
+	document.getElementById(divID).removeChild(descriptionElem);
+	closeDiv(divID);
+}
+/* Opens and Closes the Accordion */
 function toggleAcc(accContentID){
 	var accContent = document.getElementById(accContentID);
 	if (accContent.style.display == 'block'){
@@ -24,27 +20,14 @@ function toggleAcc(accContentID){
 		accContent.style.display = 'block';	
 	}
 }
-
-/* Opens and closes the filter.
-    To close the filter, you must give the div a negative margin to move
-    it off the screen. The opposite occurs when opening the filter -- set the
-    margin to 0.
-    
-closeFilter - a boolean that indicates whether the filter should be opened or 
-closed 
-*/
 function toggleFilter(closeFilter){
 	var filter = document.getElementById('filter');
 	var menu = document.getElementById('menu-icon');
 	var main = document.getElementById('main');
 	if (closeFilter){
-		/* The transition is begins slowly and then picks up speed, which means 
-		the filter exits more slowly and enters more quickly. To look more uniform,
-		must assign a quicker transition time to the exit function, etc.*/
-		filter.style.transition = '2s'; 
+		filter.style.transition = '2s';
 		filter.style.marginLeft = '-1000px';	
-		/* Must wait for filter to leave to display the menu icon */
-		setTimeout(function(){menu.style.display = 'block';}, 400); 
+		setTimeout(function(){menu.style.display = 'block';}, 400);
 		main.style.width = '100%';
 		main.style.marginLeft = "0%";
 		document.getElementById("help_div").style.left = '35%';
@@ -53,7 +36,6 @@ function toggleFilter(closeFilter){
 	else{
 		filter.style.transition = '0.7s';
 		filter.style.marginLeft = '0px';
-		/* Filter enters more quickly, but still need to wait */
 		setTimeout(function(){menu.style.display = 'none';}, 300);
 		main.style.width = '75%';
 		main.style.marginLeft = "25%";
@@ -62,21 +44,10 @@ function toggleFilter(closeFilter){
 	}	
 }
 
-/* hasClass function 
-
-element - the HTML element that we wish to check for a particular class
-clss - a string representing the classname that we wish to check 
-*/
 function hasClass(element, clss) {
 	return (element.className).indexOf(clss) > -1;
 }
 
-/* Checks and Unchecks a checkbox -- for styling. Changes the color of the
-text belonging to that checkbox when it is checked.
-
-checkboxLabelID - a string representing the id of the label that belongs
-to the checkbox being checked 
-*/
 function toggleCheckbox(checkboxLabelID){
 	var checkboxLabel = document.getElementById(checkboxLabelID);
 	var checkbox = document.getElementById(checkboxLabel.htmlFor);
@@ -87,8 +58,6 @@ function toggleCheckbox(checkboxLabelID){
 		checkboxLabel.style.color = "black";
 	}
 }
-
-/* Resets the filter, both checkboxes and selects (except the semester) */
 function clearAll(){
 	var checkboxLabels = document.getElementsByClassName('checkbox-label');	
 	
@@ -104,8 +73,8 @@ function clearAll(){
 	toSelect.options[toSelect.length - 1].selected = true;
 }
 
+/*------------------------Professor Search Function----------------------*/
 
-/*------------------------Professor Oninput Filter Function----------------------*/
 function filterProfs(){
 
 	var profs = document.getElementsByClassName("prof");
@@ -126,13 +95,6 @@ function filterProfs(){
 	}
 }
 
-/* When the user clicks "Morning" or "Afternoon", checks the appropriate 
-checkboxes. 
-
-mornAftClassname - a string representing the classname for morning ('morn_check') 
-or Afternoon ('aft_check') 
-input - an HTML checkbox input element - will belong to "Morning" or "Afternoon"
-*/
 function toggleMornAft(mornAftClassname, input){
 	var mornAftClasses = document.getElementsByClassName(mornAftClassname);
 	var check = false;
@@ -149,10 +111,8 @@ function toggleMornAft(mornAftClassname, input){
 }
 
 
-/*Creates query to pass to the db -- takes values from the checkboxes and the select menus 
-to assign them to hidden inputs which can be processed by the python code */
+/*---------------------Create query to pass to the db------------------*/
 
-/* Each field will have its own query (profStr, deptStr, etc). If there are multiple values within a certain field, they are divided by " or ", which will be the split RegEx for the python file ('search.py').*/
 function createQueryStr(){
 
 	var profStr = "";
@@ -224,15 +184,11 @@ function createQueryStr(){
 		}
 	}
 	
-	/* Class size query format: '0-6' or '12-36' 
-	  '-' is the RegEx for the python script */
 	var fromClassSize = document.getElementById('from-class-size-select');
 	var fromAns = (fromClassSize.options[fromClassSize.selectedIndex]).innerHTML;
 	var toClassSize = document.getElementById('to-class-size-select');
 	var toAns = (toClassSize.options[toClassSize.selectedIndex]).innerHTML;
-	/* If default values, don't bother passing to the python script */
-	/* May need fixing -- '56' (the max) is subject to change by semester*/
-	if ((fromAns == "1") && (toAns == "56")){ 
+	if ((fromAns == "1") && (toAns == "35")){
 		classSizeStr = "";
 	}
 	else{
@@ -256,12 +212,8 @@ function createQueryStr(){
 }
 
 
-/* Displays the iframe with the course description
+/*-------------------------- Display Course Description ---------------------------*/
 
-divID - a string representing the id of the div that will contain the iframe
-dept - a string representing the department the course belongs to (for the link)
-course_num - a string representing the course number (for the link) 
-*/
 function showDescription(divID, dept, course_num){
 
 	var curDiv = document.getElementById(divID);
@@ -279,9 +231,6 @@ function showDescription(divID, dept, course_num){
 	a.src = "http://www.davidson.edu/general-course-detail/?subj=" + dept + "&cnum=" + course_num;	
 	a.width = "100%";
 	a.height = "1410";
-	/* Use negative margins and a wrapping div (limitingDiv) to make the iframe display only 
-	the course description, not the rest of the page. Not completely effective because of 
-	page resizing */
 	a.style.marginTop = "-180px";
 	a.style.marginBottom = "-800px";
 	a.frameborder = "1";
@@ -291,22 +240,14 @@ function showDescription(divID, dept, course_num){
 	curDiv.insertBefore(limitingDiv, cancelBtn);
 }
 
-/* Used to close the iframe description window 
-      Completely removes the iframe inside the div so a new 
-      iframe can be displayed next time, then hides the div 
-      
-divID - string representing the id of the div that contains the iframe 
-*/
 function closeDescription(divID) {
+	var curDiv = document.getElementById(divID);
 	var descriptionElem = document.getElementById("iframe_sur_div");
-	document.getElementById(divID).removeChild(descriptionElem);
-	closeDiv(divID);
+	curDiv.removeChild(descriptionElem);
+	curDiv.style.display = "none";
+	document.getElementById("blackout").style.display = "none";
 }
 
-/* Opens or Closes all of the results accordions
-
-open - a boolean that indicates whether to open or close all accordions
-*/
 function openCloseAllAccordions(open){
 	var accContents = document.getElementsByClassName('acc-content-results');
 	var display = 'none';
@@ -317,9 +258,6 @@ function openCloseAllAccordions(open){
 		accContents[i].style.display = display;
 	}
 }
-
-/* Changes how the Open/Close Accordions button looks and 
-calls openCloseAllAccordions()*/
 function toggleOpenCloseBtn(){
 	var openCloseBtn = document.getElementById('open-close-btn');
 	if (openCloseBtn.innerHTML == "Open All"){
@@ -335,18 +273,9 @@ function toggleOpenCloseBtn(){
 		openCloseAllAccordions(false);
 	}
 }
-
-/* Hides (or displays) all accordions that are 
-not 'visitable' by prospective students
-
-visitable - a boolean that indicates whether the user wants 
-or does not want to see the classes that you cannot visit 
-*/
 function visNoAllAccordions(visitable){
 	var visContents = document.getElementsByClassName('visit-row');
 	var nopeContents = document.getElementsByClassName('no-visit-row');
-	console.log(visContents.length);
-	console.log(nopeContents.length);
 	display = 'block';
 	if (visitable) {
 		display = 'none';	
@@ -355,8 +284,6 @@ function visNoAllAccordions(visitable){
 		nopeContents[j].parentNode.style.display = display;	
 	}
 }
-
-/* Changes how the Visitable button looks and calls visNoAllAccordions()*/
 function toggleVisNoBtn() {
 	var visNoBtn = document.getElementById('vis-no-btn');		
 	if (visNoBtn.innerHTML == "Allow Visitors"){
@@ -364,36 +291,63 @@ function toggleVisNoBtn() {
 		visNoBtn.style.color = "#660000";
 		visNoBtn.innerHTML = "No Visitors";
 		visNoAllAccordions(true);
+		decreaseCountNoVisitors(true);
 	}	
 	else{
 		visNoBtn.style.backgroundColor = "#660000";
 		visNoBtn.style.color = "white";
 		visNoBtn.innerHTML = "Allow Visitors";
 		visNoAllAccordions(false);
+		decreaseCountNoVisitors(false);
 	}
 }
-
-/* Displays tooltips for Department and Distribution Requirement filters. 
-May choose the display type depending on the div. 
-Use 'block' to display below; use 'inline' to display to the right.
-
-tooltipID - string representing id for the tooltip
-displayType - string representing the type of display, whether 'block' or 'inline'
-*/
+function countResults(chosen_year, search_results) {
+	var resultSpan = document.getElementById("displayed_yr");
+	var listResults = search_results.replace('[','').replace(']','').split(',');
+	resultSpan.innerHTML = "<i>"+chosen_year+"</i>&nbsp;&nbsp;&nbsp;"+"Total Results: " + String(listResults.length);
+}
+function hideDiv(loopIndex) {
+	document.getElementById('acc_'+String(loopIndex)).style.display='none';
+	var resultSpan = document.getElementById("displayed_yr");
+	var lengthInner = resultSpan.innerHTML.length;
+	var decrease = parseInt(resultSpan.innerHTML.substring(lengthInner-2, lengthInner)) - 1;
+	if (decrease <= 8) {
+		var decrease = parseInt(resultSpan.innerHTML.substring(lengthInner-1, lengthInner)) - 1;
+		resultSpan.innerHTML = resultSpan.innerHTML.substring(0,lengthInner-1) + String(decrease);
+	}
+	else {
+		resultSpan.innerHTML = resultSpan.innerHTML.substring(0,lengthInner-2) + String(decrease);
+	}
+}
+function decreaseCountNoVisitors(visitable) {
+	var resultSpan = document.getElementById("displayed_yr");
+	var lengthInner = resultSpan.innerHTML.length;
+	var nopeContents = document.getElementsByClassName('no-visit-row');				
+	
+	if (visitable) {
+		var decrease = parseInt(resultSpan.innerHTML.substring(lengthInner-2, lengthInner)) - nopeContents.length;
+		if (decrease < 0) {
+			decrease = 0;
+		}
+		resultSpan.innerHTML = resultSpan.innerHTML.substring(0,lengthInner-2) + ' ' + String(decrease);
+	}
+	else {
+		var decrease = parseInt(resultSpan.innerHTML.substring(lengthInner-2, lengthInner)) + nopeContents.length;
+		if (decrease < 0) {
+			decrease = 0;
+		}
+		resultSpan.innerHTML = resultSpan.innerHTML.substring(0,lengthInner-2) + ' ' + String(decrease);
+	}
+	
+}
+/*document.getElementById('acc_{{loop.index0}}').style.display='none';*/
 function showTooltip(tooltipID, displayType){
 	document.getElementById(tooltipID).style.display = displayType;
 }
-/* Hides the tooltip 
-tooltipID - string representing id for the tooltip
-*/
 function hideTooltip(tooltipID){
 	document.getElementById(tooltipID).style.display = 'none';
 }
 
-/* After the homepage, there is a transition to display the results. This is that transition 
-
-searchBox - an HTML element containing the search bar, button, and Help
-*/ 
 function mainPageSetup(searchBox){
 	searchBox.style.marginTop = "5px";	
 	searchBox.style.width = "90%";
@@ -411,40 +365,28 @@ function mainPageSetup(searchBox){
 	document.getElementById("open-close-btn").style.display = "inline";
 	document.getElementById("vis-no-btn").style.display = "inline";
 }
-
-/* Display the results box after page load (Timeout is set so that
-the page load does not affect the transition) */
 function showResults(){
 	setTimeout(function(){
-		var searchBox = document.getElementById("opq_search_box");
-		var results = document.getElementById("results");
+	var searchBox = document.getElementById("opq_search_box");
+	var results = document.getElementById("results");
+	mainPageSetup(searchBox);
 	
-		mainPageSetup(searchBox);
-		
-		/* Shows the results box */
-		results.style.opacity = "1.0";
-		results.style.zIndex = "0";
-		results.style.position = "static";
+	results.style.opacity = "1.0";
+	results.style.zIndex = "0";
+	results.style.position = "static";
 	}, 10);
 }
-
-/* Sets up the page, then hides the results box (because there are no results)*/
 function showNoResults(){
 	setTimeout(function(){
-		var searchBox = document.getElementById("opq_search_box");
-		var results = document.getElementById("results");
-		mainPageSetup(searchBox);
-		
-		results.style.opacity = "0.0";
-		results.style.zIndex = "-1";
-		results.style.position = "absolute";
+	var searchBox = document.getElementById("opq_search_box");
+	var results = document.getElementById("results");
+	mainPageSetup(searchBox);
+	
+	results.style.opacity = "0.0";
+	results.style.zIndex = "-1";
+	results.style.position = "absolute";
 	}, 10);
 }
-
-/* Select the user's semester even after reload 
-
-semester - string representing the name of the semester 
-*/
 function keepSemester(semester){
 	var yearInputs = document.getElementsByClassName("year_li");
 	for(var x = 0; x < yearInputs.length; x++){
@@ -454,12 +396,6 @@ function keepSemester(semester){
 		}
 	}	
 }
-
-/* Keeps the same class sizes after reload. 
-
-class_size_kept - a string representing the string query that was 
-passed off the the python script before reload 
-*/
 function keepClassSize(class_size_kept){
 	var fromSelect = document.getElementById('from-class-size-select');
 	var fromOptions = fromSelect.options;
