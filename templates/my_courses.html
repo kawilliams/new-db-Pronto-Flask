@@ -15,8 +15,7 @@
 	<h4 id="davidson_logo">DAVIDSON COLLEGE</h4>
 	<div id="upload_div">
 	<h2 id="syllabus_upload">Syllabus Upload</h2>
-	<p id="you_teach">Please upload your syllabus for each of the following courses. Under "Visitable", check whether you would want prospective students to visit your class ("Can visit") or not ("Not open"). Under "Privacy," please check whether everyone can view your syllabus ("Anyone") or only those on the Davidson network ("Only Davidson"). </p>
-	<p id="you_teach">For courses with labs, only the class or lab will be displayed; however, both sets of information will be updated. For courses with multiple sections, a syllabus must be uploaded for each section.</p>
+	<p id="you_teach">Please upload your syllabus for each of the following courses. 	Under "Visitable", check whether you would want prospective students to visit 		your class ("Can visit") or not ("Not open"). Under "Privacy," please check 		whether everyone can view your syllabus ("Anyone") or only those on the Davidson 	network ("Only Davidson"). </p>
 			
 	{% if courses|length > 0 %}
  		
@@ -99,57 +98,10 @@
 
 	{% endif %}
     </table><br\>
-        <input type="text" value="{{db_name}}" name = "db_name" hidden><br>
-    	<input type="text" value="{{semester}}" name = "semester" hidden>
-	  	<input id="submit_changes" type="submit" value="Submit" >
+    <input type="text" value="{{db_name}}" name = "db_name" hidden><br>
+    <input type="text" value="{{semester}}" name = "semester" hidden>
+	  <input id="submit_changes" type="submit" value="Submit" >
 	</form>
-    <br />
-    <br />
-    {% if inst2_courses|length > 0 %}
-    	{% if inst2_courses|length == 1 %}
- 			<p id="you_teach"><b>NOTE:</b> You are listed as the second professor for a course. The faculty member listed under 'Instructor1' is responsible for uploading the syllabus for the course.</p>
- 		{% elif inst2_courses|length > 1 %}
- 			<p id="you_teach"><b>NOTE:</b> You are listed as the second professor for several courses. The faculty member listed under 'Instructor1' is responsible for uploading the syllabus for each course.</p>
- 		{% endif %}
- 		
-      <table id="class_table">
-			<thead>				
-				<tr>
-					<th name="dep">Dept</th>
-					<th name="course_num">Crs</th>
-					<th name="class_section">Sec</th>
-					<th name="CRN">CRN</th>
-					<th name="title">Title</th>
-					<th name="instructor1">Instructor1</th>
-					<th name="instructor2">Instructor2</th>
-					<th name="class_days">Days</th>
-					<th name="class_time">Time</th>
-					<th name="class_place">Location</th>				
-				</tr>
-			</thead>
-      <tbody>
-
-        {% for c in inst2_courses %}
-          <tr>
-            <tr>
-				<td name="dep{{loop.index0}}">{{ c.subject }}</td>
-				<td name="course_num{{loop.index0}}">{{ c.course_num }}</td>
-				<td name="class_section{{loop.index0}}">{{ c.seq_num }}</td>
-				<td name="CRN{{loop.index0}}">{{ c.CRN }}</td>
-				<td name="title{{loop.index0}}">{{ c.course_title }}</td>
-				<td name="instructor1{{loop.index0}}">{{ c.instructor1 }}</td>
-				<td name="instructor2{{loop.index0}}">{{ c.instructor2 }}</td>
-				<td name="class_days{{loop.index0}}">{{ c.meet_days }}</td>
-				<td name="class_time{{loop.index0}}">{{ c.class_time }}</td>
-				<td name="class_place{{loop.index0}}">{{ c.bldg_code + " " + c.room_code }}</td>
-				</td>
-											
-          </tr>
-
-        {% endfor %}
-      </tbody>    
-    {% endif %}
-
 
 </body>
 

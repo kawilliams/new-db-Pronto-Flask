@@ -6,10 +6,10 @@
 			<title>FindACourse</title>
 			<link rel="stylesheet" type="text/css" href="{{url_for('static', filename='search.css')}}">
 			<script type="text/javascript" src="{{ url_for('static', filename='search.js') }}"></script>
-			<script type="text/javascript" src="{{url_for('static', filename='jquery-3.1.0.min.js') }}"></script>
+			<!--<script type="text/javascript" src="{{url_for('static', filename='jquery-3.1.0.min.js') }}"></script>-->
 
 		</header>
-		<body>
+		<body onload="{% if chosen_year and search_results%}countResults('{{chosen_year}}', '{{search_results}}'); {% endif%}">
 			
 				
 		<!-- Contains an iframe with a course description -->
@@ -43,8 +43,6 @@
 			
 			
 		<!--Semester ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
-		
-		<!-- When you choose a semester, autopopulates the fields with information specific to that semester -->
 		<script>
 			function submitOption(){
 				var subBtn = document.getElementById("submit_btn");		
@@ -81,7 +79,7 @@
 				<div id="prof-acc-content" style="font-size:14px;" class="accordion-content filter_card">
 						<input type="text" oninput="filterProfs()" name="prof_search" id="prof_search_id" placeholder="Search for a professor"/>
 						<div> <!-- placeholder -->
-						<div> <!-- placeholder (placeholders help keep the accordions open .. looks for a certain number of parentElements)--> 
+						<div> <!-- placeholder -->
       					<div id="prof_list">	
 	    					{% for i in profs %}
     						<p><input type="checkbox" class="choices prof prof_check" id="{{i}}" value="{{i}}" onclick="toggleCheckbox('{{i}}_label');"><label id="{{i}}_label" for="{{i}}" class="checkbox-label">{{i}}</label></p>
@@ -103,7 +101,7 @@
 							{% for i in deps %}
 								<td><input type="checkbox" class="choices dept_check" id='{{i}}' value='{{i}}' onclick="toggleCheckbox('{{i}}_label');"/><label for='{{i}}' class="help checkbox-label" id='{{i}}_label' onmouseover="showTooltip('{{i}}_span', 'block');" onmouseout="hideTooltip('{{i}}_span');">{{i}}<span class="tooltip" id="{{i}}_span">{{deps_full[loop.index0]}}</span></label></td>
 								
-								{% if loop.index%3 == 0 %} <!-- to create columns -->
+								{% if loop.index%3 == 0 %}
 							</tr>
 							<tr>	
 								{% endif %}
@@ -233,8 +231,8 @@
 						<span>To: </span>
 						<select id="to-class-size-select" style="width:50px;">
 							{% for i in sizes_large %}
-							{% if i == size_large|length %}
-							<option value="to_{{i}} selected>{{i}}</option>
+							{% if i == sizes_large|length %}
+							<option value="to_{{i}}" selected>{{i}}</option>
 							{% endif %}
 							<option value="to_{{i}}">{{i}}</option>
 							{% endfor %}
@@ -297,53 +295,51 @@
 	
 	
 	<!-- Result Div ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
-		
-		<!-- If a semester has been chosen, and there are results -->
+			
 		{% if chosen_year and not message %}
-			<p id="displayed_yr"><i>{{chosen_year}}</i>
-			{% if result_count %}
-				<span>&nbsp;&nbsp;&nbsp;&nbsp;Total Results: {{result_count}}</span>
-			{% endif %} 
+			<p id="displayed_yr"><i></i>
+			{% if search_results %}
+				<span id="result_count"></span>
+				{% endif %} 
 				</p>
+		{% elif search_results %}
+				<span id="result_count"></span>
 		{% endif %}
 		
-		<!-- As long as there are results, display the Open All button and the Allow Visitors button -->
 		{% if not message %}
 			<span id="open-close-btn" onclick="toggleOpenCloseBtn();">Open All</span>
 			<span id="vis-no-btn" onclick="toggleVisNoBtn();">Allow Visitors</span>
 		{% endif %}
-		
-		<!-- If there are no results, display an error message -->
 	 	{% if message %}
 	 	<p id="error_msg">{{message}}</p>
 	 	{% endif %}
 
-		
-		<!-- Results div -->
+			
+		{% if message %}
+			<p id="error_msg">{{message}}</p>
+		{% endif %}
 		<div id="results">
 			{% for i in search_results %}
 			{% set rowloop = loop %}
 			<div class="acc-results" id="acc_{{loop.index0}}">
 				
 				<span class="acc-header-results" onclick="toggleAcc('acc_content_{{loop.index0}}');">
-				<table class="header_results_table"> <!-- Accordion Header -->
+				<table class="header_results_table">
 					<tr>
 						<td class="courseLink"><b>{{i.subject}} {{i.course_num}} {% if i.seq_num != '0' %}{{i.seq_num}}{% endif %}[{{i.major_code}}]</b>: <u class="iframe_link" onclick="showDescription('course_desc_div', '{{i.subject}}', '{{i.course_num}}');">{{i.course_title}}</u></td>
-						<td>{{ i.acad_period }}</td>
+							<td class="semester_result">{% if "01" in i.acad_period[4:] %}Fall {{ i.acad_period[:4] }}{% else %}Spring {{ ((i.acad_period[:04]|int)+1)|string }}{% endif %}</td>
 						<td class="prof_result">{{i.instructor1}}</td>
 						<td class="CRN_result"><span style="margin-right:10%;">CRN: {{i.CRN}}</span></td>
-						<td class="x_result"><span onclick="document.getElementById('acc_{{loop.index0}}').style.display='none'" style="font-size:23px;" class="close_icon">&times;</span></td>
+						<td class="x_result"><span onclick="hideDiv({{loop.index0}});" style="font-size:23px;" class="close_icon">&times;</span></td>
 				  </tr>
 				</table>
-				</span> <!-- End header -->	
-					
-				{% if i.visitable == "Can visit" %} <!-- visitable courses row identification-->	
+				</span> <!-- End header -->		
+				{% if i.visitable == "Can visit" %} <!-- visitable courses row identification-->				
 				<div id="acc_content_{{loop.index0}}" class="acc-content-results visit-row" style="margin-top:10px;background-color:#d9d9d9; padding:5px;">
 				{% else %}
 					<div id="acc_content_{{loop.index0}}" class="acc-content-results no-visit-row" style="margin-top:10px;background-color:#d9d9d9; padding:5px;">					
 				{% endif %} <!-- end visitable courses row identification -->
-				
-			  	<table class="results_table"> <!-- Accordion Content -->
+			  	<table class="results_table">
 				  <tr>
 					<td class="results_th">Time:</td>
 					<td class="results_th">Days:</td>
@@ -367,19 +363,23 @@
 						
 					{% else %}
 						<td class="results_td" onload="countRow()">
-							<!-- Creates tooltips for the Notes -->
-							{% set notes = i.course_notes.split(',') %}
+							
+							{% set notes = i.course_notes.replace(' ', '').split(',') %}
 							{% for n in notes %}
-								<div class="NotesContainer help"><span>{{n}}</span>
+								<div class="NotesContainer"><span>{{n}}</span>
 								<span class="NotesTooltip">{{sched_notes[n]}}</span></div>
 							{% endfor %}	
 						</td>
 					{% endif %}
-					
 					<td class="results_td">{{i.max_enroll}}</td>
 					<td class="results_td">{{i.visitable}}</td>
-					
-					<td class="results_td"><u><a href = {{url_for('download',file_path=i.syllabus_link)}} target = "blank" style="cursor:pointer;">{{i.syllabus_link}}</a></u></td>
+					<td class="results_td">
+						{% if i.syllabus_link == "" %}
+						No Syllabus
+						{% else %}
+						<u><a href = {{url_for('download',file_path=i.syllabus_link)}} target = "blank" style="cursor:pointer;">Click to Download</a></u>
+						{% endif %}
+						</td>
 				</tr>                    
 			  </table>
 			  </div> <!-- End acc content -->
@@ -388,37 +388,21 @@
 		</div> <!-- End "results" -->
 		</div> <!-- End main -->
 		
-		<!-- If there are search results, moves away from the homepage -->
 		{% if search_results %}
 			<script>
 				showResults();
 			</script>
-			
-		<!-- If there are no results, moves away from the homepage and displays error message -->
 		{% elif message %}
 			<script>
 				showNoResults();
 			</script>
 		{% endif%}
 		
-		<!-- Keeps all of the checkbox values and keeps the accordions open that have checked checkboxes -->
 		<script>
-			/*Keeps track of all of the accordions that have checked checkboxes 
-			-- helps prevent accordion name duplication when restoring */
-			var openAccs = []; 
-			var mornTimes = 0; /* To indicate whether "Morning" should be checked */
-			var aftTimes = 0; /* To indicate whether "Afternoon" should be checked */
+			var openAccs = [];
+			var mornTimes = 0;
+			var aftTimes = 0;
 		</script>
-		
-		<!--For every kept value, goes through all of the inputs and checks off the
-		one with the same value. 
-		
-		To open the accordion when a checkbox is checked, I 
-		make sure that the name of the accordion is not already in openAccs (which 
-		means the accordion has been opened already), I find the checkbox's fifth 
-		parent element (which I standardized by creating div placeholders if there weren't
-		enough parentElements), and I display it -->
-		
 		{% for i in kept_values %}
 		<script>
 			var allInputs = document.getElementsByTagName("input");
@@ -435,7 +419,7 @@
 					}
 					
 					var inputLabel = curElem.id + "_label";
-					document.getElementById(inputLabel).style.color = '#248f8f';
+					/*document.getElementById(inputLabel).style.color = '#248f8f';*/
 					var accId = curElem.parentElement.parentElement.parentElement.parentElement.parentElement.id;
 					
 					if (openAccs.indexOf(accId) === -1){
@@ -460,8 +444,8 @@
 		</script>
 		{% endfor %}
 		
-		<!-- Since semester and class size use select menus, must restore the values a different way  -->
 		{% if semester %}
+		
 		<script>
 			keepSemester('{{semester}}');
 		</script>
