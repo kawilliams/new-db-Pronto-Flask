@@ -119,8 +119,7 @@ def syllabi_prof(prof, semester, subject):
         filter_by(acad_period=semester).\
         filter_by(subject=subject).all()
     unique_courses = determine_unique(prof_courses)
-    for ea in unique_courses:
-	print ea.course_title, ea.seq_num, ea.CRN
+
     return len(unique_courses)
 
 def determine_unique(primary):
@@ -183,7 +182,7 @@ def format_subj(subjset):
     
     return subj_dict
 
-def find_recip():
+def find_recip(PROFESSORS):
     semester=determine_semester()
            
     courses = Course.query
@@ -204,8 +203,6 @@ def manage_form():
     semester=determine_semester()
            
     PROFESSORS,SUBJ_SET=initialize()
-    SEMESTER=determine_semester()
-
     subjList = format_subj(SUBJ_SET)
     profs_no_syl = []    
        
@@ -319,12 +316,17 @@ def get_professors(profs):
     # the professor table must have a user_name file that is exactly like
     # the Course.instructor1 field.
     pass
+    
 @app.route("/email",methods=["GET","POST"])
 def email():
     """
     This might need editing. We can not test this now since we don't have
     professors table
     """
+    semester=determine_semester()
+    PROFESSORS,SUBJ_SET=initialize()
+    subjList = format_subj(SUBJ_SET)
+    
     if request.method == "POST":
         recipients = str(request.form["recipients"]).split(",")
         #message = request.form["message"]
@@ -351,13 +353,11 @@ def email():
     for c in courses:
         profsSet.add(c.instructor1.strip())
     #get all departments
-    depsSet = set()
-    for c in courses:
-        depsSet.add(c.subject.strip())
-    depsList = format_dept(depsSet)
-    profs_no_syl = find_recip()
+    subjList = format_subj(SUBJ_SET)
 
-    return render_template("syllabi_manager.html", deps=depsList,
+    profs_no_syl = find_recip(PROFESSORS)
+
+    return render_template("syllabi_manager.html", deps=subjList,
                            depsSorted=sorted(subjList.keys()),
                            depBtnOn="False", profBtnOn="False",
                            profs='',profs_courses='',
@@ -365,6 +365,68 @@ def email():
                            miss_prof=count_mis_prof(""),active_dep="",
                            active_prof="",
                            recipients=profs_no_syl,
+                           semester=semester)
+
+@app.route('/update_status', methods=["GET", "POST"])
+def update_status():
+    semester=determine_semester()
+    PROFESSORS,SUBJ_SET=initialize()
+    subjList = format_subj(SUBJ_SET)
+    
+    if request.method == "POST":
+	print request.form
+	form_status = request.form["status"]
+	CRN = request.form["CRN"]
+	active_dep = request.form["activedep"]
+	active_prof = request.form["activeprof"]
+	course = Course.query.filter_by(acad_period=semester).filter_by(CRN=CRN).all()
+	print course
+	stat_dictionary = {
+	    "not_submitted" : "Not submitted",
+	    "not_viewed" : "Not viewed",
+	    "needs_edits" : "Viewed, needs edits",
+	    "approved" : "Approved"    
+	    }
+	for c in course:
+	    setattr(c, 'lo_status', stat_dictionary[form_status])
+	 
+    percent_syl = (float(count_mis_syll(active_prof))/
+			           Course.query.filter(Course.subject.like(
+	                               active_dep)).filter_by(acad_period=semester).count())*100  
+    subject_btn_on = "True"
+    prof_btn_on = "True"
+    	    
+    courses = Course.query.filter_by(acad_period=semester).all()
+    #get all professors
+    profsSet = set()
+    for c in courses:
+        profsSet.add(c.instructor1.strip())
+    #get all departments
+    subjList = format_subj(SUBJ_SET)
+    profs_no_syl = find_recip(PROFESSORS)
+    subject_courses = Course.query.filter_by(subject=active_dep).\
+	                filter_by(acad_period=semester).\
+	                order_by(Course.course_num)
+    prof_inDep = set()		
+    for dc in subject_courses:
+	prof_inDep.add(dc.instructor1.strip())
+	
+    profs_courses = subject_courses.filter_by(instructor1=active_prof).all()
+    profList = format_prof(prof_inDep,active_dep)
+    num_prof_is_missing = syllabi_prof(active_prof, semester, active_dep)
+    
+    db.session.commit()
+    return render_template("syllabi_manager.html", deps=subjList,
+                           depsSorted=sorted(subjList.keys()),
+                           depBtnOn=subject_btn_on, profBtnOn=prof_btn_on,
+                           profs=profList, profsSorted=sorted(profList.keys()),
+                           profs_courses=profs_courses, 
+                           miss_syl=num_prof_is_missing,
+                           miss_prof=binary_prof(num_prof_is_missing),
+                           active_dep=active_dep,
+                           active_prof=active_prof,
+                           recipients=profs_no_syl,
+                           syl_percent=str(percent_syl),
                            semester=semester)
 
 
