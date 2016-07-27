@@ -352,8 +352,8 @@ function unAnimateChoice(bubble){
 	if (!alreadyAnimated){
 		bubble.style.backgroundColor = "#cce6ff";
 		bubble.style.color = "black";
-		bubble.style.border = "1px solid gray";
-		bubble.style.boxShadow = "0px 0px 0px gray";
+		bubble.style.border = "1px solid #cce6ff";
+		bubble.style.boxShadow = "0px 0px 0px #4d4d4d";
 	}
 	alreadyAnimated = false;
 }
