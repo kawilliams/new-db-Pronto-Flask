@@ -1,0 +1,1 @@
+oracle+cx_oracle://zzprontoproject:takearun0nthewildside@xoapp1

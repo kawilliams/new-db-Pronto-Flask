@@ -6,7 +6,7 @@ import dropbox
 from operator import attrgetter
 import datetime
 import logging
-
+import csv
 
 """
 This file is the search script for all of the courses and their 
@@ -15,7 +15,6 @@ search.html page.
 """
 
 app = Flask(__name__, template_folder='templates')
-app.debug=True
 
 
 ALL_DEPS_FULL = {"AFR":"Africana Studies",
@@ -196,7 +195,6 @@ def range_list(current_semester):
 
 	range_size_small = range(smallest, largest+1)
 	range_size_large = range(smallest+1, largest+1)
-	print smallest, largest
 	return range_size_small, range_size_large
 
 
@@ -411,15 +409,18 @@ def read_notes_file():
 	CODE = 0
 	EXPLANATION = 1
 	sched_notes = {}
-	
-	with open('static/ScheduleNotes.csv', 'rU') as f:
+    
+	with open('/var/www/html/FindACourse/static/ScheduleNotes.csv', 'rU') as f:
 		fReader = csv.reader(f, quotechar = '"', delimiter = ',')	    
 		for line in fReader:
 			sched_notes[line[CODE]] = line[EXPLANATION]   	
 	
 	return sched_notes
 
-
+@app.route("/hello")
+def hello():
+	return "hello, plz work"
+	
 @app.route("/")
 def home():
 	"""
@@ -606,8 +607,8 @@ def process_search():
 		return redirect(url_for("home"))
 	
 	
-ACCESS_TOKEN_FILE = "access_token.txt"
-DROPBOX_ACCESS_TOKEN = open(ACCESS_TOKEN_FILE,'r').read()	
+ACCESS_TOKEN_FILE = "/var/www/html/FindACourse/access_token.txt"
+DROPBOX_ACCESS_TOKEN = open(ACCESS_TOKEN_FILE,'r').read()
 
 
 @app.route('/<path:file_path>')
@@ -621,5 +622,5 @@ def download(file_path):
 
 if __name__=="__main__":
 	print "All ok"
-	db.create_all()
-	app.run()
+	#db.create_all()
+	app.run(debug=True)

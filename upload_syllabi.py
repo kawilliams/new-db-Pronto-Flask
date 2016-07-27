@@ -23,7 +23,7 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
 
 
 
-ACCESS_TOKEN_FILE = "access_token.txt"
+ACCESS_TOKEN_FILE = "/var/www/html/FindACourse/access_token.txt"
 
 def dropbox_accesstoken():
     """
@@ -87,22 +87,30 @@ def get_courses():
         elif len(username) > 3:       
 	    
 	    prof = Professor.query.filter_by(email=username).all()
-	    print "90 Prof:", prof
+	    if prof == []:
+		flash('Username does not exist. Please check your spelling and try again')
+	    #print "90 Prof:", prof
             semester = request.form['semester']
            
 	    # there exists exactly one professor with that username
             if len(prof)==1: 
-		prof = prof[0]
+            	prof = prof[0]
                 acad_period = request.form['semester'] 
                 # find user's courses
                 primary, secondary = current_course(prof,semester) 
 		if primary == []:
-		    flash('No courses found for '+prof.fullname+' for semester '+semester)
+		    if str(semester)[-1] == "1":
+			flash('No courses found for '+prof.fullname+' for Fall '+semester[:4])
+		    else:
+			flash('No courses found for '+prof.fullname+' for Spring '+str(int(semester[:4])+1))
+			#flash('No courses found for '+prof.fullname+' for semester '+semester)
 		    return render_template('Prof_Login.html', username='', 
                                   most_recent=["201601","201602"])  
                 unique = determine_unique(primary)
+		unique2 = determine_unique(secondary)
                 return render_template('my_courses.html', courses=unique, 
-                                       db_name=prof.dbname, semester=semester)
+                                       db_name=prof.dbname, semester=semester,
+		                       inst2_courses=unique2)
             
 	               
     return render_template('Prof_Login.html', username="", 
@@ -115,7 +123,6 @@ def current_course(prof, semester):
     secondary = prof.secondary_classes
     tertiary = prof.tertiary_classes      
     secondary = secondary + tertiary  
-    
     primary_sem = []
     secondary_sem = []
     
@@ -148,7 +155,7 @@ def build_CRN_string(unique):
 
 
 @app.route('/upload/', methods=["GET","POST"])    
-def make_updates(): 
+def make_updates(): # 
     
     if request.method == "POST":
         
@@ -209,7 +216,7 @@ def make_updates():
                 # update secondary courses
                 update_secondary(unique[i],'syllabus_link',response['path'])
                 
-                print "212", unique[i].course_title, unique[i].CRN, unique[i].syllabus_link
+                #print "212", unique[i].course_title, unique[i].CRN, unique[i].syllabus_link
                 
             if new_visitable != unique[i].visitable:
                 changed_vis_list.append(course_name)
@@ -221,14 +228,14 @@ def make_updates():
             setattr(unique[i], 'privacy', new_privacy)
             setattr(unique[i], 'visitable', new_visitable)
             setattr(unique[i], 'learning_outcomes', new_lo_txt) 
-            setattr(unique[i], 'lo_status', 'Not viewed')
+	    setattr(unique[i], 'lo_status', 'Not viewed')
 	    
             update_secondary(unique[i], 'privacy', new_privacy)
             update_secondary(unique[i], 'visitable', new_visitable)
             update_secondary(unique[i], 'learning_outcomes', new_lo_txt)
-            update_secondary(unique[i], 'lo_status', 'Not viewed') 	
 
-
+	    update_secondary(unique[i], 'lo_status', 'Not viewed')
+	    
         db.session.commit()
         
         return render_template('thankyou.html', syl_list=changed_syl_list, 
@@ -254,10 +261,10 @@ def update_secondary(c, attribute, characteristic):
     reg_courses = Course.query.filter_by(acad_period=c.acad_period).\
         filter_by(instructor1=c.instructor1).\
         filter(Course.course_title.like(crn_to_find)).all()
-
+	
     
     for r in reg_courses:
-	print "259", r.course_title
+	#print "264", r.course_title
 	setattr(r, attribute, characteristic)
     return
 

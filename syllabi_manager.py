@@ -31,8 +31,8 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
 #mail = Mail(app)
 
 # need to replace this with dropbox download
-UPLOAD_FOLDER = 'all_syllabi/'
-app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+#UPLOAD_FOLDER = 'all_syllabi/'
+#app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 
 def initialize():
@@ -447,7 +447,7 @@ url_for('download',file_path=c.syllabus_link)
 
 '''
 
-ACCESS_TOKEN_FILE = "access_token.txt"
+ACCESS_TOKEN_FILE = "/var/www/html/FindACourse/access_token.txt"
 DROPBOX_ACCESS_TOKEN = open(ACCESS_TOKEN_FILE,'r').read()
 
 @app.route('/<path:file_path>')
