@@ -6,42 +6,41 @@ font-family:"verdana";
 #upload_div_login{
 background-color: #e6e6e6;	
 margin: 40px;
-margin-top:20px;
+margin-top:0px;
 box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 8px 20px 0 rgba(0, 0, 0, 0.19);
 padding-bottom: 30px;
 text-align: center;
 }
 
 #user_semest_container{
-	width:50%;
-	margin:0 auto;
-	margin-left:35%;
-	text-align:left;
+width:50%;
+margin: 0 auto;
+margin-left:35%;
+text-align:left;	
 }
 #username{
-	padding:7px;
-	border-radius:3px;
-	border:1px solid #cccccc;	
-	margin-left:5px;
-	font-size:13px;
-	color:#800000;
-	margin-bottom:20px;
+padding:7px;
+border-radius:3px;
+border:1px solid #cccccc;
+margin-left:5px;
+font-size:13px;
+color:#800000;
+margin-bottom:20px;	
 }
 #username:focus{
-	background-color:#e6f2ff;	
+	background-color:#e6f2ff;
 }
-
 #semester_select{
 	margin-left:25px;
 	width:170px;
 	padding:5px;
 	text-align:center;
-	margin-bottom:20px;	
+	margin-bottom:20px;
 }
 #upload_div{
 background-color: #e6e6e6;	
 margin: 40px;
-margin-top:20px;
+margin-top:0px;
 box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 8px 20px 0 rgba(0, 0, 0, 0.19);
 min-width: 800px;
 padding-bottom: 20px;
@@ -58,8 +57,8 @@ margin-bottom:0px;
 }
 #syllabus_upload {
 text-align: center;
-font-family:"cambria";
-font-size:25px;
+font-family: "cambria";
+font-size: 25px;
 }
 
 #syllabus_upload_load {
@@ -69,10 +68,10 @@ font-size:25px;
 font-weight:normal;
 padding-bottom:8px;
 border-bottom:2px solid black;
-width:90%;
+width: 90%;
 margin:0 auto;
-margin-top:20px;
-margin-bottom:30px;
+margin-top: 20px;
+margin-bottom: 30px;
 }
 
 .input_text {
@@ -163,7 +162,7 @@ th {
 	background-color:#8c8c8c;
 	color:white;
 	padding-bottom:15px;
-	padding:top:15px;
+	padding-top:15px; /*katy */
 }
 .dept_td{
 	width:15%;
@@ -210,14 +209,14 @@ tr:hover {background-color:#e6f2ff}
 }
 #you_teach {
 	text-align:justify;
-	color:#990000;	
+	color:#90000;	
 	margin-right: 15%;
 	margin-left:15%;
 	margin-bottom:20px;
 }
 #profs_courses{
 	font-family:"cambria";
-	font-size:25px;	
+	font-size:25px;
 	margin-top:40px;
 }
 .dept, .no {
@@ -229,13 +228,12 @@ tr:hover {background-color:#e6f2ff}
 .tab {
 	margin-left: 300px;
 }
-
 #lo{
 	background-color:rgb(240, 252, 265);
-	padding:5px;	
+	padding:5px;
 	resize:vertical;
 }
 
 .gen_course_row{
-	background-color:#a6a6a6;	
+	background-color:#a6a6a6;
 }

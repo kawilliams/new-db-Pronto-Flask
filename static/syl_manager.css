@@ -248,13 +248,13 @@ body{
 	width:calc(100% - 60px);	
 	margin-left:10px;
 	margin-bottom:0px;
-	height:80px;
+	height:80px; 
 	opacity:0.8;
 	outline:1px solid black;
 	position:absolute;
 	top:20px;
 	left:20px;
-	min-width:1050px;
+	min-width:1170px;
 }
 #quick_info table{
 	width:100%;	
