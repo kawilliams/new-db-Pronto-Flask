@@ -27,8 +27,17 @@
 				}
 			}
 		}
-		function showLoStatusWindow(divID){
+		function showLoStatusWindow(divID, status){
+			var status_dictionary = {}
+			status_dictionary["Not submitted"]="not_submitted";
+			status_dictionary["Not viewed"]="not_viewed";
+			status_dictionary["Viewed, needs edits"]="needs_edits";
+			status_dictionary["Approved"]="approved";
+			
 			var curDiv = document.getElementById(divID);
+			var statusValue = status_dictionary[status]
+			var statusRadio = document.getElementById(statusValue);
+			statusRadio.checked = true; 
 			curDiv.style.display = "block";
 			hideOptionMenu();
 			document.getElementById("blackout").style.display = "block";
@@ -42,7 +51,7 @@
 				document.getElementById('current_lo').innerHTML = lo;
 				document.getElementById('CRN').value = CRN;
 			}
-			showLoStatusWindow('course_status');
+			showLoStatusWindow('course_status', status);
 		}
 		function closeStatusBox(divID){
 			var curDiv = document.getElementById(divID);
@@ -57,7 +66,7 @@
 		
 		
 <!***********************  Group Email for Professors Missing Syllabi  **************************-->
-
+		<!-- Currently, we probably do not need Send From or Send To, so we should consider removing those -->
 		<div id="email_syl_div">
 			<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/8d/VisualEditor_-_Icon_-_Close.svg/1000px-VisualEditor_-_Icon_-_Close.svg.png" id="close_btn_email" onclick="closeEmail('email_syl_div')"/> <!--close button-->
 			<p>Default Email: </p>
@@ -100,23 +109,23 @@
 			</div><br>
 				
 			<div id="default_email" name="default_email" contenteditable>You are receiving this email because you have yet to submit Learning Outcomes for your Introduction to Biological Programming Course for Spring 2022. Please submit your syllabus by January 1st to avoid getting subsequent angry emails from us with possible incurring consequences. You may view all of the courses you have submitted syllabi for from the general search page or from the syllabi upload page. If you believe you are receiving this email by mistake, please email asyllabusislife@hotmail.com with your argument. Thank you!</div><br>
-			<input type="button" id="cancel_email_syl" value="Cancel" name="cancel" onclick="cancelEmail('email_lo_div')"/>
+			<input type="button" id="cancel_email_syl" value="Cancel" name="cancel" onclick="closeEmail('email_lo_div')"/>
 			<input type="button" id="send_email_syl" value="Send" name="send"/>
 		</div>
 		
 <!--***************************  Learning Outcomes Status Box for Specific Course **************************-->
 		<div id="course_status">
 			<form action="{{ url_for('update_status')}}" method="post" enctype="multipart/form-data">
-				<input type="text" name="activeprof" value="{{ active_prof }}">
-				<input type="text" name="activedep" value="{{ active_dep }}">
+				<input type="text" name="activeprof" value="{{ active_prof }}" style="display:none;">
+				<input type="text" name="activedep" value="{{ active_dep }}" style="display:none;">
 				<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/8d/VisualEditor_-_Icon_-_Close.svg/1000px-VisualEditor_-_Icon_-_Close.svg.png" id="close_btn_email" onclick="closeStatusBox('course_status')"/>
 				<p id="current_lo"></p>
-				<input type="text" name="CRN" id="CRN" value=""></p>
+				<input type="text" name="CRN" id="CRN" value="" style="display:none;"></p>
 			
-				<input type="radio" name="status" value="not_submitted">Not submitted</input><br />
-				<input type="radio" name="status" value="not_viewed">Not viewed</input><br />
-				<input type="radio" name="status" value="needs_edits">Viewed, needs edits</input><br />
-				<input type="radio" name="status" value="approved">Approved</input><br />
+				<input type="radio" id="not_submitted"name="status" value="not_submitted">Not submitted</input><br />
+				<input type="radio" id="not_viewed" name="status" value="not_viewed">Not viewed</input><br />
+				<input type="radio" id="needs_edits" name="status" value="needs_edits">Viewed, needs edits</input><br />
+				<input type="radio" id="approved" name="status" value="approved">Approved</input><br />
 				<input type="submit" value="Submit Status Change">
 			</form>
 		</div>		
@@ -176,35 +185,29 @@
 				<img class="close_icon" id="close_btn_option" src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/72/VisualEditor_-_Icon_-_Close_-_white.svg/768px-VisualEditor_-_Icon_-_Close_-_white.svg.png" onclick="hideOptionMenu()"/><br>
 				<p id="option_p_head">Options</p>
 				<div id="login_info">
-					<p>You are logged in as: username</p><br>
+					<p>You are logged in as: {{user}}</p><br>
 					<a href="search.html" id="logout">Logout</a>
 				</div>
 				<p class="nav_option nav_link" onclick="showEmailWindow('email_syl_div')">Send emails to all professors missing syllabi</p>			
 				<p class="nav_option nav_link" onclick="showEmailWindow('email_lo_div')">Send emails to all professors missing learning outcomes</p>
+				<p class="nav_option nav_link" onclick="showQuickInfo()">Show Statistics</p><!-- Later, we might want to add this functionality -->
 				<!--<p class="nav_option nav_link">Show Word Cloud</p>
 				<p class="nav_option nav_link">Show Status of Syllabi By Department</p>
 				<p class="nav_option nav_link" onclick="autoClick('archive')">Archive ALL Syllabi for Current Semester</p>-->
 			</div>
 
-
-
-<!--************************************  Main Body  *****************************************************-->
-	
-	<div id="quick_info">
-		<span style="color:white;position:relative;left:8px;top:8px;font-size:20px;cursor:pointer;" onclick="closeQuickInfo(this);">&times;</span>
-				<table style="width:80%;margin:0 auto;position:relative;bottom:10px;">
+<!--*****************************  Quick Info: the stats in the dark gray horizontal bar **************** -->
+	<div id="quick_info"><!--<span style="color:black;position:relative;left:8px;top:8px;font-size:20px;cursor:pointer;" onclick="closeQuickInfo(this);" id="close_quick_info">&times;</span>-->
+				<table style="width:80%;margin:0 auto;position:relative;top:10px;bottom:10px;">
 					<tr>
-						<td>No. Syllabi Outstanding:<br><p class="answers"><span class="first">{{ miss_syl }}</span><!--<span class="second">See All</span>--></p></td>
-						<td>No. Professors Missing Syllabi:<br><p class="answers"><span class="first">{{ miss_prof }}</span><!--<span class="second">See All</span>--></p></td>
-						<!-- <td>% Syllabi Outstanding:<br><p class="answers"><span class="first">{{ syll_percent }}%</span><!--<span class="second">See All</span>--><!--</p></td>
-						<td>No. Departments Missing Syllabi:<br><p class="answers"><span class="first">0</span><!--<span class="second">See All</span>--><!--</p></td>-->
+						<td>No. Syllabi Outstanding:<br><p class="answers"><span class="first">{{ miss_syl }}</span></p></td>
+						<td>No. Professors Missing Syllabi:<br><p class="answers"><span class="first">{{ miss_prof }}</span></p></td>
 					</tr>
 				</table>		
 			</div>
 
-		
-		
-			<!--*********************  The stats in the dark gray horizontal bar  ***********************-->
+<!--************************************  Main Body  *****************************************************-->
+
 		<div id="main_body">			
 	
 			<h2 id="welcome">WELCOME, {{user}}. &nbsp;&nbsp; &nbsp;&nbsp; ACADEMIC PERIOD: {{ semester }}</h2>
@@ -216,7 +219,7 @@
 			<!--*****************************  Department Scroll  ****************************************-->
 			
 				<div id="dept_search">
-					<input type="text" id="dep_search_bar" oninput="filterDeps()" placeholder="Search for a department..."/>
+					<input type="text" id="dep_search_bar" oninput="filterDeps()" placeholder="Search for a department..."/>	<div id="dep_list">
 					{% for d in depsSorted %}
 						{% if deps[d] == "True" %}
 							<span><input type="submit" id="{{d}}" class="dep_li has_syllabus_dep" name="submit" value="{{ d }}" onmouseover="animateChoice(this)" onmouseout="unAnimateChoice(this)"/></span>
@@ -225,7 +228,7 @@
 						{% endif %}
 						
 					{% endfor %}
-					
+					</div>
 					<input name="selected_dep" value="{{ selected_dep }}" style="display:none;"/>
 					
 					<p id="show_deps" class="button" onclick="showDepsBtn()">Show Only Departments with Missing Syllabi</p>
@@ -253,15 +256,14 @@
 					{% if profsSorted|length > 10 %}
 						<script>document.getElementById('prof_search').style.overflowY = 'scroll';</script>
 					{% endif %}
-				</div>
+				</div> <!-- End prof_search -->
 				<p id="show_profs" class="button" onclick="showProfsBtn()">Show Only Professors with Missing Syllabi in Chosen Department</p>
 				
 				<input type="text" id="prof_btn_submit_ID" name="prof_btn_submit" value="False" hidden/>
 				{% if profBtnOn == "True" %}
 					<script>document.getElementById("show_profs").click();</script>
 				{% endif %}			
-			</div>
-			</div>
+			</div> <!-- End prof_search_container -->
 			
 			<!--*****************************  Chart of Course Results  ****************************************-->
 				{% if profs_courses != "" %}
@@ -323,9 +325,15 @@
 					<script>
 						var actProf = document.getElementById("{{active_prof}}");
 						animateChoice(actProf);
-
 					</script>
-				{% endif %}
+					{% endif %}			
+                     <input type="text" id="quick_info_status" name="quick_info_status" value="{{quick_info}}" style="display:none;"/>	
+					<input type="text" id="username_info" name="username" value="{{user}}" style="display:none;"/>  					{% if quick_info == "closed" %}			
+						<script>			
+						var quick_info = document.getElementById('close_quick_info');			
+						closeQuickInfo(quick_info);
+						</script>
+					{% endif %}
 				
 				</form>
 				
