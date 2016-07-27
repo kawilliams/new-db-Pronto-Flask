@@ -290,14 +290,6 @@ def build_db(courses):
 
 
 
-@app.route('/', methods=['GET','POST'])        
-def index():
-    """
-    Index for displaying our database. 
-    """
-    courses = Course.query.all()
-    return render_template('show_all_sylman.html', courses=courses)
-
 def main():
     """
     To construct the database, comment in the first three lines with the 
@@ -313,13 +305,11 @@ def main():
     database.
     """
     # Comment-in these 3 lines to build the database
-    #filename = "static/1617ClassSchedule.csv"
-    #courses = read_csv(filename)
-    #build_db(courses)
+    filename = "static/1617ClassSchedule.csv"
+    courses = read_csv(filename)
+    build_db(courses)
     # end of "Build Database" part
 
-    # Comment-in this line to view the database via an HTML page
-    app.run(debug=True)
 
 if __name__ == "__main__":
     main()
