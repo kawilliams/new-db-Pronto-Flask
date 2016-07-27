@@ -109,7 +109,7 @@
 			</div><br>
 				
 			<div id="default_email" name="default_email" contenteditable>You are receiving this email because you have yet to submit Learning Outcomes for your Introduction to Biological Programming Course for Spring 2022. Please submit your syllabus by January 1st to avoid getting subsequent angry emails from us with possible incurring consequences. You may view all of the courses you have submitted syllabi for from the general search page or from the syllabi upload page. If you believe you are receiving this email by mistake, please email asyllabusislife@hotmail.com with your argument. Thank you!</div><br>
-			<input type="button" id="cancel_email_syl" value="Cancel" name="cancel" onclick="cancelEmail('email_lo_div')"/>
+			<input type="button" id="cancel_email_syl" value="Cancel" name="cancel" onclick="closeEmail('email_lo_div')"/>
 			<input type="button" id="send_email_syl" value="Send" name="send"/>
 		</div>
 		
@@ -197,8 +197,8 @@
 			</div>
 
 <!--*****************************  Quick Info: the stats in the dark gray horizontal bar **************** -->
-	<div id="quick_info"><span style="color:black;position:relative;left:8px;top:8px;font-size:20px;cursor:pointer;" onclick="closeQuickInfo(this);" id="close_quick_info">&times;</span>
-				<table style="width:80%;margin:0 auto;position:relative;bottom:10px;">
+	<div id="quick_info"><!--<span style="color:black;position:relative;left:8px;top:8px;font-size:20px;cursor:pointer;" onclick="closeQuickInfo(this);" id="close_quick_info">&times;</span>-->
+				<table style="width:80%;margin:0 auto;position:relative;top:10px;bottom:10px;">
 					<tr>
 						<td>No. Syllabi Outstanding:<br><p class="answers"><span class="first">{{ miss_syl }}</span></p></td>
 						<td>No. Professors Missing Syllabi:<br><p class="answers"><span class="first">{{ miss_prof }}</span></p></td>
