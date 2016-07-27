@@ -12,25 +12,27 @@ function hideStatBox(){
 	document.getElementById("syl_status_box").style.visibility = "hidden";	
 }
 
+/*function submitClick(btnName){
+	document.show_hide_form.btnName.click();	
+} Katy*/
+
 /* Displays the option menu */
 function showOptionMenu(){
 	var curElem = document.getElementById("option_menu");
 	curElem.style.width = '20%';
-	document.getElementById("options").style.display = "none";	
+	/*	document.getElementById("options").style.display = "none";	*/
 }
 
 /* Hides the option menu */
 function hideOptionMenu(){
 	var curElem = document.getElementById("option_menu");
 	curElem.style.width = "0%";
-	document.getElementById("options").style.display = "inline";	
-
+	/*document.getElementById("options").style.display = "inline";*/
 }
 
-/* Displays the email popup window 
-
-divID - a string representing the id of the window
-that you wish to show 
+/* Displays the email popup window
+divID - a string representing the id of the window that you
+wish to show 
 */
 function showEmailWindow(divID){
 	var curDiv = document.getElementById(divID);
@@ -39,11 +41,9 @@ function showEmailWindow(divID){
 	document.getElementById("blackout").style.display = "block";
 }
 
-/* Closes the email popup window 
-
-divID - a string representing the id of the window
-that you wish to hide  
-*/
+/* Closes the email popup window
+divId - a string representing the id of the window that you
+wish to hide */
 function closeEmail(divID){
 	var cancelBool = confirm("Closing this window will discard all changes. Do you wish to continue?");
 	if (cancelBool){
@@ -54,14 +54,12 @@ function closeEmail(divID){
 	/*restoreRecipientList();*/
 }
 
-
-
-/* These functions aren't necessary unless we actually load all 
-of the profs missing syllabi every time we load the page. This function
-makes sure that even if the user deletes an HTML element when composing an
-email, the next time the window pops up, there is a new, restored prof 
-recipient list. However, it isn't needed because loading the profs is too slow.*/
-/*
+/* These functions aren't necessary unless we actually laod all of the
+profs missing syllabi every time we load the page. This function makes
+sure that even if the user deletes an HTML element when composing an 
+email, the next time the window pops up, there is a new, restored prof
+recipient list. However, it isn't needed because loading the profs is 
+too slow */
 function restoreRecipientList(){
 	for (var i = 0; i < EMAIL_RECIPIENTS.length; i++){
 		var curElem = EMAIL_RECIPIENTS[i];
@@ -71,13 +69,10 @@ function restoreRecipientList(){
 		}	
 	}
 	EMAIL_RECIPIENTS_EDIT = EMAIL_RECIPIENTS;
-}*/
-
-
+}
 
 /*MODEL*/
 /*<span class="email_recipient" id="{{i}}_span"><span class="email_rec_span" style="display:inline-block;" id="{{i}}">{{i}}</span><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/8d/VisualEditor_-_Icon_-_Close.svg/1000px-VisualEditor_-_Icon_-_Close.svg.png" style="cursor:pointer;" class="close_recipient" onclick="deleteRecipient('{{i}}_span')"/></span>*/
-
 /*
 function formatRecipient(recipient){
 	var curElem = document.createElement("SPAN");
@@ -104,7 +99,6 @@ function formatRecipient(recipient){
 	
 	document.getElementById('hidden_rec_lst_syl').appendChild(curElem);
 }
-*/
 
 /*
 function formatRecipQuery(){	
@@ -120,29 +114,32 @@ function formatRecipQuery(){
 	return qryStr;
 }*/
 
-
-
 /* Sends an email */
-
 function sendEmail(){
 	
 	var submitBtnRec = document.getElementById('send_email');
 	var submitBtnMsg = document.getElementById('send_email_msg');
 	var message = document.getElementById('default_email').innerHTML;
-	/*var recipient_qry = formatRecipQuery();*/
+	/* var recipient_qry = formatRecipQuery(); */
 	
 	submitBtnMsg.value = message;
 	submitBtnRec.value = recipient_qry;
 	submitBtnRec.click();
-	/*restoreRecipientList();*/	
+	/*restoreRecipientList(); */
 	window.alert("success!");
 }
 
-/* Shows/Hides given members of a field that have syllabi -- for "Show Only Departments 
-With Missing Syllabi" and "Show Only Professors with Missing Syllabi in Chosen Department"
+/* likely obsolete */
+function autoClick(btnID){
+	document.getElementById(btnID).click();	
+}
 
-show - a boolean that indicates whether the elements are being shown or hidden 
-field - a string that indicates the field: dept or prof 
+/* Shows/Hides given members of a field that have syllabi -- for "Show Only Departments
+With Missing Syllabi" and "Show Only Professors with Missing Syllabi in Chosen 
+Department".
+
+show - a boolean that indicates whether the elemetns are being shown or hidden
+field - a stirng tha tindicates the field: dept or prof 
 */
 function toggleSylOwners(show, field){
 	var depsWSyl = document.getElementsByClassName("has_syllabus_" + field);
@@ -202,9 +199,9 @@ function showProfsBtn(){
 	}
 }
 
-/* Displays a given tooltip 
+/* Displays a given tooltip
 
-tooltipID - string representing the id of the tooltip
+tooltipID - a string representing the id of the tooltip
 */
 function showTooltip(tooltipID){
 	var tooltip = document.getElementById(tooltipID);
@@ -214,9 +211,10 @@ function showTooltip(tooltipID){
 	notAvail.style.cursor = "pointer";
 	tooltip.style.color = "black";
 }
-/* Hides a given tooltip 
 
-tooltipID - string representing the id of the tooltip
+/* Hides a given tooltip
+
+tooltipID - a string representing the id of the tooltip
 */
 function hideTooltip(tooltipID){
 	var tooltip = document.getElementById(tooltipID);
@@ -226,10 +224,10 @@ function hideTooltip(tooltipID){
 	notAvail.style.cursor = "pointer";
 }
 
-/* Displays an individual email 
+/* Displays an individual email
 
-profName - a string representing the professor to whom
-the user is sending the email 
+profName - a string representing the professor to whom the user is
+sending the email
 */
 function showIndEmail(profName){
 	showEmailWindow("ind_email");
@@ -290,7 +288,6 @@ function findCurrentDate(){
 		document.getElementById('search_recip').style.display = 'block';
 	}
 }*/
-
 /*
 function filterRecip(){
 	var profs = document.getElementsByClassName("email_rec_span");
@@ -309,8 +306,8 @@ function filterRecip(){
 			curElem.parentElement.style.display = "inline-block";	
 		}
 	}
-}*/
-
+}
+*/
 /*
 function deleteRecipient(spanID){
 	var parent = document.getElementById("hidden_rec_lst_syl");
@@ -326,12 +323,10 @@ function deleteRecipient(spanID){
 	}
 }*/
 
+/* Highlights the current choice or the current element the mouse 
+is hovering over. 
 
-
-/* Highlights the current choice or the current element the mouse
-is hovering over 
-
-bubble - an HTML element -- will belong either to .dep_li or .prof_li
+bubble - an HTML element -- will belong either to .dep_li or prof_li
 */
 function animateChoice(bubble){
 	
@@ -347,8 +342,8 @@ function animateChoice(bubble){
 var alreadyAnimated = false;
 
 /* Un-highlights the current element the mouse is hovering over.
-alreadyAnimated is a boolean that tells the function whether the element
-has been selected, in which case it should not un-highlight 
+alreadyAnimated is a boolean that tells the function whether the
+element has been selected, in which case it should not un-highlight.
 
 bubble - an HTML element -- will belong either to .dep_li or .prof_li
 */
@@ -357,8 +352,8 @@ function unAnimateChoice(bubble){
 	if (!alreadyAnimated){
 		bubble.style.backgroundColor = "#cce6ff";
 		bubble.style.color = "black";
-		bubble.style.border = "1px solid gray";
-		bubble.style.boxShadow = "0px 0px 0px gray";
+		bubble.style.border = "1px solid #cce6ff";
+		bubble.style.boxShadow = "0px 0px 0px #4d4d4d";
 	}
 	alreadyAnimated = false;
 }
@@ -380,16 +375,19 @@ function filterDeps(){
 	}	
 }
 
-/* Closes quick info and resizes everything else. Needs some tweaking
+/* Closes quick info and resizes everything else. Needs some tweaking.
 
-Problems:
-      - quick info doesn't stay closed when clicked bc of page reload
-      - results div isn't positioned correctly 
-      - the professor list is a bit too long?
+Katy: I decided to keep the div there. It isn't obtrusive and dealing 
+with keeping it off when the page reloads is very tricky.
 
+Problems: 
+	- quick info doesn't stay closed when clicked bc of page reload
+	- results div isn't positioned correctly
+	- the professor list is a bit too long
+	
 quickInfo - an HTML element, the quick info div
 */
-function closeQuickInfo(quickInfo){
+/*function closeQuickInfo(quickInfo){
 	quickInfo.parentElement.style.display = 'none';
 	document.getElementById('main_body').style.height = '89%';
 	document.getElementById('main_body').style.marginTop = '20px';
@@ -399,24 +397,22 @@ function closeQuickInfo(quickInfo){
 	document.getElementById('prof_search_container').style.height = '640px';
 	document.getElementById('prof_search').style.height = '550px';
 	document.getElementById('prof_search_container').style.top = '100px';
-		
 	document.getElementById('quick_info_status').value = "closed";
-	
-	document.getElementById('syl_status_box').style.marginTop = '-660px';
+	document.getElementById('syl_status_box').style.marginTop = '15px';
 	document.getElementById('syl_status_box').style.height = '640px';
-}
-
-function showQuickInfo(){
-	document.getElementById('quick_info').style.display = 'block';
-	document.getElementById('main_body').style.height = '80%';
-	document.getElementById('main_body').style.marginTop = '110px';
-	document.getElementById('dept_search').style.height = '550px';
-	document.getElementById('dep_list').style.height = '420px';
-	document.getElementById('prof_search_container').style.height = '550px';
-	document.getElementById('prof_search').style.height = '450px';
-		
-	document.getElementById('quick_info_status').value = "open";
-	
-	document.getElementById('syl_status_box').style.marginTop = '-570px';
-	document.getElementById('syl_status_box').style.height = '560px';
-}
+} */
+/*
+function showQuickInfo(){			
+    document.getElementById('quick_info').style.display = 'block';			
+    document.getElementById('main_body').style.height = '80%';			
+    document.getElementById('main_body').style.marginTop = '110px';			
+    document.getElementById('dept_search').style.height = '550px';			
+    document.getElementById('dep_list').style.height = '420px';			
+    document.getElementById('prof_search_container').style.height = '550px';			
+    document.getElementById('prof_search').style.height = '450px';			
+           			
+    document.getElementById('quick_info_status').value = "open";			
+    			
+    document.getElementById('syl_status_box').style.marginTop = '-570px';			
+    document.getElementById('syl_status_box').style.height = '560px';
+} */

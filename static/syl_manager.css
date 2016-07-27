@@ -2,12 +2,10 @@ body{
 	background-color:#aa0210;
 	min-width:1100px;
 }
-	
 *{
 	font-family:"verdana";
 	font-size:12.5px;	
-}
-		
+}			
 #main_body{
 	background-color:#999999;
 	margin:20px;
@@ -22,6 +20,7 @@ body{
 	transition: margin-top 0.5s;
 	transition: height 0.5s;
 }
+
 #welcome{
 	text-align:center;
 	padding-top:25px;
@@ -30,7 +29,6 @@ body{
 	font-size:22px;
 	color:white;	
 }
-
 #options{
 	background-color:black;
 	opacity:0.8;
@@ -114,6 +112,19 @@ body{
 	z-index:2;	
 }
 #ind_email, #ind_email_lo{
+	display:none;
+	background-color:#e6e6e6;
+	border:1px solid #e6e6e6;
+	border-radius:4px;
+	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 8px 20px 0 rgba(0, 0, 0, 0.19);
+	padding:10px;
+	position:fixed;
+	top:25%;
+	left:28%;
+	width:40%;
+	z-index:2;
+}
+#course_status{
 	display:none;
 	background-color:#e6e6e6;
 	border:1px solid #e6e6e6;
@@ -344,14 +355,18 @@ p{
 	background-color:#cce6ff;
 	transition:0.5s;	
 	width:20%;
+	margin: 1px;
 }
 .prof_li{
 	width:calc(100% - 5px);
 	padding:10px;
+	padding-left:1%;
+	padding-right:1%;
 	border-radius:10px;
 	border:1px solid #cce6ff;
 	background-color:#cce6ff;
-	transition:0.5s;	
+	transition:0.5s;
+	margin: 1px;	
 }
 .dep_li:hover, .prof_li:hover{
 	background-color:#cce6ff;
@@ -364,7 +379,7 @@ p{
 #syl_status_box{
 	margin-left:5px;
 	margin-right:40px;
-	margin-top:-570px;
+	margin-top:-572px;
 	background-color:white;
 	height:560px;
 	width:55%;	
@@ -402,7 +417,19 @@ p{
 #syl_status_box tr:nth-child(odd){
 	background-color:#d9d9d9;	
 }
-
+.lo-status-btn {
+	background-color: #4CAF50;
+    border: none;
+    color: white;
+    padding: 7px 15px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 10px;
+    margin: 2px 1x;
+    cursor: pointer;
+	
+}
 input[type=checkbox]{
 	cursor:pointer;	
 }
@@ -425,7 +452,7 @@ input[type=checkbox]{
 	font-size:17px;
 	margin-top:0px;
 	margin-bottom:8px;
-	color:#800000;	
+	color:#800000;
 	float:left;
 	margin-left:10px;
 }
