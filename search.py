@@ -552,7 +552,7 @@ def process_form():
 	
 		msg = ""
 		
-		if len(final_query) == 0:
+		if (len(final_query) == 0):
 			msg = "Sorry, no courses found. Try again."
 
 		return render_template("search.html",search_results=results,
