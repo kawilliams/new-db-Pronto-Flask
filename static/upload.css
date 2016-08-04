@@ -1,6 +1,7 @@
 .error {color: #ff4d4d;}
 body{
 background-color: #990000;
+font-family:"verdana";
 }
 #upload_div_login{
 background-color: #e6e6e6;	
@@ -11,15 +12,39 @@ padding-bottom: 30px;
 text-align: center;
 }
 
-
+#user_semest_container{
+width:50%;
+margin: 0 auto;
+margin-left:35%;
+text-align:left;	
+}
+#username{
+padding:7px;
+border-radius:3px;
+border:1px solid #cccccc;
+margin-left:5px;
+font-size:13px;
+color:#800000;
+margin-bottom:20px;	
+}
+#username:focus{
+	background-color:#e6f2ff;
+}
+#semester_select{
+	margin-left:25px;
+	width:170px;
+	padding:5px;
+	text-align:center;
+	margin-bottom:20px;
+}
 #upload_div{
 background-color: #e6e6e6;	
 margin: 40px;
 margin-top:0px;
 box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 8px 20px 0 rgba(0, 0, 0, 0.19);
-min-width: 640px;
-padding-bottom: 30px;
-padding-top: 30px;
+min-width: 800px;
+padding-bottom: 20px;
+padding-top: 20px;
 text-align: center;
 }
 #davidson_logo {
@@ -27,15 +52,26 @@ font-size: 50px;
 text-align: center;	
 font-family: "copperplate gothic lite";
 text-shadow: 2px 2px 4px #FF0000;
+margin-top:15px;
+margin-bottom:0px;
 }
 #syllabus_upload {
 text-align: center;
-font-family: "times new roman";
+font-family: "cambria";
+font-size: 25px;
 }
 
 #syllabus_upload_load {
 text-align: center;
-font-family: "times new roman";
+font-family: "cambria";
+font-size:25px;
+font-weight:normal;
+padding-bottom:8px;
+border-bottom:2px solid black;
+width: 90%;
+margin:0 auto;
+margin-top: 20px;
+margin-bottom: 30px;
 }
 
 .input_text {
@@ -44,7 +80,7 @@ font-family: "times new roman";
 
 /*keep*/
 #button {
-	margin-left:20px;
+	margin-left:18%;
 	padding: 8px;
 	background-color:#990000;
 	color:white;
@@ -55,6 +91,7 @@ font-family: "times new roman";
 	height:4%;
 	transition:0.5s;
 	min-width:160px;
+	margin-bottom:5px;
 }
 
 #syl_button {
@@ -83,8 +120,9 @@ font-family: "times new roman";
 	height:8%;
 	transition:0.5s;
 	min-width:110px;
+	margin-top:10px;
 }
-#button:hover, #button:focus, #submit:hover, #submit:focus {
+#button:hover, #button:focus, #submit_changes:hover, #submit_changes:focus {
 	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 8px 20px 0 rgba(0, 0, 0, 0.19);
 	transition:0.5s;
 }
@@ -97,7 +135,7 @@ font-family: "times new roman";
 #receipt{
 background-color: #e6e6e6;	
 margin: 40px;
-margin-top:0px;
+margin-top:20px;
 box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 8px 20px 0 rgba(0, 0, 0, 0.19);
 padding-bottom: 30px;
 padding-top: 30px;
@@ -117,11 +155,14 @@ table {
 }
 	
 th {
-	padding:7px;
-	border-bottom: 1px solid #bfbfbf;
-	border-top: 1px solid #bfbfbf;
+	padding:10px;
+	border-bottom: 1px solid #666666;
+	border-top: 1px solid #666666;
 	/*background-color: #bfbfbf;*/
-	background-color:#d9d9d9;
+	background-color:#8c8c8c;
+	color:white;
+	padding-bottom:15px;
+	padding-top:15px; /*katy */
 }
 .dept_td{
 	width:15%;
@@ -152,7 +193,7 @@ td {
 	border-bottom: 1px solid #bfbfbf;
 }
 
-tr:hover {/*background-color: #cccccc;*/background-color:#e6f2ff}
+tr:hover {background-color:#e6f2ff}
 #class_intro {
 	width:95%;
 	/*visibility:hidden;*/
@@ -167,10 +208,16 @@ tr:hover {/*background-color: #cccccc;*/background-color:#e6f2ff}
 	margin:10px;	
 }
 #you_teach {
-	text-align:center;
-	color:black;	
-	margin-right: 5%;
-	margin-left:5%;
+	text-align:justify;
+	color:#90000;	
+	margin-right: 15%;
+	margin-left:15%;
+	margin-bottom:20px;
+}
+#profs_courses{
+	font-family:"cambria";
+	font-size:25px;
+	margin-top:40px;
 }
 .dept, .no {
 	width:4%;	
@@ -180,4 +227,13 @@ tr:hover {/*background-color: #cccccc;*/background-color:#e6f2ff}
 }
 .tab {
 	margin-left: 300px;
+}
+#lo{
+	background-color:rgb(240, 252, 265);
+	padding:5px;
+	resize:vertical;
+}
+
+.gen_course_row{
+	background-color:#a6a6a6;
 }

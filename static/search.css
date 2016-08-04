@@ -1,227 +1,10 @@
 body{
-  width:100%;
-  height:100%;
-  background-color:#990000;
-  margin-right:20px;
-  margin-bottom:5%;
-  min-width:600px;
+	background-color:#990000;
+	min-width:600px;
+	font-family:"Verdana";
 }
 
-#davidson_logo {
-font-size: 50px;
-text-align: center;	
-font-family: "copperplate gothic lite";
-text-shadow: 2px 2px 4px #FF0000;
-}
-
-#error_msg{
-	font-size:17px;
-	color:white;
-	text-align: center;
-	margin-top:10%;
-}
-
-
-/*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -*/
-
-
-/*filter search box*/
-#filter {  
-    background-color:#eeeeee;
-    padding:10px;
-    text-align:center;
-    min-width:290px;
-}
-#filter_res{
-	margin-top:10px;
-	font-weight:bold;
-	padding-bottom:5px;
-	border-bottom:2px solid lightgray;
-}
-
-/*tooltip descriptions*/
-.w3-tag{							
-	background-color:#e6e6e6;
-	opacity:0.7;
-	position:absolute;
-	z-index:1;
-	color:black;
-}
-
-#by_keyword_sidenav, #search_sidenav{	/*For phone*/
-	display:none;
-}
-
-/*Semester Filter*/
-
-/*Professor Filter*/
-#prof_list{		 
-   height:250px;
-   overflow:scroll;	
-}
-.prof_li {
-  display:block;	  
-  padding:3px;
-  text-align:left;
-}
-.prof_li:hover{
-	outline: 2px solid #cce6ff;
-	cursor:pointer;	
-	background-color:#d9d9d9;	
-}
-#prof_search{
-	padding:5px;
-}
-#prof_search:focus{
-   outline:2px solid #cce6ff;
-   background-color: #cccccc;	
-}
-
-/*Department Filter*/
-.dept_li {
-  padding:0px;
-  margin:0px;
-}
-.dept_text{
-	margin-left:5px;	
-}
-.dept_text:hover{
-	cursor:help;
-}
-
-.w3-row-padding, .w3-third{
-	text-align:left;
-}
-#hidden_dept_scroll{
-   	display:none;
-   	padding:0px;
-}
-#hidden_dept_scroll ul{
-   	padding:0px;
-}
-.hidden_dept_li{
-	display:block;
-	text-align:left;
-	padding:3px;
-	width:100%;
-	border-bottom:1px solid #e6e6e6;
-}
-.hidden_dept_li:hover{
-	outline: 2px solid #cce6ff;
-	cursor:pointer;	
-	background-color:#d9d9d9;	
-}
-
-/*Day Filter*/
-#day_list{
-	display:block;	
-}
-#day_acc{
-	padding-bottom:7px;	
-}
-.day_li {
-  display:inline;
-  margin:3%;
-  margin-right:20%;
-  margin-left:12%;
-  padding:5px;
-  padding-top:7px;
-}
-#day_list{
-	padding:0px;
-}
-.day_li{
-	margin:0px;
-}
-
-/*Time Filter*/
-.time_li {
-  display:block;
-}
-#morn_aft{
-	margin-top:10px;
-	background-color:#cccccc;
-	padding:5px;
-	text-align:left;
-}
-.time_li{
-	margin-left:none;
-	margin:0px;
-	margin-bottom:7px;
-}
-.time_list{
-	margin-left:0px;
-}
-#time_list_MWF, #time_list_TR{
-	padding:0px;
-	text-align:left;	
-}
-.hidden_time_list{
-	display:none;	
-}
-#hidden_morn_aft{
-	display:none;	
-}
-#morn_aft_format{
-	display:none;	
-}
-
-/*Distribution Requirement Filter*/
-#dist_req_list{
-   display:block;				
-   width:100%;
-   text-align:left;
-   margin:0 auto;
-}
-.dist_req_text {
-  padding:5px;
-  font-size:15px;
-  cursor:help;
-}
-#dist_acc{
-	padding-top:5px;
-	padding-bottom:7px;
-	text-align:left;
-}
-.dist_req_li{
-	padding:5px;
-	padding-bottom:20px;	
-}
-.dist_text{
-	margin-left:5px;
-	cursor:help;
-}
-#hidden_dist_req_list{
-	display:none;	
-}
-
-/*Class Size Filter*/
-.class_size_li {
-  display:block;
-  text-align:left;
-}
-
-.text{
-	margin-left:5px;
-}
-
-/*Filter by Selections button?*/
-input[type="submit"]{			
-	padding:7px;
-	margin-top:20px;
-	background-color:#cce6ff;
-	color:black;
-}
-/*Clear Button*/
-#clear-btn{
-	margin-top:5%;
-	background-color:#cccccc;
-	color:black;
-}
-
-
-/*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -*/
-
+/* Div that contains the iframe with the course description */
 #course_desc_div{
 	display:none;
 	background-color: #e6e6e6;
@@ -233,11 +16,13 @@ input[type="submit"]{
 	top:5%;
 	left:43%;
 	width:40%;
-	z-index:2;
+	z-index:4;
 	line-height:30px;	
 	font-size: 40%;
+	font-size:90%;	
 }
 
+/* To dim everything behind a popup message */
 #blackout{
 	position:fixed;
 	display:none;
@@ -251,222 +36,19 @@ input[type="submit"]{
 	opacity:0.5;	
 }
 
-#opq_search_box{
-	background-color:rgba(230, 210, 210, 0.8);
-	margin:0 auto;
-    margin-top:150px;
-	height:150px;
-	width:300px;
-	border:1px solid #cccccc;
-	padding:10px;
-    padding-left:30px;
-	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 8px 20px 0 rgba(0, 0, 0, 0.19);
-	transition:0.5s;
-}
-
-/*Search box and button, before and after transformation*/
-#by_keyword_long, #search_norm{
-	display:none;
-	margin-top:7px;
-	text-align:left;
-}
-#gen_search_btn{
-	padding:none;
-	display:none;
-	background-color:#cce6ff;
-	border:1px solid #cccccc;
-	width:40px;
-	height:34px;
-}
-#icon_search{
-	color:black;
-	position:relative;
-	right:5px;	
-}
-#gen_search_btn_home{
-	display:inline-block;
-}
-#gen_search_btn_home{
-	background-color:#cce6ff;
-	padding:4px;
-	padding-right:3px;
-	padding-left:5px;
-	padding-top:6px;
-	width:40px;
-	border:1px solid #cccccc;
-}
-#gen_search_mobile{
-	display:none;
-	background-color:#cce6ff;
-	cursor:pointer;
-	/*padding:4px;
-	padding-right:3px;
-	padding-left:5px;
-	padding-top:5px;
-	padding-bottom:3px;*/
-	width:40px;
-	border:1px solid #cccccc;	
-}
-#icon_search_mobile{
-	padding-bottom:11px;
-	position:relative;
-	top:5px;
-}
-#icon_search_home{
-	color:black;
-	margin:0 auto;	
-}
-#by_keyword, #search_norm_home{
-	display:inline-block;	
-}
-#search_norm{
-	border:solid 1px #ccc;
-	border-radius:2px;	
-}
-#search_norm:hover{
-  cursor:auto;
-}
-#search_norm:focus{
-	background-color: #cccccc;
-	outline:2px solid #cce6ff;
-}
-
-#descript_page{
-	background-color:rgba(250, 250, 250, 0.5);
-	padding:10px;
-	height:30%;
-	font-family:"cambria";
-	margin:0 auto;
-	margin-top:5%;
-	width:40%;
-	outline:1px solid black;
-	transition:0.5s;
-	text-align:center;
-}
-
-.w3-opennav{
-  background-color:rgba(230, 210, 210, 0.8);
-  padding:10px;
-}
-
-#displayed_yr{
-	margin-left:5%;
-	color:#e6e6e6;	
-	margin-top:15px;
-	margin-bottom:0px;
-	display:inline-block;
-}
-#displayed_count{
-	color:#e6e6e6;	
-	margin-top:15px;
-	margin-bottom:0px;	
-	display:inline-block;
-	margin-right:5%;
-	margin-left:70%;
-}
-
-/*Results list*/
-#results{
-  background-color:white;
-  margin:5%;
-  margin-top:5px;
-  overflow:scroll;
-  height:575px;
-  width:90%;
-  padding-right:30px;
-  border-radius:4px;
-  padding-top:20px;
-  display:none;
-  transition:0.5s;
-  min-width:500px;
-  font-size:80%;
-}
-#results li{
-  display:block;
-  padding:0px;
-  border:1px solid #cccccc;
-  border-radius:4px;
-  background-color:#e6e6e6;
-  box-shadow: 5px 5px 5px gray;
-  margin-bottom:9px;
-}
-#results li:hover{
-  cursor:pointer;
-}
-.results_th{
-	color:#800000;	
-}
-.header_table_result{
-	width:100%;	
-	margin:0px;
-}
-.title_result{
-	width:65%;
-	padding:12px;
-}
-.prof_result{
-	width:15%;
-	padding:12px;
-}
-.CRN_result{
-	width:15%;
-	padding:12px;
-}
-.x_result{
-	width:5%;
-	padding:12px;
-	margin:0 auto;
-}
-
-.search	{	      /*Search field*/
-  display:inline-block;
-  border:solid 1px #ccc;
-  border-radius:2px;
-  padding:7px 14px;
-  margin-bottom:10px
-}
-.search:hover{
-  cursor:auto;
-}
-.search:focus{
-	outline:2px solid #cce6ff;
-	background-color: #cccccc;	
-}
-
-.result_list {
-  font-family:cambria;
-  font-size:13px;
-  padding:20px;
-  height:500px;
-  overflow:scroll;
-}
-#hidden_results_mobile{
-	display:none;
-	text-align:center;	
-}
+/* Help text/button */
 #help{
-	display:none;
 	color:#990000;
 	padding:5px;
 	margin-left:10px;
+	width:35px;
 }
 #help:hover{
 	color:#800000;
 	cursor:pointer;
 	background-color:rgba(220, 200, 200, 0.8)	
 }
-#blackout{
-	position:fixed;
-	display:none;
-	z-index:1;
-	width:100%;
-	height:100%;
-	margin:0px;
-	top:0px;
-	left:0px;
-	background-color:black;
-	opacity:0.5;	
-}
+/* Div that contains the helpful information after clicking #help */
 #help_div{
 	display:none;
 	background-color:white;
@@ -478,7 +60,8 @@ input[type="submit"]{
 	top:20%;
 	left:48%;
 	width:30%;
-	z-index:2;	
+	z-index:4;
+	transition:0.5s;	
 }
 #close_btn_help{
 	float:right;
@@ -492,84 +75,462 @@ input[type="submit"]{
 	border-bottom:2px solid #cccccc;
 }
 
-@media only screen and (max-width: 500px) {
-	#results{
-		height:450px;
-		width:90vw;
-		margin-left:0px;
-	}
-	#hidden_results_mobile{
-		display:inline;	
-	}
-	#results_table{
-		display:none;	
-	}
-	#opq_search_box{
-		display:none;
-	}
-	#by_keyword_sidenav{
-		display:block;
-	}
-	#search_sidenav{
-		margin:0 auto;
-		margin-bottom:10px;
-		display:inline-block;
-	}
-	#gen_search_mobile{
-		display:inline-block;	
-	}
-	#by_keyword_sidenav{
-		font-weight:bold;
-	}
-	#results{
-		padding:none;
-		margin-top:5%;
-	}
-	#davidson_logo{
-		display:none;
-	}
-	#descript_page{
-		width:90%;
-		margin-left:5%;
-		margin-top:10%;
-		height:300px;
-	}	
+/* filter div */
+#filter{
+	padding-bottom:20px;
+	background-color:#eeeeee;
+	text-align:center;
+	text-decoration:none;
+	position:fixed;
+	top:0px;
+	left:0px;
+	height:100%;
+	width:25%;
+	transition:2s;
+	box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2), 0 4px 10px 0 rgba(0, 0, 0, 0.19);
+	overflow:scroll;
+	min-width:310px;
+	z-index:5;
+}
+/* Hides the scrollbar in safari*/
+#filter::-webkit-scrollbar{
+	display:none;	
 }
 
-@media only screen and (max-width: 1200px){
-	#hidden_dept_scroll{
-		display:block;
-		height:250px;
-   		overflow:scroll;
+/* The header "Filter Results" */
+#filter_results{
+	font-weight:bold;
+	padding-bottom:5px;
+	border-bottom:2px solid lightgray;
+	margin:10px;
+	margin-top:2px;
+}
+
+/* Standardized accordion layout (filter) */
+.accordion-header{
+	margin:0px;
+	padding:10px;
+	transition:0.3s;	
+}
+.accordion-header:hover{
+	background-color:#d9d9d9;	
+	cursor:pointer;
+}
+.accordion-content{
+	margin:10px;
+	margin-top:0px;
+	margin-bottom:0px;
+	display:none;	
+}
+.filter_card{
+	background-color:white;
+	box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2), 0 4px 10px 0 rgba(0, 0, 0, 0.19);
+	border-radius:3px;
+	padding:10px;	
+}
+
+select{
+	width:90%;	
+}
+/* Professor search text input bar */
+#prof_search_id{
+	width:90%;
+	padding:8px;
+	border:1px solid #cccccc;
+	border-radius:3px;
+	font-size:14px;
+	margin:10px;
+	margin-top:5px;
+	margin-bottom:2px;
+	background-color:#eeeeee;	
+}
+#prof_search_id:focus{
+	outline:3px solid #cce6ff;
+	background-color:#cccccc;	
+}
+/* List of profs underneath search bar */
+#prof_list{
+	width:90%;
+	margin:0 auto;
+	text-align:left;
+	height:180px;
+	overflow:scroll;
+	overflow-x:hidden;	
+}
+#prof_list p{
+	display:block;
+	padding:6px;
+	border-bottom:2px solid #e6e6e6;
+	width:100% - 7px;
+	margin:0px;
+}
+
+input[type=checkbox]{
+	margin-right:10px;
+	width:15px;
+	height:15px;	
+}
+#dept_table{
+	width:calc(100% - 20px);
+	margin-left:10px;	
+}
+#dept_table td{
+	width:33%;
+	font-size:14px;		
+}
+.help:hover{
+	cursor:help;
+}
+.tooltip{
+	background-color:black;
+	color:white;
+	padding:3px;
+	position:absolute;
+	z-index:2;
+	opacity:0.7;
+	display:none;
+	margin-left:5px;
+	font-size:14px;	
+}
+.day_li{
+	display:inline-block;
+	margin:0px;	
+	margin-left:20px;
+	margin-right:10px;			
+}
+.time-half, .class-size-half{
+	display:inline-block;
+	margin-left:2%;
+	margin-right:2%;
+	text-align:left;	
+}
+.time-half ul{
+	padding:0px;
+}
+li{
+	display:block;	
+	padding:5px;
+	font-size:14px;
+}
+.distr-half{
+	text-align:left;	
+}
+.distr_choice{
+	margin-bottom:5px;
+	font-size:14px;	
+}
+.class_size_li{
+	margin-left:30%;	
+}
+.filter_button{
+	width:95%;
+	padding:8px;
+	font-size:15.5px;
+	border:1px solid #cce6ff;
+	border-radius:3px;
+	background-color:#cce6ff;	
+	cursor:pointer;
+	transition:0.4s;
+	margin-top:15px;
+}
+.filter_button:hover{
+	box-shadow:0 0 15px gray;	
+}
+#clear-btn{
+	background-color:#cccccc;
+	border:1px solid #cccccc;	
+	margin-top:0px;
+	margin-bottom:30px;
+}
+#close_icon{
+	font-size:30px;
+	text-align:right;
+	margin:0px;
+	margin-top:2px;
+	margin-right:5px;
+	cursor:pointer;	
+}
+#menu-icon{
+	font-size:23px;
+	margin:0px;
+	position:absolute;
+	top:0px;
+	left:0px;	
+	display:none;
+	background-color:rgba(230, 210, 210, 0.8);
+	padding:10px;
+	padding-top:5px;
+	border-bottom-right-radius:3px;
+	cursor:pointer;
+}
+#main{
+	width:75%;	
+	margin-left:25%;
+	transition:1s;
+	overflow:hidden;
+	height:100%;
+}
+#descript_page{
+	background-color:rgba(250, 250, 250, 0.5);
+	padding:10px;
+	height:30%;
+	margin:0 auto;
+	margin-top:5%;
+	width:40%;
+	outline:1px solid black;
+	transition:0.5s;
+	text-align:center;
+	font-family:"cambria";
+	min-width:350px;
+}
+#opq_search_box{
+	background-color:rgba(230, 210, 210, 0.8);
+	margin:0 auto;
+	margin-top:140px;
+	height:150px;
+	width:300px;
+	border:1px solid #cccccc;
+	padding:10px;
+	padding-top:20px;
+	padding-left:30px;
+	padding-bottom:0px;
+	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 8px 20px 0 rgba(0, 0, 0, 0.19);
+	transition:0.5s;
+}
+#by_keyword_home{
+	text-align:center;
+	transition:0.5s;	
+}
+#search_bar{
+	margin:0 auto;
+	margin-top:6px;	
+	padding:0px;
+}
+#search_bar td{
+	padding:0px;
+	margin:0px;	
+}
+#search_home{
+	border:solid 1px #ccc;
+	border-radius:2px;
+	padding:7px 14px;
+	font-size:15px;	
+	width:90%;
+	-webkit-transition: width 1.5s;
+	-moz-transition: width 1.5s;
+	-o-transition: width 1.5s;
+	transition: width 1.5s;	
+}
+#search_home:focus{
+	background-color: #cccccc;
+	outline:2px solid #cce6ff;
+}
+#search_btn_home{
+	background-color:#cce6ff;
+	width:25px;
+	height:25px;
+	padding:5px;
+	cursor:pointer;	
+}
+#search_btn_home:hover{
+	background-color:#b3daff;	
+}
+#davidson_logo {
+	font-family: "copperplate gothic lite";
+	font-size: 50px;
+	text-align: center;	
+	text-shadow: 2px 2px 4px #FF0000;
+	font-weight:none;
+	margin-top:10px;
+	margin-bottom:10px;
+}
+#displayed_yr{
+	margin-left:5%;
+	color:#e6e6e6;	
+	margin-top:25px;
+	margin-bottom:0px;
+	float:left;
+}
+#error_msg{
+	font-size:17px;
+	color:white;
+	text-align: center;
+	margin-top:50px;
+	z-index:2;
+}
+#results{
+	background-color:white;
+	margin-top:5px;
+	overflow:scroll;
+	overflow-x:hidden;
+	max-height:575px;
+	width:90%;
+	border-radius:4px;
+	padding-top:20px;
+	transition:1s;
+	min-width:500px;
+	margin:0 auto;
+	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 8px 20px 0 rgba(0, 0, 0, 0.19);
+	
+	/* Purely for transitional purposes */
+	z-index:-1;
+	opacity:0.0;
+	position:absolute;
+	top:5%;
+}
+#results::-webkit-scrollbar{
+	display:none;
+}
+select{
+	padding:5px;
+	font-size:16px;	
+}
+.acc-results{
+	border:1px solid #cccccc;
+	border-radius:4px;
+	background-color:#e6e6e6;
+	box-shadow: 2px 2px 5px gray;
+	z-index:3;
+	width:95%;
+	margin:0 auto;
+	margin-bottom:10px;
+	font-size:14px;
+}
+.acc-results:hover{
+	cursor:pointer;
+}
+.acc-header-results{
+	background-color:#e6e6e6;
+}
+.header_results_table{
+	width:98%;
+	padding:10px;
+	font-size:14px;
+}
+.acc-content-results{
+	display:none;
+}
+.results_table{
+	width:100%;	
+	font-size:13px;
+}
+.results_th{
+	color:#800000;	
+}
+.courseLink{
+	width:45%;	
+}	
+.semester_result{
+	width:10%;
+	text-align:left;
+}
+.prof_result{
+	width:25%;
+	text-align:right;	
+}
+.CRN_result{
+	width:15%;
+	text-align:right;
+}
+.x_result{
+	width:5%;
+	text-align:right;
+}	
+#course_desc_div{
+	display:none;
+	background-color: #e6e6e6;
+	border:1px solid #e6e6e6;
+	border-radius:4px;
+	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 8px 20px 0 rgba(0, 0, 0, 0.19);
+	padding:10px;
+	position:fixed;
+	top:5%;
+	left:43%;
+	width:40%;
+	z-index:5;
+	line-height:30px;	
+	font-size: 40%;
+	transition: left 0.5s;
+	max-width:500px;
+	min-width:350px;
+}
+iframe{
+	border:1px solid #cccccc;	
+	z-index:5;
+}
+iframe::-webkit-scrollbar{
+	display:none;	
+}
+#open-close-btn{
+	margin-bottom:8px;
+	margin-top:10px;
+	float:right;	
+	margin-right:8%;
+	background-color:#660000;
+	color:white;
+	padding:7px;
+	cursor:pointer;
+	display:none;
+}
+#seats-avail-btn{
+	margin-bottom:8px;
+	margin-top:10px;
+	float:right;	
+	margin-right:8%;
+	background-color:#660000;
+	color:white;
+	padding:7px;
+	cursor:pointer;
+	display:none;
+}
+#result_count{
+	color:white;
+	margin:0px;
+	float:left;
+	margin-top:20px;
+	margin-left:5%;	
+}
+#morn_class_div, #aft_class_div{
+	white-space:nowrap;
+	display:inline-block;
+	margin-left:5%;
+	margin-right:5%;	
+}
+.NotesTooltip {
+	background-color:black;
+	color:white;
+	padding:3px;
+	position:absolute;
+	z-index:24;
+	opacity:0.7;
+	display:none;
+	margin-left:5px;
+	font-size:10px;	
+}
+.NotesContainer {
+	position: relative;
+	z-index: 4;
+}
+.NotesContainer:hover {
+	z-index:4;
+}
+.NotesContainer:hover .NotesTooltip {
+	display: block;
+}
+
+
+@media only screen and (max-width:1200px){
+	#filter{
+		margin-left:-1000px;
 	}
-	.dept_list{
-		display:none;	
+	#main{
+		width:100% !important;	
+		margin-left:0% !important;
 	}
-	.hidden_time_list{
+	#menu-icon{
 		display:block;	
 	}	
-	/*.time_list{
-		display:none;	
-	}*/
-	#hidden_morn_aft{
-		display:block;	
-		margin-top:10px;
-		background-color:#cccccc;
-		padding:5px;
-		text-align:left;
+	#course_desc_div{
+		left:30%;	
 	}
-	#time_TR_div{
-		margin:0px;
-		display:block;
-		float:none;	
-	}
-	#morn_aft{
-		display:none;	
-	}
-	#hidden_dist_req_list{
-		display:inline;	
-	}
-	/*.dist_req_list{
-		display:none;	
-	}*/
 }

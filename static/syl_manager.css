@@ -2,11 +2,14 @@ body{
 	background-color:#aa0210;
 	min-width:1100px;
 }
-			
+*{
+	font-family:"verdana";
+	font-size:12.5px;	
+}			
 #main_body{
 	background-color:#999999;
 	margin:20px;
-	margin-top:110px;
+	margin-top:110px; /*50px;*/
 	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 8px 20px 0 rgba(0, 0, 0, 0.19);	
 	padding-bottom:10px;
 	padding-top:0px;
@@ -16,19 +19,6 @@ body{
 	height:80%;
 	transition: margin-top 0.5s;
 	transition: height 0.5s;
-}
-#header_welcome{
-	background-color:#999999;
-	margin:20px;
-	margin-bottom:0px;
-	margin-top:0px;
-	min-width:1080px;
-	color:white;
-}
-
-*{
-	font-family:"verdana";
-	font-size:12.5px;	
 }
 
 #welcome{
@@ -254,17 +244,17 @@ body{
 /*---------------------------------Stats---------------------------------------*/
 
 #quick_info{
-	background-color:#404040;
+	background-color:#e6e6e6;
 	width:calc(100% - 60px);	
 	margin-left:10px;
 	margin-bottom:0px;
-	height:80px;
+	height:80px; 
 	opacity:0.8;
-	outline:1px solid white;
+	outline:1px solid black;
 	position:absolute;
 	top:20px;
 	left:20px;
-	min-width:1050px;
+	min-width:1170px;
 }
 #quick_info table{
 	width:100%;	
@@ -273,7 +263,7 @@ body{
 	width:25%;
 	text-align:center;
 	padding:10px;
-	color:white;	
+	color:black;	
 }
 /*Styling the numbers below the headers*/
 .answers{
@@ -283,20 +273,6 @@ body{
 	margin:3px;	
 	transition:1s;
 }
-/*.answers .second{
-	display:none;	
-}*/
-/*.answers:hover{
-	cursor:pointer;
-	color:#3333ff;	
-}*/
-/*
-.answers:hover .first{
-	display:none;	
-}*/
-/*.answers:hover .second{
-	display:inline;	
-}*/
 
 p{
 	text-align:center;	
@@ -339,7 +315,6 @@ p{
 #prof_search_container{
 	border:1px solid black;
 	height:550px;
-	/*display:inline-block;*/
 	width:15%;
 	padding:10px;
 	border-radius:5px;
@@ -380,14 +355,18 @@ p{
 	background-color:#cce6ff;
 	transition:0.5s;	
 	width:20%;
+	margin: 1px;
 }
 .prof_li{
 	width:calc(100% - 5px);
 	padding:10px;
+	padding-left:1%;
+	padding-right:1%;
 	border-radius:10px;
 	border:1px solid #cce6ff;
 	background-color:#cce6ff;
-	transition:0.5s;	
+	transition:0.5s;
+	margin: 1px;	
 }
 .dep_li:hover, .prof_li:hover{
 	background-color:#cce6ff;
@@ -400,7 +379,7 @@ p{
 #syl_status_box{
 	margin-left:5px;
 	margin-right:40px;
-	margin-top:-650px;
+	margin-top:-572px;
 	background-color:white;
 	height:560px;
 	width:55%;	
@@ -435,21 +414,9 @@ p{
 #syl_status_box tr:nth-child(even){
 	background-color:#bfbfbf;
 }
-/*#syl_status_box tr:nth-child(even):hover{
-	background-color:#cccccc;
-}*/
 #syl_status_box tr:nth-child(odd){
 	background-color:#d9d9d9;	
 }
-/*#syl_status_box tr:nth-child(odd):hover{
-	background-color:#e6e6e6;	
-}*/
-/*.true{
-	color:#00cc66;		
-}
-.false{
-	color:#cc0000;	
-}*/
 .lo-status-btn {
 	background-color: #4CAF50;
     border: none;
@@ -470,7 +437,6 @@ input[type=checkbox]{
 .close_icon{
 	width:30px;
 	height:30px;
-	/*display:inline-block;*/
 }
 #close_stat{
 	float:right;
@@ -486,8 +452,7 @@ input[type=checkbox]{
 	font-size:17px;
 	margin-top:0px;
 	margin-bottom:8px;
-	color:#800000;	
-	/*display:inline-block;*/
+	color:#800000;
 	float:left;
 	margin-left:10px;
 }
