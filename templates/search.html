@@ -1,789 +1,18 @@
-
-			<script>window.jQuery || document.write('<script src="{{
-  url_for('static', filename='jquery.js') }}">\x3C/script>')</script>
-			<meta charset="utf-8">
+<html>
+	<head>
+			<!--<script>window.jQuery || document.write('<script src="{{
+  url_for('static', filename='jquery-3.1.0.min.js') }}">\x3C/script>')</script>-->
+			<meta content="text/html; charset=windows-1252" http-quiv="content-type">
 			<meta name="viewport" content="width=device-width, initial-scale=1">
-			<title>FindACourse</title>
-			
-			<style>
-				body{
-				  background-color:#990000;
-				  min-width:600px;
-				  font-family:"Verdana";
-				}
-				#course_desc_div{
-					display:none;
-					background-color: #e6e6e6;
-					border:1px solid #e6e6e6;
-					border-radius:4px;
-					box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 8px 20px 0 rgba(0, 0, 0, 0.19);
-					padding:10px;
-					position:fixed;
-					top:5%;
-					left:43%;
-					width:40%;
-					z-index:2;
-					line-height:30px;	
-					font-size: 40%;
-					font-size:90%;	
-				}
-				#blackout{
-					position:fixed;
-					display:none;
-					z-index:1;
-					width:100%;
-					height:100%;
-					margin:0px;
-					top:0px;
-					left:0px;
-					background-color:black;
-					opacity:0.5;	
-				}
-				#help{
-					color:#990000;
-					padding:5px;
-					margin-left:10px;
-					width:35px;
-				}
-				#help:hover{
-					color:#800000;
-					cursor:pointer;
-					background-color:rgba(220, 200, 200, 0.8)	
-				}
-				#help_div{
-					display:none;
-					background-color:white;
-					border:1px solid #e6e6e6;
-					border-radius:4px;
-					box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 8px 20px 0 rgba(0, 0, 0, 0.19);
-					padding:15px;
-					position:fixed;
-					top:20%;
-					left:48%;
-					width:30%;
-					z-index:2;
-					transition:0.5s;	
-				}
-				#close_btn_help{
-					float:right;
-					margin:5px;	
-					width:25px;
-					height:25px;
-					cursor:pointer;
-				}
-				.question{
-					padding:5px;
-					border-bottom:2px solid #cccccc;
-				}
-				#filter{
-					padding-bottom:20px;
-					background-color:#eeeeee;
-					text-align:center;
-					text-decoration:none;
-					position:fixed;
-					top:0px;
-					left:0px;
-					height:100%;
-					width:25%;
-					transition:2s;
-					box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2), 0 4px 10px 0 rgba(0, 0, 0, 0.19);
-					overflow:scroll;
-					min-width:310px;
-					z-index:5;	
-				}
-				#filter::-webkit-scrollbar{
-					display:none;	
-				}
-				#filter_results{
-					font-weight:bold;
-					padding-bottom:5px;
-					border-bottom:2px solid lightgray;
-					margin:10px;
-					margin-top:2px;
-				}
-				.accordion-header{
-					margin:0px;
-					padding:10px;
-					transition:0.3s;	
-				}
-				.accordion-header:hover{
-					background-color:#d9d9d9;	
-					cursor:pointer;
-				}
-				.accordion-content{
-					margin:10px;
-					margin-top:0px;
-					margin-bottom:0px;
-					display:none;	
-				}
-				select{
-					width:90%;	
-				}
-				.filter_card{
-					background-color:white;
-					box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2), 0 4px 10px 0 rgba(0, 0, 0, 0.19);
-					border-radius:3px;
-					padding:10px;	
-				}
-				#prof_search_id{
-					width:90%;
-					padding:8px;
-					border:1px solid #cccccc;
-					border-radius:3px;
-					font-size:14px;
-					margin:10px;
-					margin-top:10px;
-					background-color:#eeeeee;	
-				}
-				#prof_search_id:focus{
-					outline:3px solid #cce6ff;
-					background-color:#cccccc;	
-				}
-				#prof_list{
-					width:90%;
-					margin:0 auto;
-					text-align:left;
-					height:250px;
-   					overflow:scroll;
-   					overflow-x:hidden;	
-				}
-				#prof_list p{
-					display:block;
-					padding:10px;
-					border-bottom:2px solid #e6e6e6;
-					width:100% - 7px;
-					margin:0px;
-				}
-				input[type=checkbox]{
-					margin-right:10px;
-					width:15px;
-					height:15px;	
-				}
-				#dept_table{
-					width:calc(100% - 20px);
-					margin-left:10px;	
-				}
-				#dept_table td{
-					width:33%;		
-				}
-				.dept_text:hover, .dist_text:hover{
-					cursor:help;
-				}
-				.tooltip{
-					background-color:black;
-					color:white;
-					padding:3px;
-					position:absolute;
-					z-index:24;
-					opacity:0.7;
-					display:none;
-					margin-left:5px;
-					font-size:14px;	
-				}
-				.day_li{
-					display:inline-block;
-					margin:0px;	
-					margin-left:20px;
-					margin-right:10px;			
-				}
-				.time-half, .class-size-half{
-					display:inline-block;
-					margin-left:2%;
-					margin-right:2%;
-					text-align:left;	
-				}
-				.time-half ul{
-					padding:0px;
-				}
-				li{
-					display:block;	
-					padding:5px;
-				}
-				.distr-half{
-					text-align:left;	
-				}
-				.distr_choice{
-					margin-bottom:5px;	
-				}
-				.class_size_li{
-					margin-left:30%;	
-				}
-				.filter_button{
-					width:95%;
-					padding:8px;
-					font-size:15.5px;
-					border:1px solid #cce6ff;
-					border-radius:3px;
-					background-color:#cce6ff;	
-					cursor:pointer;
-					transition:0.4s;
-					margin-top:15px;
-				}
-				.filter_button:hover{
-					box-shadow:0 0 15px gray;	
-				}
-				#clear-btn{
-					background-color:#cccccc;
-					border:1px solid #cccccc;	
-					margin-top:0px;
-					margin-bottom:30px;
-				}
-				#close_icon{
-					font-size:30px;
-					text-align:right;
-					margin:0px;
-					margin-top:2px;
-					margin-right:5px;
-					cursor:pointer;	
-				}
-				#menu-icon{
-					font-size:23px;
-					margin:0px;
-					position:absolute;
-					top:0px;
-					left:0px;	
-					display:none;
-					background-color:rgba(230, 210, 210, 0.8);
-  					padding:10px;
-  					padding-top:5px;
-  					border-bottom-right-radius:3px;
-  					cursor:pointer;
-				}
-				#main{
-					width:75%;	
-					margin-left:25%;
-					transition:1s;
-					overflow:hidden;
-					height:100%;
-				}
-				#descript_page{
-					background-color:rgba(250, 250, 250, 0.5);
-					padding:10px;
-					height:30%;
-					margin:0 auto;
-					margin-top:5%;
-					width:40%;
-					outline:1px solid black;
-					transition:0.5s;
-					text-align:center;
-					font-family:"cambria";
-					min-width:350px;
-				}
-				#opq_search_box{
-					background-color:rgba(230, 210, 210, 0.8);
-					margin:0 auto;
-					margin-top:140px;
-					height:150px;
-					width:300px;
-					border:1px solid #cccccc;
-					padding:10px;
-					padding-top:20px;
-					padding-left:30px;
-					padding-bottom:0px;
-					box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 8px 20px 0 rgba(0, 0, 0, 0.19);
-					transition:0.5s;
-				}
-				#by_keyword_home{
-					text-align:center;
-					transition:0.5s;	
-				}
-				#search_bar{
-					margin:0 auto;	
-				}
-				#search_home{
-					border:solid 1px #ccc;
-					border-radius:2px;
-					padding:7px 14px;
-					font-size:15px;	
-					transition:1.5s;	
-				}
-				#search_home:focus{
-					background-color: #cccccc;
-					outline:2px solid #cce6ff;
-				}
-				#search_btn_home{
-					background-color:#cce6ff;
-					width:25px;
-					height:25px;
-					padding:5px;
-					cursor:pointer;
-					transition:0.5s;	
-				}
-				#search_btn_home:hover{
-					background-color:#b3daff;	
-				}
-				#davidson_logo {
-					font-family: "copperplate gothic lite";
-					font-size: 50px;
-					text-align: center;	
-					text-shadow: 2px 2px 4px #FF0000;
-					font-weight:none;
-					margin-top:10px;
-					margin-bottom:10px;
-				}
-				#displayed_yr{
-					margin-left:5%;
-					color:#e6e6e6;	
-					margin-top:25px;
-					margin-bottom:0px;
-					float:left;
-				}
-				#error_msg{
-					font-size:17px;
-					color:white;
-					text-align: center;
-					margin-top:30px;
-					display:none;
-				}
-				#results{
-				  background-color:white;
-				  margin-top:5px;
-				  overflow-x:hidden;
-				  overflow-y:scroll;
-				  height:575px;
-				  width:90%;
-				  border-radius:4px;
-				  padding-top:20px;
-				  transition:1s;
-				  min-width:500px;
-				  margin:0 auto;
-				  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 8px 20px 0 rgba(0, 0, 0, 0.19);
-				  
-				  /* Purely for transitional purposes */
-				  z-index:-1;
-				  opacity:0.0;
-				  position:fixed;/*absolute;*/
-				  top:5%;
-				}
-				#results::-webkit-scrollbar{
-					display:none;
-				}
-				select{
-					padding:5px;
-					font-size:16px;	
-				}
-				.acc-results{
-				  border:1px solid #cccccc;
-				  border-radius:4px;
-				  background-color:#e6e6e6;
-				  box-shadow: 2px 2px 5px gray;
-				  z-index:3;
-				  width:95%;
-				  margin:0 auto;
-				  margin-bottom:10px;
-				  font-size:14px;
-				}
-				.acc-results:hover{
-				  cursor:pointer;
-				}
-				.acc-header-results{
-					background-color:#e6e6e6;
-				}
-				.header_results_table{
-					width:98%;
-					padding:10px;
-					font-size:14px;
-					table-layout:fixed;
-				}
-				.acc-content-results{
-					display:none;
-				}
-				.results_table{
-					width:100%;	
-					font-size:13px;
-				}
-				.results_th{
-					color:#800000;	
-				}
-				.courseLink{
-					width:50%;	
-				}	
-				.prof_result{
-					width:25%;
-					text-align:right;	
-				}
-				.CRN_result{
-					width:20%;
-					text-align:right;
-				}
-				.x_result{
-					width:5%;
-					text-align:right;
-				}	
-				#course_desc_div{
-					display:none;
-					background-color: #e6e6e6;
-					border:1px solid #e6e6e6;
-					border-radius:4px;
-					box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 8px 20px 0 rgba(0, 0, 0, 0.19);
-					padding:10px;
-					position:fixed;
-					top:5%;
-					left:43%;
-					width:40%;
-					z-index:2;
-					line-height:30px;	
-					font-size: 40%;
-				}
-				.NotesTooltip {
-					background-color:black;
-					color:white;
-					padding:3px;
-					position:absolute;
-					z-index:24;
-					opacity:0.7;
-					display:none;
-					margin-left:5px;
-					font-size:10px;	
-				}
-				.NotesContainer {
-					position: relative;
-					z-index: 10;
-				}
-				.NotesContainer:hover {
-					z-index:20;
-				}
-				.NotesContainer:hover .NotesTooltip {
-					display: block;
-				}
-				iframe{
-					border:1px solid #cccccc;	
-				}
-				iframe::-webkit-scrollbar{
-					display:none;	
-				}
-				#open-close-btn{
-					margin-bottom:8px;
-					margin-top:10px;
-					float:right;	
-					margin-right:8%;
-					background-color:#660000;
-					color:white;
-					padding:7px;
-					cursor:pointer;
-				}
-				#vis-no-btn{
-					margin-bottom:8px;
-					margin-top:10px;
-					float:right;	
-					margin-right:8%;
-					background-color:#660000;
-					color:white;
-					padding:7px;
-					cursor:pointer;
-				}
-				
-				@media only screen and (max-width:1200px){
-					#filter{
-						margin-left:-1000px;
-					}
-					#main{
-						width:100% !important;	
-						margin-left:0% !important;
-					}
-					#menu-icon{
-						display:block;	
-					}	
-				}
-				
-			</style>
-		</header>
-		<body>
-			
-		<script>
-			/* Generic function that closes any pop-up message */
-			function closeDiv(divID){
-				var curDiv = document.getElementById(divID);
-				curDiv.style.display = "none";
-				document.getElementById("blackout").style.display = "none";
-			}
-			/* Used to close the iframe description window */
-			function closeDescription(divID) {
-				var descriptionElem = document.getElementById("iframe_sur_div");
-				document.getElementById(divID).removeChild(descriptionElem);
-				closeDiv(divID);
-			}
-			/* Opens and Closes the Accordion */
-			function toggleAcc(accContentID){
-				var accContent = document.getElementById(accContentID);
-				if (accContent.style.display == 'block'){
-					accContent.style.display = 'none';
-				}
-				else{
-					accContent.style.display = 'block';	
-				}
-			}
-			function toggleFilter(closeFilter){
-				var filter = document.getElementById('filter');
-				var menu = document.getElementById('menu-icon');
-				var main = document.getElementById('main');
-				if (closeFilter){
-					filter.style.transition = '2s';
-					filter.style.marginLeft = '-1000px';	
-					setTimeout(function(){menu.style.display = 'block';}, 400);
-					main.style.width = '100%';
-					main.style.marginLeft = "0%";
-					document.getElementById("help_div").style.left = '35%';
-				}
-				else{
-					filter.style.transition = '0.7s';
-					filter.style.marginLeft = '0px';
-					setTimeout(function(){menu.style.display = 'none';}, 300);
-					main.style.width = '75%';
-					main.style.marginLeft = "25%";
-					document.getElementById("help_div").style.left = '48%';
-				}	
-			}
-			function hasClass(element, clss) {
-    			return (element.className).indexOf(clss) > -1;
-			}
-			function toggleCheckbox(checkboxLabelID){
-				var checkboxLabel = document.getElementById(checkboxLabelID);
-				var checkbox = document.getElementById(checkboxLabel.htmlFor);
-				if (checkbox.checked){
-					checkboxLabel.style.color = "#008080";
-				}
-				else{
-					checkboxLabel.style.color = "black";
-				}
-			}
-			function clearAll(){
-				var checkboxLabels = document.getElementsByClassName('checkbox-label');	
-				
-				for (var i = 0; i < checkboxLabels.length; i++){
-					var label = checkboxLabels[i];
-					var checkbox = document.getElementById(label.htmlFor);
-					label.style.color = 'black';
-					checkbox.checked = false;	
-				}
-			}
-			
-			/*------------------------Professor Search Function----------------------*/
-			function filterProfs(){
-				
-				var profs = document.getElementsByClassName("prof");
-				var curInput = document.getElementById("prof_search_id").value.toLowerCase();
-				var inputLen = curInput.length;
-				
-				var i;
-				for (i = 0; i < profs.length; i++){
-					var curElem = profs[i];
-					var curSubStr = curElem.value.substring(0,inputLen).toLowerCase();
-					
-					if (curSubStr !== curInput){
-						curElem.parentElement.style.display = "none";	
-					}	
-					else{
-						curElem.parentElement.style.display = "block";	
-					}
-				}
-			}
-			
-			function toggleMornAft(mornAftClassname, input){
-				var mornAftClasses = document.getElementsByClassName(mornAftClassname);
-				var check = false;
-				var color = 'black';
-				
-				if (input.checked){
-					check = true;
-					color = '#008080';
-				}
-				for (var i = 0; i < mornAftClasses.length; i++){
-					mornAftClasses[i].checked = check;
-					document.getElementById(mornAftClasses[i].id + '_label').style.color = color;
-				}
-			}
-			
-			
-			/*---------------------Create query to pass to the db------------------*/
-			function createQueryStr(){
-			
-				var profStr = "";
-				var deptStr = "";
-				var dayStr = "";
-				var timeStr = "";
-				var distStr = "";
-				var semStr = "";
-				var classSizeStr = "";
-					
-				var checkedBoxes = document.getElementsByClassName("choices");
-				for(var i = 0; i < checkedBoxes.length; i++){
-					var curElem = checkedBoxes[i];
-					if (curElem.checked){
-						if (hasClass(curElem, "prof_check")){
-							var replacemt;
-							if(profStr != ""){
-								replacemt = profStr.concat(" or ", curElem.value);
-							}
-							else{
-								replacemt = profStr.concat(curElem.value);
-									
-							}
-							profStr = replacemt;
-						}
-						if (hasClass(curElem, "dept_check")){
-							var replacemt;
-							if(deptStr != ""){
-								replacemt = deptStr.concat(" or ", curElem.value);
-							}
-							else{
-								replacemt = deptStr.concat(curElem.value);
-							}
-							deptStr = replacemt;
-						}
-						if (hasClass(curElem,"day_check")){
-							var replacemt;
-							if(dayStr != ""){
-								replacemt = dayStr.concat(" or ", curElem.value);
-							}
-							else{
-								replacemt = dayStr.concat(curElem.value);
-									
-							}
-							dayStr = replacemt;
-						}
-						if (hasClass(curElem,"time_check")){
-							var replacemt;
-							if(timeStr != ""){
-								replacemt = timeStr.concat(" or ", curElem.value);
-							}
-							else{
-								replacemt = timeStr.concat(curElem.value);
-									
-							}
-							timeStr = replacemt;
-						}
-						if (hasClass(curElem,"dist_req_check")){
-							var replacemt;
-							if(distStr != ""){
-								replacemt = distStr.concat(" or ", curElem.value);
-							}
-							else{
-								replacemt = distStr.concat(curElem.value);
-									
-							}
-							distStr = replacemt;
-						}
-					}
-				}
-				
-				var fromClassSize = document.getElementById('from-class-size-select');
-				var fromAns = (fromClassSize.options[fromClassSize.selectedIndex]).innerHTML;
-				var toClassSize = document.getElementById('to-class-size-select');
-				var toAns = (toClassSize.options[toClassSize.selectedIndex]).innerHTML;
-				if ((fromAns == "1") && (toAns == "35")){
-					classSizeStr = "";
-				}
-				else{
-					classSizeStr = fromAns + "-" + toAns;	
-				}
-				var semDropdown = document.getElementById("year_dropdwn");
-				var semChoices = semDropdown.options;
-				var semAns = semChoices[semDropdown.selectedIndex];
-				var replacemt;
-				replacemt = semStr.concat(semAns.value);
-				semStr = replacemt;
-			
-				document.getElementById("period").value = semStr;
-				document.getElementById("prof_form").value = profStr;
-				document.getElementById("dep").value = deptStr;
-				document.getElementById("days").value = dayStr;
-				document.getElementById("times").value = timeStr;
-				document.getElementById("distri").value = distStr; 	
-				document.getElementById("class_size").value = classSizeStr;	
-			}
-			/*-------------------------- Display Course Description ---------------------------*/
-			function showDescription(divID, katy, course_num){
-			
-				var curDiv = document.getElementById(divID);
-				curDiv.style.display = "block";
-				document.getElementById("blackout").style.display = "block"; 	
-				
-				var descDiv = document.getElementById('course_desc_div');
-				descDiv.style.marginTop = "10%";
-				var limitingDiv = document.createElement("DIV");
-				limitingDiv.id = "iframe_sur_div";
-				limitingDiv.style.padding = "0px";
-				limitingDiv.style.boxShadow = "0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 8px 20px 0 rgba(0, 0, 0, 0.19)";
-				limitingDiv.style.overflow = "hidden";
-				var a = document.createElement('iframe');
-				a.id = "iframe_description"
-				a.src = "http://www.davidson.edu/general-course-detail/?subj=" + katy + "&cnum=" + course_num;	
-				a.width = "100%";
-				a.height = "1410";
-				a.style.marginTop = "-180px";
-				a.style.marginBottom = "-900px";
-				a.frameborder = "1";
-				limitingDiv.appendChild(a);
-				
-				var cancelBtn = document.getElementById('put_here');
-				descDiv.insertBefore(limitingDiv, cancelBtn);
-			}
-			
-			function closeDescription(divID) {
-				var curDiv = document.getElementById(divID);
-				var descriptionElem = document.getElementById("iframe_sur_div");
-				curDiv.removeChild(descriptionElem);
-				curDiv.style.display = "none";
-				document.getElementById("blackout").style.display = "none";
-			}
-			
-			function openCloseAllAccordions(open){
-				var accContents = document.getElementsByClassName('acc-content-results');
-				var display = 'none';
-				if (open){
-					display = 'block';	
-				}
-				for (var i = 0; i < accContents.length; i++){
-					accContents[i].style.display = display;
-				}
-			}
-			function toggleOpenCloseBtn(){
-				var openCloseBtn = document.getElementById('open-close-btn');
-				if (openCloseBtn.innerHTML == "Open All"){
-					openCloseBtn.style.backgroundColor = "white";
-					openCloseBtn.style.color = "#660000";
-					openCloseBtn.innerHTML = "Close All";
-					openCloseAllAccordions(true);
-				}	
-				else{
-					openCloseBtn.style.backgroundColor = "#660000";
-					openCloseBtn.style.color = "white";
-					openCloseBtn.innerHTML = "Open All";
-					openCloseAllAccordions(false);
-				}
-			}
-			function visNoAllAccordions(visitable){
-				var visContents = document.getElementsByClassName('visit-row');
-				var nopeContents = document.getElementsByClassName('no-visit-row');
-				console.log(visContents.length);
-				console.log(nopeContents.length);
-				display = 'block';
-				if (visitable) {
-					display = 'none';	
-				}
-				for (var j = 0; j < nopeContents.length; j++){					
-					nopeContents[j].parentNode.style.display = display;	
-				}
-			}
-			function toggleVisNoBtn() {
-				var visNoBtn = document.getElementById('vis-no-btn');			
-				if (visNoBtn.innerHTML == "Allow Visitors"){
-					visNoBtn.style.backgroundColor = "white";
-					visNoBtn.style.color = "#660000";
-					visNoBtn.innerHTML = "No Visitors";
-					visNoAllAccordions(true);
-				}	
-				else{
-					visNoBtn.style.backgroundColor = "#660000";
-					visNoBtn.style.color = "white";
-					visNoBtn.innerHTML = "Allow Visitors";
-					visNoAllAccordions(false);
-				}
-			}
+			<title>FindACourse - Search</title>
+			<link rel="stylesheet" type="text/css" href="{{url_for('static', filename='search.css')}}">
+			<script type="text/javascript" src="{{ url_for('static', filename='search.js') }}"></script>
+			<!--<script type="text/javascript" src="{{url_for('static', filename='jquery-3.1.0.min.js') }}"></script>-->
 
-		</script>
-		
+		</head>
+		<body onload="{% if chosen_year and search_results%}countResults('{{chosen_year}}', 'header_results_table');{% endif%}">
+			
+				
 		<!-- Contains an iframe with a course description -->
 		<div id="course_desc_div">
 			<p id="put_here"></p>
@@ -829,32 +58,34 @@
 					<form action="{{url_for('process_semester')}}" method="post">
 						<select name="years" id="year_dropdwn" onchange="submitOption()">
 							<option value="Choose one" id="choose_one" class="year_li">Choose one</option>
-							{% for i in semesters %}
-							{% if i == selected_sem %}
-							<option value="{{ i }}" id="{{ i }}" class="year_li" selected>{% set fall_year = i[:4] %}{% set spring_year = ((fall_year)|int +1)|string %}{% if i[-1] == '2' %}Spring {{ spring_year }}{% elif i[-1] == '1' %}Fall {{ fall_year }}{% endif %}</option>
-							{% else %}
-							<option value="{{ i }}" id="{{ i }}" class="year_li">{% set fall_year = i[:4] %}{% set spring_year = ((fall_year)|int +1)|string %}{% if i[-1] == '2' %}Spring {{ spring_year }}{% elif i[-1] == '1' %}Fall {{ fall_year }}{% endif %}</option>
+						{% for c in semesters %}
+							{% if c[-1] == '2' and c == selected_sem %}
+							<option value="{{c}}" id="{{c}}" class="year_li" selected>Spring {{ ((c[:4])|int + 1)|string }}</option>
+							{% elif c[-1] == '1' and c == selected_sem %}
+							<option value="{{c}}" id="{{c}}" class="year_li" selected>Fall {{ c[:4] }}</option>
+							{% elif c[-1] == '2' and c != selected_sem %}
+							<option value="{{c}}" id="{{c}}" class="year_li">Spring {{ ((c[:4])|int + 1)|string }}</option>
+							{% elif c[-1] == '1' and c != selected_sem %}
+							<option value="{{c}}" id="{{c}}" class="year_li">Fall {{ c[:4] }}</option>
 							{% endif %}
-
-							{% endfor %}										
+						{% endfor %}
 						</select>
 						<input type="submit" id="submit_btn" name="submit" value="" style="display:none;">
 					</form>
 				</div> <!-- End accordion content -->
 			</div> <!-- End accordion -->
-			
-			
+	
 		<!--Professors ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
 		<form action={{url_for("process_form")}} method="post">
 			<div class="accordion">
 				<p class="accordion-header" onclick="toggleAcc('prof-acc-content');">By Professor</p>
-				<div id="prof-acc-content" class="accordion-content filter_card">
+				<div id="prof-acc-content" style="font-size:14px;" class="accordion-content filter_card">
 						<input type="text" oninput="filterProfs()" name="prof_search" id="prof_search_id" placeholder="Search for a professor"/>
 						<div> <!-- placeholder -->
 						<div> <!-- placeholder -->
       					<div id="prof_list">	
 	    					{% for i in profs %}
-    						<p class="prof_li"><input type="checkbox" class="checkbox choices prof prof_check" id="{{i}}" value="{{i}}" onclick="toggleCheckbox('{{i}}_label');"><label id="{{i}}_label" for="{{i}}" class="label text checkbox-label">{{i}}</label></p>
+    						<p><input type="checkbox" class="choices prof prof_check" id="{{i}}" value="{{i}}" onclick="toggleCheckbox('{{i}}_label');"><label id="{{i}}_label" for="{{i}}" class="checkbox-label">{{i}}</label></p>
     						{% endfor %}
     					</div> <!-- End prof_list -->
     				</div> <! End placeholder -->
@@ -871,7 +102,7 @@
 						<table id="dept_table">
 							<tr>
 							{% for i in deps %}
-								<td><input type="checkbox" class="choices visible_dep dept_li dept_check" id='{{i}}' value='{{i}}' onclick="toggleCheckbox('{{i}}_label');"><label for='{{i}}' class="dept_text label checkbox-label" id='{{i}}_label' onmouseover="document.getElementById('{{i}}_span').style.display = 'block';" onmouseout="document.getElementById('{{i}}_span').style.display = 'none';">{{i}}</label><span class="tooltip" id="{{i}}_span">{{deps_full[loop.index0]}}</span></input></td>
+								<td><input type="checkbox" class="choices dept_check" id='{{i}}' value='{{i}}' onclick="toggleCheckbox('{{i}}_label');"/><label for='{{i}}' class="help checkbox-label" id='{{i}}_label' onmouseover="showTooltip('{{i}}_span', 'block');" onmouseout="hideTooltip('{{i}}_span');">{{i}}<span class="tooltip" id="{{i}}_span">{{deps_full[loop.index0]}}</span></label></td>
 								
 								{% if loop.index%3 == 0 %}
 							</tr>
@@ -893,8 +124,8 @@
 					<div> <!-- Placeholder -->
 					<div> <!-- Placeholder -->
 					<div id="day_list" class="filter_card">
-						<p class="day_li"><input type="checkbox" id="mwf" class="checkbox day_check choices" value="mwf" onclick="toggleCheckbox('mwf_label');"><label for="mwf" id="mwf_label" class="label text checkbox-label">MWF</label></p>
-      					<p class="day_li"><input type="checkbox" id="tr" class="checkbox day_check choices" value="tr" onclick="toggleCheckbox('tr_label');"><label for="tr" id="tr_label" class="label text checkbox-label">TR</label></p>
+						<p class="day_li"><input type="checkbox" id="mwf" class="day_check choices" value="mwf" onclick="toggleCheckbox('mwf_label');"><label for="mwf" id="mwf_label" class="checkbox-label">MWF</label></p>
+      					<p class="day_li"><input type="checkbox" id="tr" class="day_check choices" value="tr" onclick="toggleCheckbox('tr_label');"><label for="tr" id="tr_label" class="checkbox-label">TR</label></p>
 					</div> <!-- End filter_card -->
 					</div> <!-- End placeholder -->
 					</div> <! End placeholder -->
@@ -911,8 +142,8 @@
 						
 				<!--Heading (Morning/Afternoon) ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
 	    				<div id="morn_aft">
-							<div style="white-space:nowrap;display:inline-block;margin-left:5%;margin-right:5%;"><input type="checkbox" id="morn_classes" class="choices" onclick="toggleCheckbox('morn_classes_label');toggleMornAft('morn_check', this);"><label for="morn_classes" id="morn_classes_label" class="label text checkbox-label">Morning</label></div>
-							<div style="white-space:nowrap;display:inline-block;margin-left:5%;margin-right:5%;"><input type="checkbox" id="aft_classes" class="choices" onclick="toggleCheckbox('aft_classes_label');toggleMornAft('aft_check', this);"><label for="aft_classes" id="aft_classes_label" class="label text checkbox-label">Afternoon</label></div>
+							<div id="morn_class_div"><input type="checkbox" id="morn_classes" class="choices" onclick="toggleCheckbox('morn_classes_label');toggleMornAft('morn_check', this);"><label for="morn_classes" id="morn_classes_label" class="checkbox-label">Morning</label></div>
+							<div id="aft_class_div"><input type="checkbox" id="aft_classes" class="choices" onclick="toggleCheckbox('aft_classes_label');toggleMornAft('aft_check', this);"><label for="aft_classes" id="aft_classes_label" class="heckbox-label">Afternoon</label></div>
 						</div> <!-- End morn_aft -->
 										
 				<!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
@@ -920,30 +151,30 @@
 				
 			    		<div class="time-half" id="time_MWF_div">
     					<ul id="time_list_MWF">
-      						<li class="time_li"><input type="checkbox" id="time_0830" class="morn_check time_check checkbox choices" value="0830" onclick="toggleCheckbox('time_0830_label');"><label for="time_0830" id="time_0830_label" class="label morn text checkbox-label">8:30am</label></li>
-      						<li class="time_li"><input type="checkbox" id="time_0930" class="morn_check time_check checkbox choices" value="0930" onclick="toggleCheckbox('time_0930_label');"><label for="time_0930" id="time_0930_label" class="label morn text checkbox-label">9:30am</label></li>
+      						<li><input type="checkbox" id="time_0830" class="morn_check time_check choices" value="0830" onclick="toggleCheckbox('time_0830_label');"><label for="time_0830" id="time_0830_label" class="checkbox-label">8:30am</label></li>
+      						<li><input type="checkbox" id="time_0930" class="morn_check time_check choices" value="0930" onclick="toggleCheckbox('time_0930_label');"><label for="time_0930" id="time_0930_label" class="checkbox-label">9:30am</label></li>
       						
-      						<li class="time_li"><input type="checkbox" id="time_1030" class="morn_check time_check checkbox choices" value="1030" onclick="toggleCheckbox('time_1030_label');"><label for="time_1030" id="time_1030_label" class="label morn text checkbox-label">10:30am</label></li>
+      						<li><input type="checkbox" id="time_1030" class="morn_check time_check choices" value="1030" onclick="toggleCheckbox('time_1030_label');"><label for="time_1030" id="time_1030_label" class="checkbox-label">10:30am</label></li>
       						
-      						<li class="time_li"><input type="checkbox" id="time_1130" class="morn_check time_check checkbox choices" value="1130" onclick="toggleCheckbox('time_1130_label');"><label for="time_1130" id="time_1130_label" class="label morn text checkbox-label">11:30am</label></li>
+      						<li><input type="checkbox" id="time_1130" class="morn_check time_check choices" value="1130" onclick="toggleCheckbox('time_1130_label');"><label for="time_1130" id="time_1130_label" class="checkbox-label">11:30am</label></li>
       						
-	  						<li class="time_li"><input type="checkbox" id="time_1230" class="aft_check time_check checkbox choices" value="1230" onclick="toggleCheckbox('time_1230_label');"><label for="time_1230" id="time_1230_label" class="label aft text checkbox-label">12:30pm</label></li>
+	  						<li><input type="checkbox" id="time_1230" class="aft_check time_check choices" value="1230" onclick="toggleCheckbox('time_1230_label');"><label for="time_1230" id="time_1230_label" class="checkbox-label">12:30pm</label></li>
 	  						
-							<li class="time_li"><input type="checkbox" id="time_0130" class="aft_check time_check checkbox choices" value="0130" onclick="toggleCheckbox('time_0130_label');"><label for="time_0130" id="time_0130_label" class="label aft text checkbox-label">1:30pm</label></li>
+							<li><input type="checkbox" id="time_0130" class="aft_check time_check choices" value="1330" onclick="toggleCheckbox('time_0130_label');"><label for="time_0130" id="time_0130_label" class="checkbox-label">1:30pm</label></li>
 							
-							<li class="time_li"><input type="checkbox" id="time_0230" class="aft_check time_check checkbox choices" value="0230" onclick="toggleCheckbox('time_0230_label');"><label for="time_0230" id="time_0230_label" class="label aft text checkbox-label">2:30pm</label></li>
+							<li><input type="checkbox" id="time_0230" class="aft_check time_check choices" value="1430" onclick="toggleCheckbox('time_0230_label');"><label for="time_0230" id="time_0230_label" class="checkbox-label">2:30pm</label></li>
 							
-							<li class="time_li"><input type="checkbox" id="time_0330" class="aft_check time_check checkbox choices" value="0330" onclick="toggleCheckbox('time_0330_label');"><label for="time_0330" id="time_0330_label" class="label aft text checkbox-label">3:30pm</label></li>
+							<li><input type="checkbox" id="time_0330" class="aft_check time_check choices" value="1530" onclick="toggleCheckbox('time_0330_label');"><label for="time_0330" id="time_0330_label" class="checkbox-label">3:30pm</label></li>
     					</ul>
     					</div> <!-- End time MWF -->
 	    					
 			    		<div class="time-half time_list" id="time_TR_div">
     					<ul id="time_list_TR">
-	 						<li class="time_li"><input type="checkbox" id="time_0815" class="morn_check time_check checkbox choices" value="0815" onclick="toggleCheckbox('time_0815_label');"><label for="time_0815" id="time_0815_label" class="label morn text checkbox-label">8:15am</label></li>
-      						<li class="time_li"><input type="checkbox" id="time_0940" class="morn_check time_check checkbox choices" value="0940" onclick="toggleCheckbox('time_0940_label');"><label for="time_0940" id="time_0940_label" class="label morn text checkbox-label">9:40am</label></li>
-      						<li class="time_li"><input type="checkbox" id="time_1215" class="aft_check time_check checkbox choices" value="1215" onclick="toggleCheckbox('time_1215_label');"><label for="time_1215" id="time_1215_label" class="label aft text checkbox-label">12:15pm</label></li>
-      						<li class="time_li"><input type="checkbox" id="time_0140" class="aft_check time_check checkbox choices" value="0140" onclick="toggleCheckbox('time_0140_label');"><label for="time_0140" id="time_0140_label" class="label aft text checkbox-label">1:40pm</label></li>
-	  						<li class="time_li"><input type="checkbox" id="time_0315" class="aft_check time_check checkbox choices" value="0315" onclick="toggleCheckbox('time_0315_label');"><label for="time_0315" id="time_0315_label" class="label aft text checkbox-label">3:15pm</label></li>
+	 						<li><input type="checkbox" id="time_0815" class="morn_check time_check choices" value="0815" onclick="toggleCheckbox('time_0815_label');"><label for="time_0815" id="time_0815_label" class="checkbox-label">8:15am</label></li>
+      						<li><input type="checkbox" id="time_0940" class="morn_check time_check choices" value="0940" onclick="toggleCheckbox('time_0940_label');"><label for="time_0940" id="time_0940_label" class="checkbox-label">9:40am</label></li>
+      						<li><input type="checkbox" id="time_1215" class="aft_check time_check choices" value="1215" onclick="toggleCheckbox('time_1215_label');"><label for="time_1215" id="time_1215_label" class="checkbox-label">12:15pm</label></li>
+      						<li><input type="checkbox" id="time_0140" class="aft_check time_check choices" value="1340" onclick="toggleCheckbox('time_0140_label');"><label for="time_0140" id="time_0140_label" class="checkbox-label">1:40pm</label></li>
+	  						<li><input type="checkbox" id="time_0305" class="aft_check time_check choices" value="1505" onclick="toggleCheckbox('time_0305_label');"><label for="time_0305" id="time_0305_label" class="checkbox-label">3:05pm</label></li>
 						</ul>
 						</div> <!-- End time TR -->
 					</div> <!-- End placeholder -->
@@ -960,23 +191,23 @@
 					<div> <!-- placeholder -->
 					<div class="filter_card" style="text-align:left;">
 						
-		    			<div class="distr_choice"><input type="checkbox" value="HTRQ" id="htrq" class="checkbox dist_req_check dist_req_li choices" onclick="toggleCheckbox('htrq_label');"><label for="htrq" id="htrq_label" class="label dist_text checkbox-label" onmouseover="document.getElementById('HTRQ_tooltip').style.display = 'inline';" onmouseout="document.getElementById('HTRQ_tooltip').style.display = 'none';">Historical Thought  <span class="tooltip" id="HTRQ_tooltip">HTRQ</span></label></div>
+		    			<div class="distr_choice"><input type="checkbox" value="HTRQ" id="htrq" class="dist_req_check choices" onclick="toggleCheckbox('htrq_label');"><label for="htrq" id="htrq_label" class="help checkbox-label" onmouseover="showTooltip('HTRQ_tooltip', 'inline');" onmouseout="hideTooltip('HTRQ_tooltip');">Historical Thought  <span class="tooltip" id="HTRQ_tooltip">HTRQ</span></label></div>
 			    			
-						<div class="distr_choice"><input type="checkbox" value="LBRQ" id="lbrq" class="checkbox dist_req_check dist_req_li choices" onclick="toggleCheckbox('lbrq_label');"><label for="lbrq" id="lbrq_label" class="label dist_text checkbox-label" onmouseover="document.getElementById('LBRQ_tooltip').style.display = 'inline';" onmouseout="document.getElementById('LBRQ_tooltip').style.display = 'none';">Liberal Studies  <span class="tooltip" id="LBRQ_tooltip">LBRQ</span></label></div>
+						<div class="distr_choice"><input type="checkbox" value="LBRQ" id="lbrq" class="dist_req_check choices" onclick="toggleCheckbox('lbrq_label');"><label for="lbrq" id="lbrq_label" class="help checkbox-label" onmouseover="showTooltip('LBRQ_tooltip', 'inline');" onmouseout="hideTooltip('LBRQ_tooltip');">Liberal Studies  <span class="tooltip" id="LBRQ_tooltip">LBRQ</span></label></div>
 			
-						<div class="distr_choice"><input type="checkbox" value="LTRQ" id="ltrq" class="checkbox dist_req_check dist_req_li choices" onclick="toggleCheckbox('ltrq_label');"><label for="ltrq" id="ltrq_label" class="label dist_text checkbox-label" onmouseover="document.getElementById('LTRQ_tooltip').style.display = 'inline';" onmouseout="document.getElementById('LTRQ_tooltip').style.display = 'none';">Literary Studies, Creative Writing, and Rhetoric  <span class="tooltip" id="LTRQ_tooltip">  LTRQ</span></label></div>
+						<div class="distr_choice"><input type="checkbox" value="LTRQ" id="ltrq" class="dist_req_check choices" onclick="toggleCheckbox('ltrq_label');"><label for="ltrq" id="ltrq_label" class="help checkbox-label" onmouseover="showTooltip('LTRQ_tooltip', 'inline');" onmouseout="hideTooltip('LTRQ_tooltip');">Literary Studies, Creative Writing, and Rhetoric  <span class="tooltip" id="LTRQ_tooltip">LTRQ</span></label></div>
+													
+						<div class="distr_choice"><input type="checkbox" value="MQRQ" id="mqrq" class="dist_req_check choices" onclick="toggleCheckbox('mqrq_label');"><label for="mqrq" id="mqrq_label" class="help checkbox-label" onmouseover="showTooltip('MQRQ_tooltip', 'inline');" onmouseout="hideTooltip('MQRQ_tooltip');">Mathematic and Quantitative Thought  <span class="tooltip" id="MQRQ_tooltip">MQRQ</span></label></div>
 							
-						<div class="distr_choice"><input type="checkbox" value="MQRQ" id="mqrq" class="checkbox dist_req_check dist_req_li choices" onclick="toggleCheckbox('mqrq_label');"><label for="mqrq" id="mqrq_label" class="label dist_text checkbox-label" onmouseover="document.getElementById('MQRQ_tooltip').style.display = 'inline';" onmouseout="document.getElementById('MQRQ_tooltip').style.display = 'none';">Mathematical and Quantitative Thought  <span class="tooltip" id="MQRQ_tooltip">  MQRQ</span></label></div>
-							
-		    			<div class="distr_choice"><input type="checkbox" value="NSRQ" id="nsrq" class="checkbox dist_req_check dist_req_li choices" onclick="toggleCheckbox('nsrq_label');"><label for="nsrq" id="nsrq_label" class="label dist_text checkbox-label" onmouseover="document.getElementById('NSRQ_tooltip').style.display = 'inline';" onmouseout="document.getElementById('NSRQ_tooltip').style.display = 'none';">Natural Science  <span class="tooltip" id="NSRQ_tooltip">NSRQ</span></label></div>
+		    			<div class="distr_choice"><input type="checkbox" value="NSRQ" id="nsrq" class="dist_req_check choices" onclick="toggleCheckbox('nsrq_label');"><label for="nsrq" id="nsrq_label" class="help checkbox-label" onmouseover="showTooltip('NSRQ_tooltip', 'inline');" onmouseout="hideTooltip('NSRQ_tooltip');">Natural Science  <span class="tooltip" id="NSRQ_tooltip">NSRQ</span></label></div>
 			    			
-						<div class="distr_choice"><input type="checkbox" value="SSRQ" id="ssrq" class="checkbox dist_req_check dist_req_li choices" onclick="toggleCheckbox('ssrq_label');"><label for="ssrq" id="ssrq_label" class="label dist_text checkbox-label" onmouseover="document.getElementById('SSRQ_tooltip').style.display = 'inline';" onmouseout="document.getElementById('SSRQ_tooltip').style.display = 'none';">Social-Scientific Thought  <span class="tooltip" id="SSRQ_tooltip">SSRQ</span></label></div>
+						<div class="distr_choice"><input type="checkbox" value="SSRQ" id="ssrq" class="dist_req_check choices" onclick="toggleCheckbox('ssrq_label');"><label for="ssrq" id="ssrq_label" class="help checkbox-label" onmouseover="showTooltip('SSRQ_tooltip', 'inline');" onmouseout="hideTooltip('SSRQ_tooltip');">Social-Scientific Thought  <span class="tooltip" id="SSRQ_tooltip">SSRQ</span></label></div>
 							
-						<div class="distr_choice"><input type="checkbox" value="VPRQ" id="vprq" class="checkbox dist_req_check dist_req_li choices" onclick="toggleCheckbox('vprq_label');"><label for="vprq" id="vprq_label" class="label dist_text checkbox-label" onmouseover="document.getElementById('VPRQ_tooltip').style.display = 'inline';" onmouseout="document.getElementById('VPRQ_tooltip').style.display = 'none';">Visual and Performing Arts  <span class="tooltip" id="VPRQ_tooltip">VPRQ</span></label></div>
+						<div class="distr_choice"><input type="checkbox" value="VPRQ" id="vprq" class="dist_req_check choices" onclick="toggleCheckbox('vprq_label');"><label for="vprq" id="vprq_label" class="help checkbox-label" onmouseover="showTooltip('VPRQ_tooltip', 'inline');" onmouseout="hideTooltip('VPRQ_tooltip');">Visual and Perfoming Arts  <span class="tooltip" id="VPRQ_tooltip">VPRQ</span></label></div>
 							
-						<div class="distr_choice"><input type="checkbox" value="PRRQ" id="prrq" class="checkbox dist_req_check dist_req_li choices" onclick="toggleCheckbox('prrq_label');"><label for="prrq" id="prrq_label" class="label dist_text checkbox-label" onmouseover="document.getElementById('PRRQ_tooltip').style.display = 'inline';" onmouseout="document.getElementById('PRRQ_tooltip').style.display = 'none';">Philosophical and Religious Perspectives  <span class="tooltip" id="PRRQ_tooltip">PRRQ</span></label></div>
+						<div class="distr_choice"><input type="checkbox" value="PRRQ" id="prrq" class="dist_req_check choices" onclick="toggleCheckbox('prrq_label');"><label for="prrq" id="prrq_label" class="help checkbox-label" onmouseover="showTooltip('PRRQ_tooltip', 'inline');" onmouseout="hideTooltip('PRRQ_tooltip');">Philosophical and Religious Perspectives  <span class="tooltip" id="PRRQ_tooltip">PRRQ</span></label></div>
 							
-						<div class="distr_choice"><input type="checkbox" value="CULT" id="cult" class="checkbox dist_req_check dist_req_li choices" onclick="toggleCheckbox('cult_label');"><label for="cult" id="cult_label" class="label dist_text checkbox-label" onmouseover="document.getElementById('CULT_tooltip').style.display = 'inline';" onmouseout="document.getElementById('CULT_tooltip').style.display = 'none';">Cultural Diversity  <span class="tooltip" id="CULT_tooltip">CULT</span></label></div>
+						<div class="distr_choice"><input type="checkbox" value="CULT" id="cult" class="dist_req_check choices" onclick="toggleCheckbox('cult_label');"><label for="cult" id="cult_label" class="help checkbox-label" onmouseover="showTooltip('CULT_tooltip', 'inline');" onmouseout="hideTooltip('CULT_tooltip');">Cultural Diversity  <span class="tooltip" id="CULT_tooltip">CULT</span></label></div>
 						
 					</div> <!-- End filter_card -->
 					</div> <!-- End placeholder -->
@@ -1003,7 +234,11 @@
 						<span>To: </span>
 						<select id="to-class-size-select" style="width:50px;">
 							{% for i in sizes_large %}
-							<option value="from_{{i}}">{{i}}</option>
+							{% if i == sizes_large[-1] %}
+							<option value="to_{{i}}" selected>{{i}}</option>
+							{% else %}
+							<option value="to_{{i}}">{{i}}</option>
+							{% endif %}
 							{% endfor %}
 						</select>
 					</div> <!-- End class size half -->
@@ -1023,7 +258,7 @@
 		
 		<input type="submit" onclick="createQueryStr()" class="filter_button" value="Filter by Selections">
 		</form>
-		<input type="button" class="filter_button" id="clear-btn" value="Clear All" onclick="clearAll();">
+		<input type="button" class="filter_button" id="clear-btn" value="Reset" onclick="clearAll();">
 		</div> <!-- End filter -->
 		
 		<p id="menu-icon" onclick="toggleFilter(false);">&#9776;</p>
@@ -1044,11 +279,11 @@
 				
 				<p id="by_keyword_home">Search By Keyword:</p>
 				<form action={{url_for("process_search")}} method="post">
-				<table id="search_bar" style="margin-top:5px;">
+				<table id="search_bar">
 					<tr>
 						<td id="search_home_td"><input class="search" id="search_home" name="gen_search" placeholder="Search..." autofocus/></td>
 						<td id="search_btn_home_td"><img src="https://cdn4.iconfinder.com/data/icons/ionicons/512/icon-ios7-search-strong-128.png" id="search_btn_home" onclick="document.getElementById('hidden_search_home').click();"></td>
-						<td style="display:none;padding-left:10px;" id="help_td"><p id="help" onclick="document.getElementById('help_div').style.display = 'block';document.getElementById('blackout').style.display = 'block';">Help</p></td>
+						<td style="display:none;padding-left:10px;padding-top:0px;" id="help_td"><p id="help" onclick="document.getElementById('help_div').style.display = 'block';document.getElementById('blackout').style.display = 'block';">Help</p></td>
 					</tr>
 				</table>
 				<input type="submit" id="hidden_search_home" name="gen_search_btn" style="display:none;"></form>
@@ -1064,77 +299,90 @@
 	
 	
 	<!-- Result Div ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
-	
-		{% if chosen_year and not message %}
-			<p id="displayed_yr"><i>{{chosen_year}}</i>
+			
+		{% if chosen_year %}
+			<p id="displayed_yr"><i></i>
+			<!--{% if search_results %}
+				<span id="result_count"></span>
+				{% endif %} -->
+				</p>
 		{% endif %}
 		
-		{% if result_count %}
-			&nbsp;&nbsp;&nbsp;Total Results: {{result_count}}
+		{% if not message %}
+			<span id="open-close-btn" onclick="toggleOpenCloseBtn();">Open All</span>
+			<span id="seats-avail-btn" onclick="toggleSeatsAvailBtn();">Seats Available</span>
 		{% endif %}
-		</p>
-		<span id="open-close-btn" onclick="toggleOpenCloseBtn();">Open All</span>
-		<span id="vis-no-btn" onclick="toggleVisNoBtn();">Allow Visitors</span>
-			
-		{% if message %}
-			<p id="error_msg">{{message}}</p>
-		{% endif %}
+	 	{% if message %}
+	 	<p id="error_msg">{{message}}</p>
+	 	{% endif %}
+
 		<div id="results">
 			{% for i in search_results %}
 			{% set rowloop = loop %}
-			<div class="acc-results" id="acc_{{loop.index0}}">
+			{% if (i.seats_remain|int) == 0 %}
+			<div class="acc-results no-seats" id="acc_{{loop.index0}}">
+			{% else %}
+			<div class="acc-results seats-left" id="acc_{{loop.index0}}">
+			{% endif %}
 				
 				<span class="acc-header-results" onclick="toggleAcc('acc_content_{{loop.index0}}');">
 				<table class="header_results_table">
 					<tr>
-						<td class="courseLink"><b>{{i.subject}} {{i.course_num}} {% if i.seq_num != '0' %}{{i.seq_num}}{% endif %}[{{i.major_code}}]</b>: <u onclick="showDescription('course_desc_div', '{{i.subject}}', '{{i.course_num}}')">{{i.course_title}}</u></td>
-						<td>{{ i.acad_period }}</td>
+						<td class="courseLink"><b>{{i.subject}} {{i.course_num}} {% if i.seq_num != '0' %}{{i.seq_num}}{% endif %}[{{i.major_code}}]</b>: <u class="iframe_link" onclick="showDescription('course_desc_div', '{{i.subject}}', '{{i.course_num}}');">{{i.course_title}}</u></td>
+							<td class="semester_result">{% if "01" in i.acad_period[4:] %}Fall {{ i.acad_period[:4] }}{% else %}Spring {{ ((i.acad_period[:04]|int)+1)|string }}{% endif %}</td>
 						<td class="prof_result">{{i.instructor1}}</td>
 						<td class="CRN_result"><span style="margin-right:10%;">CRN: {{i.CRN}}</span></td>
-						<td class="x_result"><span onclick="document.getElementById('acc_{{loop.index0}}').style.display='none'" style="font-size:23px;" class="close_icon">&times;</span></td>
+						<td class="x_result"><span onclick="hideDiv({{loop.index0}});" style="font-size:23px;" class="close_icon">&times;</span></td>
 				  </tr>
 				</table>
 				</span> <!-- End header -->		
-				{% if i.visitable == "Can visit" %} <!-- visitable courses row identification-->				
-				<div id="acc_content_{{loop.index0}}" class="acc-content-results visit-row" style="margin-top:10px;background-color:#d9d9d9; padding:5px;">
-				{% else %}
-					<div id="acc_content_{{loop.index0}}" class="acc-content-results no-visit-row" style="margin-top:10px;background-color:#d9d9d9; padding:5px;">					
-				{% endif %} <!-- end visitable courses row identification -->
+				<div id="acc_content_{{loop.index0}}" class="acc-content-results" style="margin-top:10px;background-color:#d9d9d9; padding:5px;">					
+				
 			  	<table class="results_table">
-				  <tr >
+				  <tr>
 					<td class="results_th">Time:</td>
 					<td class="results_th">Days:</td>
 					<td class="results_th">Place:</td>
 					<td class="results_th">Distr. Req.'s:</td>
-					{% if i.course_notes == "" %}
-					
+					{% if not i.course_notes %}
+					<td class="results_th"></td>
 					{% else %}
 						<td class="results_th">Notes</td>
 					{% endif %}
 					<td class="results_th">Class Size:</td> 
-					<td class="results_th">Visit:</td>
+					<td class="results_th">Open Seats:</td>
 					<td class="results_th">Syllabus</td>
 				</tr>
-				<tr>
+				<tr>					
 					<td class="results_td">{{i.class_time}}</td>
 					<td class="results_td">{{i.meet_days}}</td>
-					<td class="results_td">{{i.bldg_code + " " + i.room_code }}</td>
+					
+					<td class="results_td">{{i.get_room_code()}}</td>
 					<td class="results_td">{{i.course_attrib}}</td>
-					{% if i.course_notes == "" %}
-						
+					{% if not i.course_notes %}
+					<td class="results_td"></td>
 					{% else %}
 						<td class="results_td" onload="countRow()">
 							
-							{% set notes = i.course_notes.split(',') %}
+							{% set notes = i.course_notes.replace(' ', '').split(',') %}
 							{% for n in notes %}
 								<div class="NotesContainer"><span>{{n}}</span>
 								<span class="NotesTooltip">{{sched_notes[n]}}</span></div>
-							{% endfor %}	
+							{% endfor %}
+					
 						</td>
 					{% endif %}
 					<td class="results_td">{{i.max_enroll}}</td>
-					<td class="results_td">{{i.visitable}}</td>
-					<td class="results_td"><u><a href = {{url_for('download',file_path=i.syllabus_link)}} target = "blank" style="cursor:pointer;">{{i.syllabus_link}}</a></u></td>
+					<td class="results_td">{{i.seats_remain}}</td>
+					<td class="results_td">
+						{% if i.syllabus_link == "" %}
+						No Syllabus
+						{% elif i.privacy == "All" %}
+						<u><a href = {{url_for('download',file_path=i.syllabus_link)}} target = "blank" style="cursor:pointer;">Click to Download</a></u>
+						{% else %}
+						Not Visible
+						{% endif %}
+						</td>
 				</tr>                    
 			  </table>
 			  </div> <!-- End acc content -->
@@ -1145,57 +393,19 @@
 		
 		{% if search_results %}
 			<script>
-				setTimeout(function(){
-					var searchBox = document.getElementById("opq_search_box");
-					var results = document.getElementById("results");
-					searchBox.style.marginTop = "5px";	
-					searchBox.style.width = "90%";
-					searchBox.style.margin = "0 auto";
-					searchBox.style.height = "55px";
-					searchBox.style.paddingTop = "0px";
-					results.style.opacity = "1.0";
-					results.style.zIndex = "0";
-					results.style.position = "static";
-					document.getElementById("by_keyword_home").style.position = "absolute";
-					document.getElementById("search_bar").style.marginLeft = "180px";
-					document.getElementById("search_bar").style.width = "calc(100% - 180px)";
-					document.getElementById("search_home_td").style.width = "70%";
-					document.getElementById("search_home").style.width = "100%";
-					document.getElementById("search_btn_home_td").style.width = "5%";
-					document.getElementById("help_td").style.display = 'inline';
-					document.getElementById("descript_page").style.display = "none";
-				}, 10);
+				showResults();
 			</script>
-	  {% elif message %}
+		{% elif message %}
 			<script>
-				setTimeout(function(){
-					var searchBox = document.getElementById("opq_search_box");
-					var results = document.getElementById("results");
-					searchBox.style.marginTop = "5px";	
-					searchBox.style.width = "90%";
-					searchBox.style.margin = "0 auto";
-					searchBox.style.height = "55px";
-					searchBox.style.paddingTop = "0px";
-					results.style.opacity = "0.0";
-					results.style.zIndex = "-1";
-					results.style.position = "absolute";
-					document.getElementById("by_keyword_home").style.position = "absolute";
-					document.getElementById("search_bar").style.marginLeft = "180px";
-					document.getElementById("search_bar").style.width = "calc(100% - 180px)";
-					document.getElementById("search_home_td").style.width = "70%";
-					document.getElementById("search_home").style.width = "100%";
-					document.getElementById("search_btn_home_td").style.width = "5%";
-					document.getElementById("help_td").style.display = 'inline';
-					document.getElementById("descript_page").style.display = "none";
-				}, 10);
-			</script>	
-		  {% endif %}
-		  
-		  <script>
-			 var openAccs = [];
-			 var mornTimes = 0;
-			 var aftTimes = 0;
-		 </script>
+				showNoResults();
+			</script>
+		{% endif%}
+		
+		<script>
+			var openAccs = [];
+			var mornTimes = 0;
+			var aftTimes = 0;
+		</script>
 		{% for i in kept_values %}
 		<script>
 			var allInputs = document.getElementsByTagName("input");
@@ -1212,7 +422,7 @@
 					}
 					
 					var inputLabel = curElem.id + "_label";
-					document.getElementById(inputLabel).style.color = '#248f8f';
+					/*document.getElementById(inputLabel).style.color = '#248f8f';*/
 					var accId = curElem.parentElement.parentElement.parentElement.parentElement.parentElement.id;
 					
 					if (openAccs.indexOf(accId) === -1){
@@ -1235,62 +445,20 @@
 			}
 				
 		</script>
-	{% endfor %}
-	
-	{% if semester %}
-	
-		<script>
-			var yearInputs = document.getElementsByClassName("year_li");
-			for(var x = 0; x < yearInputs.length; x++){
-					var curElem = yearInputs[x];
-					if(curElem.value == "{{semester}}"){
-						curElem.selected = true;
-						var accId = curElem.parentElement.parentElement.id;
-						document.getElementById(accId).style.display = 'block';  
-					}
-			}
-		</script>
-	
-	{% endif %}
-	
-	{% if class_size_kept %}
+		{% endfor %}
+		
+		{% if semester %}
 		
 		<script>
-			var fromSelect = document.getElementById('from-class-size-select');
-			var fromOptions = fromSelect.options;
-			var toSelect = document.getElementById('to-class-size-select');
-			var toOptions = toSelect.options;
-			
-			var split = "{{class_size_kept}}".split("-");
-			var from = split[0];
-			var to = split[1];
-			var fromSolution;
-			var foundSolFrom = false;
-			for (var i = 0; i < fromOptions.length; i++){
-				if (fromOptions[i].value == ("from_" + String(from))){
-					fromSolution = fromOptions[i];
-					foundSolFrom = true;
-					break;	
-				}
-			}
-			var toSolution = "";
-			var foundSolTo = false;
-			for (var i = 0; i < toOptions.length; i++){
-				if (toOptions[i].value == ("to_" + String(to))){
-					toSolution = toOptions[i];
-					foundSolTo = true;
-					break;	
-				}	
-			}
-			
-			if (foundSolTo && foundSolFrom){
-				fromSolution.selected = true;
-				toSolution.selected = true;	
-				document.getElementById("class-size-acc-content").style.display = 'block';
-			}
+			keepSemester('{{semester}}');
+		</script>
+		{% endif %}
+		{% if class_size_kept %}
+		<script>
+			keepClassSize('{{class_size_kept}}');
 		</script>
 		
-	{% endif %}
+		{% endif %}	
 		  
 	</body>
 </html>

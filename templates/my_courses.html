@@ -16,7 +16,6 @@
 	<div id="upload_div">
 	<h2 id="syllabus_upload">Syllabus Upload</h2>
 	<p id="you_teach">Please upload your syllabus for each of the following courses. Under "Visitable", check whether you would want prospective students to visit your class ("Can visit") or not ("Not open"). Under "Privacy," please check whether everyone can view your syllabus ("Anyone") or only those on the Davidson network ("Only Davidson"). </p>
-	<p id="you_teach">For courses with labs, only the class or lab will be displayed; however, both sets of information will be updated. For courses with multiple sections, a syllabus must be uploaded for each section.</p>
 			
 	{% if courses|length > 0 %}
  		
@@ -25,9 +24,9 @@
 
 			{% if courses[0].acad_period[-2:] == "01" %}
 
-				<h3 id="you_teach">Professor {{ courses[0].instructor1[:-2]|string }}'s Courses for Fall {{ start_yr }}</h3>
+				<h3 id="profs_courses">Professor {{ courses[0].instructor1[:-2]|string }}'s Courses for Fall {{ start_yr }}</h3>
 			{% else %}
-				<h3 id="you_teach">Professor {{ courses[0].instructor1[:-2]|string }}'s Courses for Spring {{ end_yr }}</h3>
+				<h3 id="profs_courses">Professor {{ courses[0].instructor1[:-2]|string }}'s Courses for Spring {{ end_yr }}</h3>
 			{% endif %}
 
 	  <form action={{url_for('make_updates')}} method="post" enctype="multipart/form-data">
@@ -42,10 +41,6 @@
 					<th name="class_days">Days</th>
 					<th name="class_time">Time</th>
 					<th name="class_place">Location</th>
-					<th name="syllabus_link">Syllabus</th>
-					<th name="visitable">Visitable</th>
-					<th name="privacy">Privacy</th>
-					<th name="learning_outcomes_txt">Learning Outcomes</th>
 					
 				</tr>
 			</thead>
@@ -53,42 +48,54 @@
 
         {% for c in courses %}
           <tr>
-            <tr>
-				<td name="dep{{loop.index0}}">{{ c.subject }}</td>
-				<td name="course_num{{loop.index0}}">{{ c.course_num }}</td>
-				<td name="class_section{{loop.index0}}">{{ c.seq_num }}</td>
-				<td name="CRN{{loop.index0}}">{{ c.CRN }}</td>
-				<td name="title{{loop.index0}}">{{ c.course_title }}</td>
-				<td name="class_days{{loop.index0}}">{{ c.meet_days }}</td>
-				<td name="class_time{{loop.index0}}">{{ c.class_time }}</td>
-				<td name="class_place{{loop.index0}}">{{ c.bldg_code + " " + c.room_code }}</td>
-
-				<td name="syllabus_link{{loop.index0}}"><p>Current: 
+            <tr class="gen_course_row" style="background-color:#d9d9d9;">	
+	           <tr>
+		           <td style="padding:10px;" name="dep{{loop.index0}}">{{ c.subject }}</td>
+		           <td style="padding:10px;" name="course_num{{loop.index0}}">{{ c.course_num }}</td>
+		           <td style="padding:10px;" name="class_section{{loop.index0}}">{{ c.seq_num }}</td>
+		           <td style="padding:10px;" name="CRN{{loop.index0}}">{{ c.CRN }}</td>
+		           <td style="padding:10px;" name="title{{loop.index0}}">{{ c.course_title }}</td>
+		           <td style="padding:10px;" name="class_days{{loop.index0}}">{{ c.meet_days }}</td>
+		           <td style="padding:10px;" name="class_time{{loop.index0}}">{{ c.class_time }}</td>
+		           <td style="padding:10px;" name="class_place{{loop.index0}}">{{ c.bldg_code + " " + c.room_code }}</td>
+		           
+			</tr>
+			<tr>
+				<td colspan="3" name="syllabus_link{{loop.index0}}"><p>Current Syllabus: 
+				  {% if c.syllabus_link != "" %}
 				  <a href = {{url_for('download',file_path=c.syllabus_link)}} target = "blank">Download
-				  </a></p>
-				  <p>Upload: <input type="file" name="syllabus_link{{loop.index0}}" size="40"></p></td>
+				  </a>
+				  {% else %}
+				  None
+				  {% endif %}				  
+				  </p>
+				  <p>Upload New: <input type="file" name="syllabus_link{{loop.index0}}" size="40"></p></td>
 				</td>
 		{% if c.visitable == "Can visit" %}
-				<td name="visitable{{loop.index0}}"><input type="radio" name="visitable{{loop.index0}}" value="Can visit" checked> Can visit <br >
+				<td colspan="2" name="visitable{{loop.index0}}">
+					<input type="radio" name="visitable{{loop.index0}}" value="Can visit" checked> Can visit <br >
 					<input type="radio" name="visitable{{loop.index0}}" value="Not open"> Not open</td>
 				{% else %}
-				<td name="visitable{{loop.index0}}"><input type="radio" name="visitable{{loop.index0}}" value="Can visit"> Can visit <br >
+				<td colspan="2" name="visitable{{loop.index0}}">
+					<input type="radio" name="visitable{{loop.index0}}" value="Can visit"> Can visit <br >
 					<input type="radio" name="visitable{{loop.index0}}" value="Not open" checked> Not open</td>
 				{% endif %}
 				{% if c.privacy == "All" %}
-				<td name="privacy{{loop.index0}}"><input type="radio" name="privacy{{loop.index0}}" value="All" checked> Anyone <br >
+				<td colspan="2" name="privacy{{loop.index0}}">
+					<input type="radio" name="privacy{{loop.index0}}" value="All" checked> Anyone <br >
 					<input type="radio" name="privacy{{loop.index0}}" value="Davidson"> Only Davidson </td>
 				{% else %}
-				<td name="privacy{{loop.index0}}"><input type="radio" name="privacy{{loop.index0}}" value="All"> Anyone <br >
+				<td colspan="2" name="privacy{{loop.index0}}">
+					<input type="radio" name="privacy{{loop.index0}}" value="All"> Anyone <br >
 					<input type="radio" name="privacy{{loop.index0}}" value="Davidson" checked> Only Davidson </td>
 				{% endif %}
-				<td name="learning_outcomes_txt{{loop.index0}}">
+				<td name="learning_outcomes_txt{{loop.index0}}" >
 					{% if c.learning_outcomes == "Cut learning outcomes from syllabus and paste them here" %}
-					<textarea rows="5" cols="30" name="learning_outcomes_txt{{loop.index0}}" style="background-color: #cce5ff">{{ c.learning_outcomes }}</textarea>
+					<textarea id="lo" rows="5" cols="30" name="learning_outcomes_txt{{loop.index0}}" style="background-color: #cce5ff" contenteditable="true">{{ c.learning_outcomes }}</textarea>
 					{% elif c.learning_outcomes == "" %}
-					<textarea rows="5" cols="30" name="learning_outcomes_txt{{loop.index0}}" style="background-color: #cce5ff">{{ c.learning_outcomes }}</textarea>
+					<textarea id="lo" rows="5" cols="30" name="learning_outcomes_txt{{loop.index0}}" style="background-color: #cce5ff" contenteditable="true">{{ c.learning_outcomes }}</textarea>
 					{% else %}
-					<textarea rows="5" cols="30" name="learning_outcomes_txt{{loop.index0}}">{{ c.learning_outcomes }}</textarea>
+					<textarea id="lo" rows="5" cols="30" name="learning_outcomes_txt{{loop.index0}}">{{ c.learning_outcomes }}</textarea contenteditable="true">
 					{% endif %}
 				</td>
 											
@@ -98,7 +105,7 @@
       </tbody>
 
 	{% endif %}
-    </table><br\>
+        </table><br>
         <input type="text" value="{{db_name}}" name = "db_name" hidden><br>
     	<input type="text" value="{{semester}}" name = "semester" hidden>
 	  	<input id="submit_changes" type="submit" value="Submit" >
@@ -149,7 +156,6 @@
         {% endfor %}
       </tbody>    
     {% endif %}
-
 
 </body>
 
